@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>FractionCalc</title>
+</head>
+<body>
+    <!-- Ribbons -->
+    <div class="ribbon">
+      <div class="dropdown">
+        <button>View</button>
+        <div class="dropdown-menu">
+            <button id="toggle-mode-btn" onclick="toggleMode()">Change Mode...</button>
+        </div>
+      </div>
+      <div class="dropdown">
+        <button>Help</button>
+        <div class="dropdown-menu">
+          <button onclick="showAboutModal()">About</button>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+        <!-- Welcome to FractionCalc Source Code! -->
+        <!-- Here you can customize the code whether you want it! -->
+        <!-- Mode Selection -->
+        <div class="mode-select">
+            <label><input type="radio" name="mode" value="operate" checked onchange="switchMode()"> Operate Fractions</label>
+            <label><input type="radio" name="mode" value="convert" onchange="switchMode()"> Mixed ↔ Fraction Converter</label>
+            <label><input type="radio" name="mode" value="decimal" onchange="switchMode()"> Fraction to Decimal</label>
+        </div>
+
+        <br>
+        <br>
+
+        <div id="operate-section">
+            <label for="fraction-count">How many fractions?</label>
+            <select id="fraction-count" onchange="updateFractionInputs()">
+                <option value="2" selected>2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+            </select>
+            <!-- Fraction 1 -->
+            <div class="fraction" id="fraction1">
+                <input type="number" id="whole1" placeholder="Whole" style="width:40px;">
+                <input type="number" id="num1" placeholder="Num">
+                <span>/</span>
+                <input type="number" id="den1" placeholder="Den">
+            </div>
+            <!-- Fraction 2 -->
+            <div class="fraction" id="fraction2">
+                <input type="number" id="whole2" placeholder="Whole" style="width:40px;">
+                <input type="number" id="num2" placeholder="Num">
+                <span>/</span>
+                <input type="number" id="den2" placeholder="Den">
+            </div>
+            <!-- Fraction 3 (hidden by default) -->
+            <div class="fraction" id="fraction3" style="display:none;">
+                <input type="number" id="whole3" placeholder="Whole" style="width:40px;">
+                <input type="number" id="num3" placeholder="Num">
+                <span>/</span>
+                <input type="number" id="den3" placeholder="Den">
+            </div>
+            <!-- Fraction 4 (hidden by default) -->
+            <div class="fraction" id="fraction4" style="display:none;">
+                <input type="number" id="whole4" placeholder="Whole" style="width:40px;">
+                <input type="number" id="num4" placeholder="Num">
+                <span>/</span>
+                <input type="number" id="den4" placeholder="Den">
+            </div>
+            <!-- Operators -->
+            <select id="operator">
+                <option value="+">+</option>
+                <option value="-">-</option>
+                <option value="*">x</option>
+                <option value="/">÷</option>
+            </select>
+            <button class="btn" onclick="calculate()">Calculate</button>
+            <h2 id="result">Result: </h2>
+
+            <br>
+        <br>
+
+            <p style="font-size:0.95em;color:#555;margin-bottom:10px;text-align: center;">
+          Leave "Whole" empty or zero for default fractions (e.g. 1/2). Fill "Whole" for mixed fractions (e.g. 2 1/2).
+        </p>
+        </div>
+
+        <div id="convert-section" style="display:none;">
+          <div class="fraction">
+            <input type="number" id="conv_whole" placeholder="Whole" style="width:40px;">
+            <input type="number" id="conv_num" placeholder="Num">
+            <span>/</span>
+            <input type="number" id="conv_den" placeholder="Den">
+          </div>
+          <button class="btn" onclick="convertMixed()">Convert</button>
+          <div id="convert-result"></div>
+        </div>
+
+        <div id="decimal-section" style="display:none;">
+          <div class="fraction">
+            <input type="number" id="dec_num" placeholder="Num">
+            <span>/</span>
+            <input type="number" id="dec_den" placeholder="Den">
+          </div>
+          <button class="btn" onclick="convertDecimal()">To Decimal</button>
+          <div id="decimal-result"></div>
+        </div>
+    </div>
+    
+    <div id="about-modal" class="modal" style="display:none;">
+  <div class="modal-content">
+    <span class="close" onclick="closeAboutModal()">&times;</span>
+    <h2>FractionCalc</h2>
+    <p>Version 1.0 (Beta)</p>
+    <p>Developed by Ashyraffa Maulana Abdi</p>
+  </div>
+</div>
+
+
+    <script src="script.js"></script>
+</body>
+</html>

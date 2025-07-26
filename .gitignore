@@ -1,0 +1,32 @@
+# Dependency folders
+node_modules/
+dist/
+
+# Electron build output
+*.exe
+*.AppImage
+*.dmg
+*.zip
+*.tar.gz
+
+# Mac system files
+.DS_Store
+
+# Logs
+*.log
+
+# Build cache
+out/
+.cache/
+electron-builder.yml
+
+# VS Code configs (if using)
+.vscode/
+
+# Misc
+*.tmp
+*.bak
+
+# Environment files
+.env
+.env.local
