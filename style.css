@@ -5,6 +5,11 @@ body {
   padding: 0;
 }
 
+body.dark-mode {
+  background: #121212;
+  color: #eee;
+}
+
 html, body {
   height: 100%;
   overflow: hidden;
@@ -99,6 +104,11 @@ input:hover {
   text-align: center;
   box-sizing: border-box;
 }
+
+.container.dark-mode {
+  background: #121212;
+}
+
 
 .fraction {
   display: flex;

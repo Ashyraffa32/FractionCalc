@@ -140,3 +140,12 @@ function closeAboutModal() {
   document.getElementById('about-modal').style.display = 'none';
 }
 
+const btn = document.getElementById('dark-mode');
+const container = document.querySelector('.container'); 
+
+btn.addEventListener('click', () => {
+  document.body.classList.toggle('dark-mode');
+  container.classList.toggle('dark-mode'); 
+});
+
+
