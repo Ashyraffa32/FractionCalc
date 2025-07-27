@@ -1,6 +1,6 @@
 {
   "name": "fractioncalc",
-  "version": "1.0.3",
+  "version": "1.0.6",
   "description": "FractionCalc",
   "main": "main.js",
   "scripts": {
