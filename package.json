@@ -1,6 +1,6 @@
 {
   "name": "fractioncalc",
-  "version": "1.0.6",
+  "version": "1.1.0",
   "description": "FractionCalc",
   "main": "main.js",
   "scripts": {
@@ -17,7 +17,8 @@
       "output": "dist"
     },
     "win": {
-      "target": "nsis"
+      "target": "nsis",
+      "icon": "fractioncalc.ico"
     },
       "nsis": {
       "oneClick": false,

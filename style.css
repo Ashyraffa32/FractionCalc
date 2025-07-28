@@ -10,6 +10,8 @@ body.dark-mode {
   color: #eee;
 }
 
+
+
 html, body {
   height: 100%;
   overflow: hidden;
@@ -164,7 +166,7 @@ select#operator {
 #result {
   margin-top: 24px;
   font-size: 1.2rem;
-  color: #22223b;
+  color: #666666;
   min-height: 1.5em;
 }
 
@@ -190,6 +192,11 @@ select#operator {
   max-width: 90vw;
   text-align: center;
   position: relative;
+}
+
+.modal-content.dark-mode {
+  background: #121212;
+  color: #eee;
 }
 
 .close {

@@ -89,6 +89,7 @@ function switchMode() {
   document.getElementById('operate-section').style.display = mode === 'operate' ? '' : 'none';
   document.getElementById('convert-section').style.display = mode === 'convert' ? '' : 'none';
   document.getElementById('decimal-section').style.display = mode === 'decimal' ? '' : 'none';
+  document.getElementById('fraction-section').style.display = mode === 'fraction' ? '' : 'none';
 }
 
 function convertMixed() {
@@ -111,6 +112,33 @@ function convertDecimal() {
     return;
   }
   document.getElementById("decimal-result").innerText = `Decimal: ${num/den}`;
+}
+
+function convertDecimalToFraction() {
+  const decimalInput = parseFloat(document.getElementById("dec_input_fraction").value);
+  if (isNaN(decimalInput)) {
+    document.getElementById("decimal-to-fraction-result").innerText = "The input was not valid.";
+    return;
+  }
+
+  
+  let tolerance = 1.0E-6; 
+  let h1 = 1, h2 = 0;
+  let k1 = 0, k2 = 1;
+  let b = decimalInput;
+
+  do {
+    let a = Math.floor(b);
+    let aux = h1;
+    h1 = a * h1 + h2;
+    h2 = aux;
+    aux = k1;
+    k1 = a * k1 + k2;
+    k2 = aux;
+    b = 1 / (b - a);
+  } while (Math.abs(decimalInput - h1 / k1) > decimalInput * tolerance && k1 < 10000); 
+
+  document.getElementById("decimal-to-fraction-result").innerText = `Result: ${h1}/${k1}`;
 }
 
 function updateFractionInputs() {
@@ -141,11 +169,14 @@ function closeAboutModal() {
 }
 
 const btn = document.getElementById('dark-mode');
-const container = document.querySelector('.container'); 
+const container = document.querySelector('.container');
+const popup = document.querySelector('.modal-content');
+
 
 btn.addEventListener('click', () => {
   document.body.classList.toggle('dark-mode');
   container.classList.toggle('dark-mode'); 
+  popup.classList.toggle('dark-mode');
 });
 
 

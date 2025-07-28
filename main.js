@@ -4,9 +4,10 @@ const path = require('path');
 
 function createWindow () {
   const win = new BrowserWindow({
-    width: 800,
-    height: 650,
-    resizable: false,
+    width: 820,
+    height: 600,
+    resizable: true,
+    icon: path.join(__dirname, 'fractioncalc.ico'),
     webPreferences: {
       contextIsolation: false,
       nodeIntegration: true

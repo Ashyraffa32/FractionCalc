@@ -20,6 +20,7 @@
         <button>Help</button>
         <div class="dropdown-menu">
           <button onclick="showAboutModal()">About</button>
+          <a href="https://ashy"></a>
         </div>
       </div>
     </div>
@@ -31,6 +32,7 @@
             <label><input type="radio" name="mode" value="operate" checked onchange="switchMode()"> Operate Fractions</label>
             <label><input type="radio" name="mode" value="convert" onchange="switchMode()"> Mixed ↔ Fraction Converter</label>
             <label><input type="radio" name="mode" value="decimal" onchange="switchMode()"> Fraction to Decimal</label>
+            <label><input type="radio" name="mode" value="fraction" onchange="switchMode()"> Decimal to Fraction</label>
         </div>
 
         <br>
@@ -79,7 +81,7 @@
                 <option value="/">÷</option>
             </select>
             <button class="btn" onclick="calculate()">Calculate</button>
-            <h2 id="result">Result: </h2>
+            <p id="result">Result: </p>
 
             <br>
         <br>
@@ -109,14 +111,21 @@
           <button class="btn" onclick="convertDecimal()">To Decimal</button>
           <div id="decimal-result"></div>
         </div>
+
+        <div id="fraction-section" style="display: none;">
+          <input type="number" id="dec_input_fraction" placeholder="Masukkan Desimal" step="any" style="width: 150px; padding: 8px; margin: 0 6px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 1rem; text-align: center; background: #f9fafb;">
+          <button class="btn" onclick="convertDecimalToFraction()">Convert to Fraction</button>
+        <div id="decimal-to-fraction-result" style="margin-top: 15px; font-size: 1.1rem; color: #666666;"></div>
+        </div>
+
     </div>
     
     <div id="about-modal" class="modal" style="display:none;">
   <div class="modal-content">
     <span class="close" onclick="closeAboutModal()">&times;</span>
     <h2>FractionCalc</h2>
-    <p>Version 1.0 (Beta)</p>
-    <p>Developed by Ashyraffa Maulana Abdi</p>
+    <p>Version 1.1</p>
+    <p>Developed by Ashyraffa</p>
   </div>
 </div>
 
