@@ -74,11 +74,11 @@ function calculate() {
     // Always show as improper fraction (default fraction)
     let resultStr;
     if (resultDen === 1) {
-        resultStr = `Hasil: ${resultNum}`;
+        resultStr = `Result: ${resultNum}`;
     } else if (resultNum === 0) {
-        resultStr = "Hasil: 0";
+        resultStr = "Result: 0";
     } else {
-        resultStr = `Hasil: ${resultNum}/${resultDen}`;
+        resultStr = `Result: ${resultNum}/${resultDen}`;
     }
 
     document.getElementById("result").innerText = resultStr;
