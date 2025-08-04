@@ -1,11 +1,15 @@
 {
   "name": "fractioncalc",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "FractionCalc",
   "main": "main.js",
+  "author": "Ashyraffa <raffa3527@outlook.com>",
+  "license": "GPL-3.0-only",
   "scripts": {
     "start": "electron .",
-    "build": "electron-builder"
+    "build": "electron-builder",
+    "build:win": "npx electron-builder --win nsis",
+    "build:linux": "electron-builder --linux deb AppImage"
   },
   "devDependencies": {
     "electron": "^37.2.4",
@@ -27,6 +31,16 @@
       "perMachine": true,
       "createStartMenuShortcut": true,
       "createDesktopShortcut": true
+    },
+     "linux": {
+      "category": "Utility",
+      "maintainer": "Ashyraffa <raffa3527@outlook.com>",
+      "target": [
+        "deb",
+        "AppImage"
+      ],
+      "icon": "fractioncalc.png",
+      "description": "A simple fraction calculator for Linux"
     }
   }
 }

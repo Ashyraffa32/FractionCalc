@@ -14,13 +14,15 @@
         <div class="dropdown-menu">
             <button id="toggle-mode-btn" onclick="toggleMode()">Change Mode...</button>
             <button id="dark-mode">Toggle Dark Mode</button>
+            <button id="upload-bg-btn">Change Background...</button>
+            <input type="file" id="bg-upload" accept="image/*" style="display: none;">
+            <button id="reset-bg-btn">Reset Background to Default</button>
         </div>
       </div>
       <div class="dropdown">
         <button>Help</button>
         <div class="dropdown-menu">
           <button onclick="showAboutModal()">About</button>
-          <a href="https://ashy"></a>
         </div>
       </div>
     </div>
@@ -124,7 +126,7 @@
   <div class="modal-content">
     <span class="close" onclick="closeAboutModal()">&times;</span>
     <h2>FractionCalc</h2>
-    <p>Version 1.1.3</p>
+    <p>Version 1.2.0</p>
     <p>Developed by Ashyraffa</p>
   </div>
 </div>

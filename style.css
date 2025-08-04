@@ -97,7 +97,6 @@ input:hover {
 }
 
 .container {
-  background: #fff;
   width: 100%;
   height: auto;
   padding: 64px 24px 24px 24px; /* Top padding for ribbon */
@@ -105,7 +104,13 @@ input:hover {
   box-shadow: 0 4px 24px rgba(0,0,0,0.10);
   text-align: center;
   box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.85); /* semi transparan */
+  backdrop-filter: blur(30px); /* biar elegan + readable */
+  -webkit-backdrop-filter: blur(30px); /* for Safari, just in case */
+  transition: all 0.3s ease;
 }
+
+
 
 .container.dark-mode {
   background: #121212;
@@ -206,4 +211,16 @@ select#operator {
   font-size: 2rem;
   color: #888;
   cursor: pointer;
+}
+
+body {
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  transition: background-image 0.3s ease;
+}
+
+.container {
+  transition: background-color 0.3s ease, backdrop-filter 0.3s ease;
 }

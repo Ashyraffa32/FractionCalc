@@ -179,4 +179,59 @@ btn.addEventListener('click', () => {
   popup.classList.toggle('dark-mode');
 });
 
+// Customization
+const uploadBtn = document.getElementById('upload-bg-btn');
+const fileInput = document.getElementById('bg-upload');
+
+uploadBtn.addEventListener('click', () => {
+    fileInput.click();
+});
+
+fileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+        const dataURL = evt.target.result;
+
+        // Simpen ke localStorage
+        localStorage.setItem('customBackground', dataURL);
+
+        // Apply ke body & container
+        setCustomBackground(dataURL);
+    };
+    reader.readAsDataURL(file);
+});
+
+// Fungsi apply background
+function setCustomBackground(dataURL) {
+    document.body.style.backgroundImage = `url('${dataURL}')`;
+    document.body.style.backgroundSize = 'cover';
+    document.body.style.backgroundPosition = 'center';
+
+    const container = document.querySelector('.container');
+    container.style.backgroundColor = 'rgba(255, 255, 255, 0.85)'; // biar teks tetep kebaca
+    container.style.backdropFilter = 'blur(8px)';
+}
+
+// Save wallpaper to localStorage on load
+window.addEventListener('DOMContentLoaded', () => {
+    const savedBG = localStorage.getItem('customBackground');
+    if (savedBG) {
+        setCustomBackground(savedBG);
+    }
+});
+
+// Reset background to default
+document.getElementById('reset-bg-btn').addEventListener('click', () => {
+    localStorage.removeItem('customBackground');
+    document.body.style.backgroundImage = '';
+    const container = document.querySelector('.container');
+    container.style.backgroundColor = ''; // back to default white
+    container.style.backdropFilter = '';
+});
+
+
+
 
