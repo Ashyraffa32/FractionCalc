@@ -42,5 +42,11 @@
       "icon": "fractioncalc.png",
       "description": "A simple fraction calculator for Linux"
     }
+  },
+  "dependencies": {
+    "@capacitor/android": "^7.4.2",
+    "@capacitor/cli": "^7.4.2",
+    "@capacitor/core": "^7.4.2",
+    "astral-regex": "^2.0.0"
   }
 }

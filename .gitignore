@@ -1,6 +1,8 @@
 # Dependency folders
 node_modules/
 dist/
+android/
+androidinstaller/
 
 # Electron build output
 *.exe
@@ -8,6 +10,7 @@ dist/
 *.dmg
 *.zip
 *.tar.gz
+*.apk
 
 # Mac system files
 .DS_Store

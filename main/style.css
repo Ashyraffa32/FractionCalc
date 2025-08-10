@@ -224,3 +224,142 @@ body {
 .container {
   transition: background-color 0.3s ease, backdrop-filter 0.3s ease;
 }
+
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+  .ribbon {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 6px;
+  }
+
+  .dropdown {
+    margin-right: 0;
+    width: 100%;
+  }
+
+  .ribbon button {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+  }
+
+  .mode-select {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .fraction {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .fraction input[type="number"] {
+    width: 60px;
+    font-size: 0.95rem;
+    padding: 6px;
+  }
+
+  select#operator {
+    width: 100%;
+    font-size: 1rem;
+    margin-top: 8px;
+  }
+
+  .btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+  }
+
+  .container {
+    padding: 80px 12px 24px 12px;
+    border-radius: 0;
+    box-shadow: none;
+    min-height: 100vh;
+  }
+
+  #result {
+    font-size: 1.1rem;
+    word-wrap: break-word;
+  }
+}
+
+/* Extra small screen (HP jadul) */
+@media (max-width: 400px) {
+  .fraction input[type="number"] {
+    width: 50px;
+    font-size: 0.9rem;
+  }
+  .btn {
+    font-size: 0.95rem;
+  }
+}
+
+/* Hamburger default hidden di desktop */
+.hamburger {
+  display: none;
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px 12px;
+}
+
+/* Mobile view */
+@media (max-width: 768px) {
+  .ribbon {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 6px;
+  }
+
+  .hamburger {
+    display: block;
+    background: #e0e0e0;
+    border-radius: 6px;
+  }
+
+  .ribbon-content {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    gap: 8px;
+    margin-top: 6px;
+  }
+
+  .ribbon-content.show {
+    display: flex;
+  }
+
+  .dropdown {
+    width: 100%;
+  }
+
+  .dropdown button {
+    width: 100%;
+    text-align: left;
+  }
+}
+
+/* Ribbon hidden for mobile */
+@media (max-width: 768px) {
+  .ribbon {
+    display: none;
+  }
+
+  .ribbon-content {
+    display: none;
+  }
+
+  .ribbon-content.show {
+    display: flex;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile {
+    display: none;
+  }
+}

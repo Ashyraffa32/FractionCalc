@@ -233,6 +233,16 @@ document.getElementById('reset-bg-btn').addEventListener('click', () => {
     container.style.backdropFilter = '';
 });
 
+// Disable for mobile
+if (window.innerWidth <= 768) {
+  const ribbonEl = document.querySelector('.ribbon');
+  if (ribbonEl) ribbonEl.remove();
+
+  // Disable Electron features for mobile
+  window.isMobileMode = true;
+}
+
+
 
 
 
