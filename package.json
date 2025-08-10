@@ -1,6 +1,6 @@
 {
   "name": "fractioncalc",
-  "version": "1.2.0",
+  "version": "1.2.4",
   "description": "FractionCalc",
   "main": "main.js",
   "author": "Ashyraffa <raffa3527@outlook.com>",
@@ -12,7 +12,7 @@
     "build:linux": "electron-builder --linux deb AppImage"
   },
   "devDependencies": {
-    "electron": "^37.2.4",
+    "electron": "^37.2.6",
     "electron-builder": "^26.0.12"
   },
   "build": {
@@ -24,7 +24,7 @@
       "target": "nsis",
       "icon": "fractioncalc.ico"
     },
-      "nsis": {
+    "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
       "license": "license.txt",
@@ -32,7 +32,7 @@
       "createStartMenuShortcut": true,
       "createDesktopShortcut": true
     },
-     "linux": {
+    "linux": {
       "category": "Utility",
       "maintainer": "Ashyraffa <raffa3527@outlook.com>",
       "target": [

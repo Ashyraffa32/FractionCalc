@@ -13,16 +13,29 @@
         <button>View</button>
         <div class="dropdown-menu">
             <button id="toggle-mode-btn" onclick="toggleMode()">Change Mode...</button>
-            <button id="dark-mode">Toggle Dark Mode</button>
-            <button id="upload-bg-btn">Change Background...</button>
-            <input type="file" id="bg-upload" accept="image/*" style="display: none;">
-            <button id="reset-bg-btn">Reset Background to Default</button>
         </div>
       </div>
       <div class="dropdown">
         <button>Help</button>
         <div class="dropdown-menu">
           <button onclick="showAboutModal()">About</button>
+          <button id="openLink">Documentation</button>
+          <script>
+             const { shell } = require('electron')
+
+             document.getElementById('openLink').addEventListener('click', () => {
+             shell.openExternal('https://ashyraffa.github.io/FractionCalcSite/getstarted.html')
+      })
+          </script>
+        </div>
+      </div>
+      <div class="dropdown">
+        <button>Options</button>
+        <div class="dropdown-menu">
+         <button id="dark-mode">Toggle Dark Mode</button>
+         <button id="upload-bg-btn">Change Background...</button>
+         <input type="file" id="bg-upload" accept="image/*" style="display: none;">
+         <button id="reset-bg-btn">Reset Background to Default</button>
         </div>
       </div>
     </div>
@@ -126,8 +139,9 @@
   <div class="modal-content">
     <span class="close" onclick="closeAboutModal()">&times;</span>
     <h2>FractionCalc</h2>
-    <p>Version 1.2.0</p>
+    <p>Version 1.2.4</p>
     <p>Developed by Ashyraffa</p>
+    <p>FractionCalc is a versatile tool for performing operations on fractions,<br> converting between mixed numbers and improper fractions,<br> and converting fractions to decimals.</p>
   </div>
 </div>
 
