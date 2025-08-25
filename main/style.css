@@ -1,20 +1,31 @@
+:root {
+  --background: #f6f8fa;
+  --surface: #fff;
+  --text: #222;
+  --btn-primary: #0078d4;
+  --btn-hover: #005fa3;
+  --border: #d1d5db;
+  --input-bg: #f9fafb;
+}
+
+:root.dark-mode {
+  --background: #121212;
+  --surface: rgba(45, 45, 45, 0.85); /* Semi-transparent */
+  --text: #eee;
+  --btn-primary: #52a3f7;
+  --btn-hover: #3b82f6;
+  --border: #444;
+  --input-bg: #1f1f1f;
+}
+
 body {
-  background: #f6f8fa;
+  background: var(--background);
+  color: var(--text);
   font-family: 'Segoe UI', Arial, sans-serif;
   margin: 0;
   padding: 0;
-}
-
-body.dark-mode {
-  background: #121212;
-  color: #eee;
-}
-
-
-
-html, body {
-  height: 100%;
-  overflow: hidden;
+  height: 100vh;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 .ribbon {
@@ -22,7 +33,7 @@ html, body {
   top: 0;
   left: 0;
   width: 100vw;
-  background: #e0e0e0;
+  background: var(--surface);
   z-index: 1000;
   display: flex;
   align-items: center;
@@ -45,8 +56,8 @@ html, body {
   position: absolute;
   top: 100%;
   left: 0;
-  width: 140px;
-  background: #fff;
+  width: 180px;
+  background: var(--surface);
   box-shadow: 0px 4px 12px rgba(0,0,0,0.18);
   border-radius: 6px;
   z-index: 2000;
@@ -59,8 +70,8 @@ html, body {
 
 .ribbon button {
   border: none;
-  color: #121212;
-  background: #e0e0e0;
+  color: var(--text);
+  background: transparent;
   padding: 8px 18px;
   border-radius: 6px;
   font-size: 1rem;
@@ -70,7 +81,7 @@ html, body {
 
 .ribbon button:hover,
 .dropdown-menu button:hover {
-  background: #f1f1f1;
+  background: rgba(0, 0, 0, 0.05);
 }
 
 .dropdown-menu button {
@@ -81,7 +92,7 @@ html, body {
   text-align: left;
   font-size: 1rem;
   cursor: pointer;
-  color: #222;
+  color: var(--text);
   border-radius: 0;
 }
 
@@ -89,33 +100,47 @@ input:hover {
   cursor: pointer;
 }
 
-.mode-select {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 25px;
-}
-
 .container {
   width: 100%;
-  height: auto;
-  padding: 64px 24px 24px 24px; /* Top padding for ribbon */
+  padding: 64px 24px 24px 24px;
   border-radius: 12px;
   box-shadow: 0 4px 24px rgba(0,0,0,0.10);
   text-align: center;
   box-sizing: border-box;
-  background: rgba(255, 255, 255, 0.85); /* semi transparan */
-  backdrop-filter: blur(30px); /* biar elegan + readable */
-  -webkit-backdrop-filter: blur(30px); /* for Safari, just in case */
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
   transition: all 0.3s ease;
+  max-width: 900px;
+  margin: 90px auto 20px auto;
+  min-height: 400px;
 }
 
-
-
-.container.dark-mode {
-  background: #121212;
+:root.dark-mode .container {
+  background: rgba(45, 45, 45, 0.85);
 }
 
+/* New section for desktop layout */
+@media (min-width: 768px) {
+  .container {
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.panel {
+    display: none;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+    width: 100%;
+}
+
+.panel.show {
+    display: flex;
+}
 
 .fraction {
   display: flex;
@@ -128,16 +153,17 @@ input:hover {
   width: 70px;
   padding: 8px;
   margin: 0 6px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--border);
   border-radius: 6px;
   font-size: 1rem;
   text-align: center;
-  background: #f9fafb;
+  background: var(--input-bg);
+  color: var(--text);
   transition: border 0.2s;
 }
 
 .fraction input[type="number"]:focus {
-  border: 1.5px solid #0078d4;
+  border: 1.5px solid var(--btn-primary);
   outline: none;
 }
 
@@ -146,14 +172,15 @@ select#operator {
   padding: 6px 14px;
   margin-bottom: 18px;
   border-radius: 6px;
-  border: 1px solid #d1d5db;
-  background: #f9fafb;
+  border: 1px solid var(--border);
+  background: var(--input-bg);
+  color: var(--text);
   cursor: pointer;
   transition: border 0.2s;
 }
 
 .btn {
-  background: #0078d4;
+  background: var(--btn-primary);
   color: #fff;
   border: none;
   border-radius: 6px;
@@ -165,13 +192,13 @@ select#operator {
 }
 
 .btn:hover {
-  background: #005fa3;
+  background: var(--btn-hover);
 }
 
-#result {
+#result, #convert-result, #decimal-result, #decimal-to-fraction-result {
   margin-top: 24px;
   font-size: 1.2rem;
-  color: #666666;
+  color: var(--text);
   min-height: 1.5em;
 }
 
@@ -189,7 +216,7 @@ select#operator {
 }
 
 .modal-content {
-  background: #fff;
+  background: var(--surface);
   padding: 32px 24px;
   border-radius: 10px;
   box-shadow: 0 4px 24px rgba(0,0,0,0.18);
@@ -199,21 +226,16 @@ select#operator {
   position: relative;
 }
 
-.modal-content.dark-mode {
-  background: #121212;
-  color: #eee;
-}
-
 .close {
   position: absolute;
   right: 16px;
   top: 12px;
   font-size: 2rem;
-  color: #888;
+  color: var(--text);
   cursor: pointer;
 }
 
-body {
+body.has-custom-bg {
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: cover;
@@ -221,8 +243,34 @@ body {
   transition: background-image 0.3s ease;
 }
 
-.container {
-  transition: background-color 0.3s ease, backdrop-filter 0.3s ease;
+.container.has-custom-bg {
+  background-color: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
 }
 
+:root.dark-mode .container.has-custom-bg {
+  background-color: rgba(45, 45, 45, 0.85);
+}
 
+.hint {
+    color: var(--text);
+    opacity: 0.7;
+    font-size: 0.9em;
+    margin-top: 10px;
+}
+
+/* Fixes the bug where hidden elements are still shown */
+[hidden] {
+  display: none !important;
+}
+
+/* Mobile styles */
+@media (max-width: 767px) {
+  .ribbon {
+    display: none;
+  }
+  .container {
+    margin-top: 20px;
+  }
+}
