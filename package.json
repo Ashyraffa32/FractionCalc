@@ -1,9 +1,9 @@
 {
   "name": "fractioncalc",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "FractionCalc",
   "main": "main.js",
-  "author": "Ashyraffa <raffa3527@outlook.com>",
+  "author": "Ashyraffa <raffa3527@outlook.com> and Ratu <syifaadilaratu@gmail.com>",
   "license": "GPL-3.0-only",
   "scripts": {
     "start": "electron .",
@@ -34,7 +34,7 @@
     },
     "linux": {
       "category": "Utility",
-      "maintainer": "Ashyraffa <raffa3527@outlook.com>",
+      "maintainer": "Ashyraffa <raffa3527@outlook.com> and Ratu <syifaadilaratu@gmail.com>",
       "target": [
         "deb",
         "AppImage"

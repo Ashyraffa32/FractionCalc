@@ -1,5 +1,7 @@
 # FractionCalc
 
+Due to problems to old account @Ashyraffa, the FractionCalc repo was moved here to my new account.
+
 This fraction calculation app is an open-source project is made in the hope to help students, especially middle-schoolers.
 No ads, and its completely free. Because who want to watch an ads when study anyway??
 

@@ -6,16 +6,31 @@
   --btn-hover: #005fa3;
   --border: #d1d5db;
   --input-bg: #f9fafb;
+  --accent-color: var(--btn-primary);
+  --accent-hover-color: var(--btn-hover);
+  --surface-opacity: 0.85;
+  --surface-color-rgb: 255, 255, 255;
 }
 
 :root.dark-mode {
   --background: #121212;
-  --surface: rgba(45, 45, 45, 0.85); /* Semi-transparent */
+  --surface: rgba(45, 45, 45, 0.85);
   --text: #eee;
   --btn-primary: #52a3f7;
   --btn-hover: #3b82f6;
   --border: #444;
   --input-bg: #1f1f1f;
+  --accent-color: var(--btn-primary);
+  --accent-hover-color: var(--btn-hover);
+  --surface-opacity: 0.85;
+  --surface-color-rgb: 45, 45, 45;
+}
+
+.btn, .fraction input[type="number"]:focus, select#operator:focus {
+  background: var(--accent-color);
+}
+.btn:hover {
+  background: var(--accent-hover-color);
 }
 
 body {
@@ -107,7 +122,7 @@ input:hover {
   box-shadow: 0 4px 24px rgba(0,0,0,0.10);
   text-align: center;
   box-sizing: border-box;
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(var(--surface-color-rgb), var(--surface-opacity));
   backdrop-filter: blur(30px);
   -webkit-backdrop-filter: blur(30px);
   transition: all 0.3s ease;
@@ -117,7 +132,7 @@ input:hover {
 }
 
 :root.dark-mode .container {
-  background: rgba(45, 45, 45, 0.85);
+  background: rgba(var(--surface-color-rgb), var(--surface-opacity));
 }
 
 /* New section for desktop layout */
@@ -195,6 +210,25 @@ select#operator {
   background: var(--btn-hover);
 }
 
+.row.align-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.label-checkbox {
+    display: flex;
+    align-items: center;
+    margin-left: 1rem;
+    cursor: pointer;
+    font-size: 0.9em;
+    margin-top: 10px;
+}
+
+.label-checkbox input {
+    margin-right: 0.5rem;
+}
+
 #result, #convert-result, #decimal-result, #decimal-to-fraction-result {
   margin-top: 24px;
   font-size: 1.2rem;
@@ -202,17 +236,33 @@ select#operator {
   min-height: 1.5em;
 }
 
+/* Styling for the explanation box */
+.explanation-box {
+  background: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 20px;
+  white-space: pre-wrap; /* Keeps newlines and spaces */
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.9em;
+  line-height: 1.6;
+  color: var(--text);
+  display: none; /* Hidden by default */
+  text-align: left;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
 .modal {
   position: fixed;
   z-index: 3000;
-  left: 0;
   top: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0,0,0,0.25);
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
 }
 
 .modal-content {
@@ -222,6 +272,7 @@ select#operator {
   box-shadow: 0 4px 24px rgba(0,0,0,0.18);
   min-width: 280px;
   max-width: 90vw;
+  width: fit-content;
   text-align: center;
   position: relative;
 }

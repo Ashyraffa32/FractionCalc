@@ -24,17 +24,27 @@
          <button id="upload-bg-btn">Change Wallpaper...</button>
          <input type="file" id="bg-upload" accept="image/*" style="display: none;">
          <button id="reset-bg-btn">Reset to Default</button>
+         <button id="change-accent-btn">Change Accent Color...</button>
+         <input type="color" id="accent-color-picker" style="display: none;">
+         <button id="open-opacity-modal-btn">Adjust Element Opacity...</button>
          <button id="toggle-lang-btn">Switch Language</button>
         </div>
       </div>
       <div class="dropdown">
         <button>Help</button>
         <div class="dropdown-menu">
-          <button onclick="alert('FractionCalc For Desktop\nVersion 1.4.0\nMade by Ashyraffa and Ratu')">About</button>
+          <button onclick="alert('FractionCalc For Desktop\nVersion 1.5.0\nMade by Ashyraffa and Ratu')">About</button>
           <button>Documentation</button>
         </div>
       </div>
+      <div class="dropdown">
+        <button>View</button>
+        <div class="dropdown-menu">
+          <button id="fullscreen-btn">Toggle Full Screen</button>
+        </div>
+      </div>
     </div>
+
     <div class="container">
         <div id="operate-section" class="panel show">
             <label for="fraction-count">How many fractions?</label>
@@ -77,9 +87,14 @@
                 <option value="*">x</option>
                 <option value="/">÷</option>
             </select>
-            <button id="calc-btn" class="btn">Calculate</button>
-            <p id="result">Result: </p>
-            <p class="hint">Leave "Whole" empty or 0 for proper fractions. Fill "Whole" for mixed numbers.</p>
+            <div class="row align-center">
+                <button id="calc-btn" class="btn">Calculate</button>
+                <label class="label-checkbox">
+                    <input type="checkbox" id="show-explanation-checkbox"> Show Explanation
+                </label>
+            </div>
+            <div id="result"></div>
+            <div id="explanation-box" class="explanation-box"></div>
         </div>
 
         <div id="convert-section" class="panel">
@@ -107,31 +122,47 @@
         <div id="fraction-section" class="panel">
           <input type="number" id="dec_input_fraction" placeholder="Enter a decimal..." class="input wide">
           <button id="btn-dec-to-frac" class="btn">Convert to Fraction</button>
-        <div id="decimal-to-fraction-result"></div>
+          <div id="decimal-to-fraction-result"></div>
         </div>
-    
 
+        <div id="opacity-modal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <span class="close" id="opacity-close-btn">&times;</span>
+                <h4>Set Container Opacity</h4>
+                <input type="range" id="opacity-slider" min="0" max="1" step="0.05">
+            </div>
+        </div>
+    </div>
+    
     <script src="script.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  // Find the Documentation button in Help dropdown
-  const helpDropdown = document.querySelectorAll('.dropdown')[2];
-  if (helpDropdown) {
-    const docBtn = helpDropdown.querySelectorAll('.dropdown-menu button')[1];
-    if (docBtn) {
-      docBtn.addEventListener('click', function() {
-        // Electron
-        if (window.require) {
-          const { shell } = require('electron');
-          shell.openExternal('https://ashyraffa.github.io/FractionCalcSite/getstarted.html');
-        } else {
-          // Browser fallback
-          window.open('https://ashyraffa.github.io/FractionCalcSite/getstarted.html', '_blank');
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Find the Documentation button in Help dropdown
+      const helpDropdown = document.querySelectorAll('.dropdown')[2];
+      if (helpDropdown) {
+        const docBtn = helpDropdown.querySelectorAll('.dropdown-menu button')[1];
+        if (docBtn) {
+          docBtn.addEventListener('click', function() {
+            // Electron
+            if (window.require) {
+              const { shell } = require('electron');
+              shell.openExternal('https://ashyraffa.github.io/FractionCalcSite/getstarted.html');
+            } else {
+              // Browser fallback
+              window.open('https://ashyraffa.github.io/FractionCalcSite/getstarted.html', '_blank');
+            }
+          });
         }
-      });
-    }
-  }
-});
-</script>
+      }
+    });
+    </script>
+    <script>
+        const button = document.getElementById('fullscreen-btn');
+        button.addEventListener('click', () => {
+          if (document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen(); // Makes the whole page fullscreen
+          }
+        });
+    </script>
 </body>
 </html>
