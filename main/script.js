@@ -89,7 +89,7 @@ const locales = {
     switchLang: "Ganti Bahasa",
     help: "Bantuan",
     about: "Tentang",
-    aboutMsg: "FractionCalc Untuk Desktop\nVersi 1.4.0\nDibuat oleh Ashyraffa dan Ratu",
+    aboutMsg: "FractionCalc Untuk Desktop\nVersi 1.5.0\nDibuat oleh Ashyraffa dan Ratu",
     documentation: "Dokumentasi",
     howMany: "Berapa banyak pecahan?",
     calculate: "Hitung",
