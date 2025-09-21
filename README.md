@@ -61,4 +61,4 @@ If you share or modify, please give proper credits 🙏.
 ## 📢 Credits
 This project was started by two middle‑school friends who just wanted a better calculator for class ✨
 
-> Built with ❤️ in Aceh, Indonesia.
+> Built with ❤️ by Ashyraffa and Ratu
