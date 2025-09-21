@@ -19,11 +19,27 @@ const opacityModal = document.getElementById('opacity-modal');
 const opacityCloseBtn = document.getElementById('opacity-close-btn');
 const showExplanationCheckbox = document.getElementById('show-explanation-checkbox');
 const explanationBox = document.getElementById('explanation-box');
+const fullscreenBtn = document.getElementById('fullscreen-btn');
+const conv_whole = document.getElementById('conv_whole');
+const conv_num = document.getElementById('conv_num');
+const conv_den = document.getElementById('conv_den');
+const dec_num = document.getElementById('dec_num');
+const dec_den = document.getElementById('dec_den');
+const dec_input_fraction = document.getElementById('dec_input_fraction');
+
 
 
 // --- Localization strings ---
 const locales = {
   en: {
+    conv_whole: "Whole",
+    conv_num: "Numerator",
+    conv_den: "Denominator",
+    dec_input_fraction: "Enter a decimal...",
+    dec_num: "Numerator",
+    dec_den: "Denominator", 
+    showExplanationCheckbox: "Show Explanation",
+    fullscreenBtn: "Toggle Fullscreen",
     mode: "Mode",
     operate: "Operate Fractions",
     convert: "Mixed ↔ Improper",
@@ -75,6 +91,14 @@ const locales = {
     expSimplestForm: "  - The fraction is already in its simplest form."
   },
   id: {
+    conv_whole: "Bilangan Utuh",
+    conv_num: "Pembilang",
+    conv_den: "Penyebut",
+    dec_input_fraction: "Masukkan desimal...",
+    dec_num: "Pembilang",
+    dec_den: "Penyebut",
+    showExplanationCheckbox: "Penjelasan/Cara",
+    fullscreenBtn: "Beralih ke Layar Penuh", 
     mode: "Mode",
     operate: "Operasi Pecahan",
     convert: "Campuran ↔ Tidak Wajar",
@@ -153,14 +177,46 @@ function applyLocale() {
   helpBtns[0].innerText = t.about;
   helpBtns[1].innerText = t.documentation;
 
+  // View dropdown
+  document.querySelectorAll('.dropdown')[3].querySelector('button').innerText = "View";
+  document.getElementById('fullscreen-btn').innerText = t.fullscreenBtn;
+
   // Main UI
   document.querySelector('label[for="fraction-count"]').innerText = t.howMany;
   document.getElementById('calc-btn').innerText = t.calculate;
-  document.getElementById('result').innerText = t.result;
-  document.querySelector('.hint').innerText = t.hint;
+  // Do NOT overwrite the result area here!
+  // document.getElementById('result').innerText = t.result;
+  // Update hint if you have it
+  const hintEl = document.querySelector('.hint');
+  if (hintEl) hintEl.innerText = t.hint;
   document.getElementById('btn-convert-mixed').innerText = t.convertBtn;
   document.getElementById('btn-frac-to-dec').innerText = t.toDecimal;
   document.getElementById('btn-dec-to-frac').innerText = t.decToFrac;
+
+  // Checkbox label
+  document.querySelector('label[for="show-explanation-checkbox"]').innerText = t.showExplanationCheckbox;
+
+  // Modal title
+  document.querySelector('#opacity-modal .modal-content h4').innerText = t.opacity;
+
+  // Placeholders for all inputs
+  for (let i = 1; i <= 4; i++) {
+    const whole = document.getElementById('whole' + i);
+    const num = document.getElementById('num' + i);
+    const den = document.getElementById('den' + i);
+    if (whole) whole.placeholder = t.conv_whole;
+    if (num) num.placeholder = t.conv_num;
+    if (den) den.placeholder = t.conv_den;
+  }
+  // Conversion section
+  document.getElementById('conv_whole').placeholder = t.conv_whole;
+  document.getElementById('conv_num').placeholder = t.conv_num;
+  document.getElementById('conv_den').placeholder = t.conv_den;
+  // Decimal section
+  document.getElementById('dec_num').placeholder = t.dec_num;
+  document.getElementById('dec_den').placeholder = t.dec_den;
+  // Fraction section
+  document.getElementById('dec_input_fraction').placeholder = t.dec_input_fraction;
 }
 
 // --- Math utility functions ---
