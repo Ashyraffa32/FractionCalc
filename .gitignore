@@ -8,7 +8,6 @@ androidinstaller/
 *.exe
 *.AppImage
 *.deb
-*amd64.deb
 *.dmg
 *.zip
 *.tar.gz
