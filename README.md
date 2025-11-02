@@ -62,3 +62,6 @@ If you share or modify, please give proper credits 🙏.
 This project was started by two middle‑school friends who just wanted a better calculator for class ✨
 
 > Built with ❤️ by Ashyraffa and Ratu
+
+## Contributors:
+- Nararinyan
