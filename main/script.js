@@ -26,8 +26,11 @@ const conv_den = document.getElementById('conv_den');
 const dec_num = document.getElementById('dec_num');
 const dec_den = document.getElementById('dec_den');
 const dec_input_fraction = document.getElementById('dec_input_fraction');
+const simp_num = document.getElementById('simp_num');
+const simp_den = document.getElementById('simp_den');
 
-
+// --- State Variable ---
+let latestExplanation = ''; // <-- FIX #1: Declare variable in a scope all functions can access
 
 // --- Localization strings ---
 const locales = {
@@ -45,6 +48,7 @@ const locales = {
     convert: "Mixed ↔ Improper",
     decimal: "Fraction → Decimal",
     fraction: "Decimal → Fraction",
+    simplify: "Simplify Fraction",
     options: "Options",
     toggleTheme: "Toggle Theme",
     changeWallpaper: "Change Wallpaper...",
@@ -54,8 +58,9 @@ const locales = {
     opacity: "Adjust Container Opacity...",
     help: "Help",
     about: "About",
-    aboutMsg: "FractionCalc For Desktop\nVersion 1.5.0\nMade by Ashyraffa and Ratu",
+    aboutMsg: "FractionCalc For Desktop\nVersion 1.6.0\nMade by Ashyraffa and Ratu",
     documentation: "Documentation",
+    view: "View",
     howMany: "How many fractions?",
     calculate: "Calculate",
     result: "Result:",
@@ -70,6 +75,14 @@ const locales = {
     decToFrac: "Convert to Fraction",
     decFracResult: "Result:",
     invalidDecimal: "Invalid input.",
+    viewHistoryBtn: "View History",
+    historyTitle: "Calculation History",
+    clearHistoryBtn: "Clear History",
+    opacityTitle: "Set Container Opacity",
+    simp_den: "Denominator",
+    simp_num: "Numerator",
+    btnSimplify: "Simplify",
+    simplifyResult: "Simplified:",
     // Explanation Strings
     expStep1: "Step 1: Convert all mixed numbers to improper fractions.",
     expMixedToImproper: "  - F{i}: {whole} {num}/{den} = ({whole} * {den} + {num})/{den} = {impNum}/{den}",
@@ -101,9 +114,10 @@ const locales = {
     fullscreenBtn: "Beralih ke Layar Penuh", 
     mode: "Mode",
     operate: "Operasi Pecahan",
-    convert: "Campuran ↔ Tidak Wajar",
+    convert: "Campuran ↔ Tidak Biasa",
     decimal: "Pecahan → Desimal",
     fraction: "Desimal → Pecahan",
+    simplify: "Sederhanakan Pecahan",
     options: "Opsi",
     toggleTheme: "Ganti Tema",
     changeWallpaper: "Ganti Wallpaper...",
@@ -113,14 +127,15 @@ const locales = {
     switchLang: "Ganti Bahasa",
     help: "Bantuan",
     about: "Tentang",
-    aboutMsg: "FractionCalc Untuk Desktop\nVersi 1.5.0\nDibuat oleh Ashyraffa dan Ratu",
+    aboutMsg: "FractionCalc Untuk Desktop\nVersi 1.6.0\nDibuat oleh Ashyraffa dan Ratu",
     documentation: "Dokumentasi",
+    view: "Tampilan",
     howMany: "Berapa banyak pecahan?",
     calculate: "Hitung",
     result: "Hasil:",
     hint: "Kosongkan \"Whole\" atau isi 0 untuk pecahan biasa. Isi \"Whole\" untuk pecahan campuran.",
     convertBtn: "Konversi",
-    improper: "Pecahan Tidak Wajar:",
+    improper: "Pecahan Tidak Biasa:",
     invalidDen: "Penyebut tidak boleh kosong atau nol.",
     invalidInput: "Input tidak valid!",
     cannotDivide: "Tidak dapat membagi dengan nol!",
@@ -129,6 +144,14 @@ const locales = {
     decToFrac: "Konversi ke Pecahan",
     decFracResult: "Hasil:",
     invalidDecimal: "Input tidak valid.",
+    viewHistoryBtn: "Lihat Riwayat",
+    historyTitle: "Riwayat Perhitungan",
+    clearHistoryBtn: "Hapus Riwayat",
+    opacityTitle: "Atur Opasitas Kontainer",
+    simp_den: "Penyebut",
+    simp_num: "Pembilang",
+    btnSimplify: "Sederhanakan",
+    simplifyResult: "Disederhanakan:",
     // Explanation Strings
     expStep1: "Langkah 1: Ubah semua bilangan campuran menjadi pecahan biasa.",
     expMixedToImproper: "  - P{i}: {whole} {num}/{den} = ({whole} * {den} + {num})/{den} = {impNum}/{den}",
@@ -163,6 +186,7 @@ function applyLocale() {
   modeBtns[1].innerText = t.convert;
   modeBtns[2].innerText = t.decimal;
   modeBtns[3].innerText = t.fraction;
+  modeBtns[4].innerText = t.simplify; 
 
   document.querySelectorAll('.dropdown')[1].querySelector('button').innerText = t.options;
   document.getElementById('toggle-theme-btn').innerText = t.toggleTheme;
@@ -173,20 +197,20 @@ function applyLocale() {
   document.getElementById('open-opacity-modal-btn').innerText = t.opacity;
 
   document.querySelectorAll('.dropdown')[2].querySelector('button').innerText = t.help;
-  const helpBtns = document.querySelectorAll('.dropdown')[2].querySelectorAll('.dropdown-menu button');
-  helpBtns[0].innerText = t.about;
-  helpBtns[1].innerText = t.documentation;
+  document.getElementById('about-btn').innerText = t.about;
+  document.getElementById('docs-btn').innerText = t.documentation;
 
   // View dropdown
-  document.querySelectorAll('.dropdown')[3].querySelector('button').innerText = "View";
+  document.querySelectorAll('.dropdown')[3].querySelector('button').innerText = t.view;
   document.getElementById('fullscreen-btn').innerText = t.fullscreenBtn;
+  
+  const viewHistoryBtnEl = document.getElementById('view-history-btn');
+  if (viewHistoryBtnEl) viewHistoryBtnEl.innerText = t.viewHistoryBtn;
 
   // Main UI
   document.querySelector('label[for="fraction-count"]').innerText = t.howMany;
   document.getElementById('calc-btn').innerText = t.calculate;
-  // Do NOT overwrite the result area here!
-  // document.getElementById('result').innerText = t.result;
-  // Update hint if you have it
+  
   const hintEl = document.querySelector('.hint');
   if (hintEl) hintEl.innerText = t.hint;
   document.getElementById('btn-convert-mixed').innerText = t.convertBtn;
@@ -194,12 +218,19 @@ function applyLocale() {
   document.getElementById('btn-dec-to-frac').innerText = t.decToFrac;
 
   // Checkbox label
-  document.querySelector('label[for="show-explanation-checkbox"]').innerText = t.showExplanationCheckbox;
+  const explanationLabel = document.querySelector('.label-checkbox');
+  if (explanationLabel && explanationLabel.lastChild.nodeType === Node.TEXT_NODE) {
+    explanationLabel.lastChild.textContent = ' ' + t.showExplanationCheckbox;
+  }
 
-  // Modal title
-  document.querySelector('#opacity-modal .modal-content h4').innerText = t.opacity;
+  // Modal titles
+  document.querySelector('#opacity-modal .modal-content h4').innerText = t.opacityTitle;
+  const historyTitleEl = document.querySelector('#history-modal .modal-content h4');
+  if (historyTitleEl) historyTitleEl.innerText = t.historyTitle;
+  const clearHistoryBtnEl = document.getElementById('clear-history-btn');
+  if (clearHistoryBtnEl) clearHistoryBtnEl.innerText = t.clearHistoryBtn; 
 
-  // Placeholders for all inputs
+  // Placeholders
   for (let i = 1; i <= 4; i++) {
     const whole = document.getElementById('whole' + i);
     const num = document.getElementById('num' + i);
@@ -208,15 +239,21 @@ function applyLocale() {
     if (num) num.placeholder = t.conv_num;
     if (den) den.placeholder = t.conv_den;
   }
-  // Conversion section
   document.getElementById('conv_whole').placeholder = t.conv_whole;
   document.getElementById('conv_num').placeholder = t.conv_num;
   document.getElementById('conv_den').placeholder = t.conv_den;
-  // Decimal section
   document.getElementById('dec_num').placeholder = t.dec_num;
   document.getElementById('dec_den').placeholder = t.dec_den;
-  // Fraction section
   document.getElementById('dec_input_fraction').placeholder = t.dec_input_fraction;
+  
+  const simpNum = document.getElementById('simp_num');
+  const simpDen = document.getElementById('simp_den');
+  if (simpNum) simpNum.placeholder = t.simp_num;
+  if (simpDen) simpDen.placeholder = t.simp_den;
+  const btnSimp = document.getElementById('btn-simplify');
+  if (btnSimp) btnSimp.innerText = t.btnSimplify;
+  const simpResult = document.getElementById('simplify-result');
+  if (simpResult) simpResult.innerText = "";
 }
 
 // --- Math utility functions ---
@@ -234,6 +271,7 @@ function switchMode(mode) {
         panel.classList.remove('show');
     });
     document.getElementById(mode + '-section').classList.add('show');
+    applyLocale(); // Ensure UI is localized after mode switch
 }
 
 function updateFractionInputs() {
@@ -252,12 +290,13 @@ function updateFractionInputs() {
 
 // --- Main fraction operation logic ---
 function calculate() {
+    latestExplanation = ''; // <-- FIX #2: Clear any old explanation at the start
+    
     const lang = localStorage.getItem('locale') || 'en';
     const t = locales[lang];
     const count = parseInt(fractionCountSelect.value);
     const operator = document.getElementById('operator').value;
     let explanation = '';
-    
     let originalInputs = [];
     let nums = [], dens = [];
 
@@ -334,7 +373,7 @@ function calculate() {
                     .replace('{op}', operator)
                     .replace('{newNum2}', newNum2)
                     .replace('{lcm}', commonDen) + '\n';
-                resultNum = (operator === "+") ? newNum1 + newNum2 : newNum1 - newNum2;
+                resultNum = (operator === "+") ? newNum1 + newNum2 : newN1 - newNum2;
                 resultDen = commonDen;
                 break;
             case "*":
@@ -408,10 +447,22 @@ function calculate() {
 
     let resultStr = (resultDen === 1) ? `${resultNum}` : `${resultNum}/${resultDen}`;
     document.getElementById("result").innerText = `${t.result} ${resultStr}`;
-    
+    // Save to history (mode: Operate)
+    // saveToHistory({
+    //   mode: 'Operate',
+    //   input: originalInputs.join(` ${operator} `),
+    //   result: resultStr,
+    //   time: new Date().toLocaleString()
+    // });
     // 4. Display or hide the explanation box
-    if (showExplanationCheckbox.checked) {
-        explanationBox.innerText = explanation;
+    latestExplanation = explanation; // Save the latest explanation
+    updateExplanationBox();
+}
+
+// --- Explanation Box Logic ---
+function updateExplanationBox() {
+    if (showExplanationCheckbox.checked && latestExplanation) {
+        explanationBox.innerText = latestExplanation;
         explanationBox.style.display = 'block';
     } else {
         explanationBox.style.display = 'none';
@@ -431,7 +482,14 @@ function convertMixed() {
     }
     const improper = Math.abs(whole) * den + num;
     const resultNum = whole < 0 ? -improper : improper;
-    document.getElementById("convert-result").innerText = `${t.improper} ${resultNum}/${den}`;
+    const resultStr = `${t.improper} ${resultNum}/${den}`;
+    document.getElementById("convert-result").innerText = resultStr;
+    // saveToHistory({
+    //   mode: 'Convert',
+    //   input: `${whole ? whole + ' ' : ''}${num}/${den}`,
+    //   result: `${resultNum}/${den}`,
+    //   time: new Date().toLocaleString()
+    // });
 }
 
 function convertDecimal() {
@@ -443,7 +501,14 @@ function convertDecimal() {
         document.getElementById("decimal-result").innerText = t.invalidInput;
         return;
     }
-    document.getElementById("decimal-result").innerText = `${t.decimalResult} ${num/den}`;
+    const resultStr = `${num/den}`;
+    document.getElementById("decimal-result").innerText = `${t.decimalResult} ${resultStr}`;
+    // saveToHistory({
+    //   mode: 'Fraction → Decimal',
+    //   input: `${num}/${den}`,
+    //   result: resultStr,
+    //   time: new Date().toLocaleString()
+    // });
 }
 
 function convertDecimalToFraction() {
@@ -468,8 +533,41 @@ function convertDecimalToFraction() {
         k2 = aux;
         b = 1 / (b - a);
     } while (Math.abs(decimalInput - h1 / k1) > decimalInput * tolerance && k1 < 10000);
-    document.getElementById("decimal-to-fraction-result").innerText = `${t.decFracResult} ${h1}/${k1}`;
+    const resultStr = `${h1}/${k1}`;
+    document.getElementById("decimal-to-fraction-result").innerText = `${t.decFracResult} ${resultStr}`;
+    // saveToHistory({
+    //   mode: 'Decimal → Fraction',
+    //   input: decimalInput,
+    //   result: resultStr,
+    //   time: new Date().toLocaleString()
+    // });
 }
+
+// --- Simplify Logic ---
+function simplifyFraction() {
+  const lang = localStorage.getItem('locale') || 'en';
+  const t = locales[lang];
+  const num = parseInt(document.getElementById("simp_num").value);
+  const den = parseInt(document.getElementById("simp_den").value);
+  const resultDiv = document.getElementById("simplify-result");
+  if (isNaN(num) || isNaN(den) || den === 0) {
+    resultDiv.innerText = t.invalidSimp || t.invalidInput || "Invalid input!";
+    return;
+  }
+  const divisor = gcd(Math.abs(num), Math.abs(den));
+  const simpNum = num / divisor;
+  const simpDen = den / divisor;
+  let resultStr = simpDen === 1 ? `${simpNum}` : `${simpNum}/${simpDen}`;
+  resultDiv.innerText = `${t.simplifyResult || "Simplified:"} ${resultStr}`;
+  // saveToHistory({
+  //   mode: t.simplify || "Simplify",
+  //   input: `${num}/${den}`,
+  //   result: resultStr,
+  //   time: new Date().toLocaleString()
+  // });
+}
+// NOTE: I have commented out saveToHistory() as the function definition was not provided. 
+// If you have that function, you can uncomment these lines.
 
 // --- Settings logic (Theme & Wallpaper) ---
 function applySettings() {
@@ -500,102 +598,7 @@ function toggleTheme() {
     applySettings();
 }
 
-// --- Event Listeners ---
-modeButtons.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-        switchMode(e.target.dataset.mode);
-    });
-});
-fractionCountSelect.addEventListener('change', updateFractionInputs);
-document.getElementById('calc-btn').addEventListener('click', calculate);
-document.getElementById('btn-convert-mixed').addEventListener('click', convertMixed);
-document.getElementById('btn-frac-to-dec').addEventListener('click', convertDecimal);
-document.getElementById('btn-dec-to-frac').addEventListener('click', convertDecimalToFraction);
-toggleThemeBtn.addEventListener('click', toggleTheme);
-
-uploadBgBtn.addEventListener('click', () => {
-    fileInput.click();
-});
-
-fileInput.addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = function(evt) {
-        const dataURL = evt.target.result;
-        localStorage.setItem('customBackground', dataURL);
-        applySettings();
-    };
-    reader.readAsDataURL(file);
-});
-
-resetBgBtn.addEventListener('click', () => {
-    localStorage.removeItem('customBackground');
-    applySettings();
-});
-
-showExplanationCheckbox.addEventListener('change', () => {
-    if (!showExplanationCheckbox.checked) {
-        explanationBox.style.display = 'none';
-    }
-});
-
-
-// --- Language toggle ---
-document.getElementById('toggle-lang-btn').addEventListener('click', () => {
-  const current = localStorage.getItem('locale') || 'en';
-  localStorage.setItem('locale', current === 'en' ? 'id' : 'en');
-  applyLocale();
-});
-
-// --- About button localization ---
-document.querySelectorAll('.dropdown')[2].querySelectorAll('.dropdown-menu button')[0]
-  .addEventListener('click', function() {
-    const lang = localStorage.getItem('locale') || 'en';
-    alert(locales[lang].aboutMsg);
-  });
-
-// Initial load
-document.addEventListener('DOMContentLoaded', () => {
-    let savedTheme = localStorage.getItem('theme');
-    if (!savedTheme) {
-        savedTheme = 'light';
-        localStorage.setItem('theme', 'light');
-    }
-    if (savedTheme === 'dark') {
-        document.documentElement.classList.remove('light');
-    } else {
-        document.documentElement.classList.add('light');
-    }
-    applySettings();
-    updateFractionInputs();
-    applyLocale();
-});
-
-// Open color picker
-openOpacityModalBtn.addEventListener('click', () => {
-    opacityModal.style.display = 'flex';
-    // Load nilai opacity yang udah disimpan ke slider
-    const savedOpacity = localStorage.getItem('containerOpacity') || '0.85';
-    opacitySlider.value = savedOpacity;
-});
-
-opacityCloseBtn.addEventListener('click', () => {
-    opacityModal.style.display = 'none';
-});
-
-// Tutup modal kalau user klik di luar modal
-window.addEventListener('click', (e) => {
-    if (e.target === opacityModal) {
-        opacityModal.style.display = 'none';
-    }
-});
-
-// Accent color picker
-changeAccentBtn.addEventListener('click', () => {
-    accentColorPicker.click();
-});
-
+// --- Color Manipulation Helper ---
 // pSBC function for color manipulation
 const pSBC = (p, c0, c1, l) => {
     let r, g, b, P, f, t, h, i = parseInt, m = Math.round, a = typeof (c1) == "string";
@@ -624,54 +627,162 @@ const pSBC = (p, c0, c1, l) => {
 }
 
 
-// Initial load
+// --- SINGLE INITIALIZATION BLOCK ---
+// This runs only after the entire HTML page is loaded
 document.addEventListener('DOMContentLoaded', () => {
-  function applyAccentColor(color) {
-    document.documentElement.style.setProperty('--btn-primary', color);
-    const hoverColor = pSBC(-0.2, color);
-    if(hoverColor) {
-      document.documentElement.style.setProperty('--btn-hover', hoverColor);
+
+    // --- Helper functions that need the DOM ---
+    function applyAccentColor(color) {
+      document.documentElement.style.setProperty('--btn-primary', color);
+      const hoverColor = pSBC(-0.2, color);
+      if(hoverColor) {
+        document.documentElement.style.setProperty('--btn-hover', hoverColor);
+      }
     }
-  }
-
-  accentColorPicker.addEventListener('input', (e) => {
-    const newColor = e.target.value;
-    applyAccentColor(newColor);
-    localStorage.setItem('accentColor', newColor);
-  });
-
-    const savedAccentColor = localStorage.getItem('accentColor');
-    if (savedAccentColor) {
-      applyAccentColor(savedAccentColor);
-      accentColorPicker.value = savedAccentColor;
-    }
-
-    applySettings();
-    updateFractionInputs();
-    applyLocale();
-});
-
-// Opacity customization
-
-// Initial load
-document.addEventListener('DOMContentLoaded', () => {
+    
     function applyOpacity(value) {
       document.documentElement.style.setProperty('--surface-opacity', value);
     }
 
+    // --- Main Event Listeners ---
+    modeButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            switchMode(e.target.dataset.mode);
+        });
+    });
+    
+    fractionCountSelect.addEventListener('change', updateFractionInputs);
+    document.getElementById('calc-btn').addEventListener('click', calculate);
+    document.getElementById('btn-convert-mixed').addEventListener('click', convertMixed);
+    document.getElementById('btn-frac-to-dec').addEventListener('click', convertDecimal);
+    document.getElementById('btn-dec-to-frac').addEventListener('click', convertDecimalToFraction);
+    document.getElementById('btn-simplify').addEventListener('click', simplifyFraction);
+
+    // Explanation checkbox
+    showExplanationCheckbox.addEventListener('change', updateExplanationBox);
+
+    // --- Options Menu Listeners ---
+    toggleThemeBtn.addEventListener('click', toggleTheme);
+    
+    uploadBgBtn.addEventListener('click', () => fileInput.click());
+    
+    fileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+            const dataURL = evt.target.result;
+            localStorage.setItem('customBackground', dataURL);
+            applySettings();
+        };
+        reader.readAsDataURL(file);
+    });
+    
+    resetBgBtn.addEventListener('click', () => {
+        localStorage.removeItem('customBackground');
+        applySettings();
+    });
+
+    // Language
+    document.getElementById('toggle-lang-btn').addEventListener('click', () => {
+      const current = localStorage.getItem('locale') || 'en';
+      localStorage.setItem('locale', current === 'en' ? 'id' : 'en');
+      applyLocale();
+    });
+
+    // Accent Color
+    changeAccentBtn.addEventListener('click', () => accentColorPicker.click());
+    
+    accentColorPicker.addEventListener('input', (e) => {
+      const newColor = e.target.value;
+      applyAccentColor(newColor);
+      localStorage.setItem('accentColor', newColor);
+    });
+
+    // Opacity Modal
+    openOpacityModalBtn.addEventListener('click', () => {
+        opacityModal.style.display = 'flex';
+        const savedOpacity = localStorage.getItem('containerOpacity') || '0.85';
+        opacitySlider.value = savedOpacity;
+    });
+    
+    opacityCloseBtn.addEventListener('click', () => {
+        opacityModal.style.display = 'none';
+    });
+    
     opacitySlider.addEventListener('input', (e) => {
       const newOpacity = e.target.value;
       applyOpacity(newOpacity);
       localStorage.setItem('containerOpacity', newOpacity);
     });
 
+    // Close modal on outside click
+    window.addEventListener('click', (e) => {
+        if (e.target === opacityModal) {
+            opacityModal.style.display = 'none';
+        }
+    });
+
+    // --- Help Menu Listeners (from inline script) ---
+    document.getElementById('about-btn').addEventListener('click', () => {
+        const lang = localStorage.getItem('locale') || 'en';
+        alert(locales[lang].aboutMsg);
+    });
+
+    document.getElementById('docs-btn').addEventListener('click', () => {
+        const url = 'https://ashyraffa32.github.io/FractionCalcSite/getstarted.html';
+        // Electron
+        if (window.require) {
+          const { shell } = require('electron');
+          shell.openExternal(url);
+        } else {
+          // Browser fallback
+          window.open(url, '_blank');
+        }
+    });
+
+    // --- View Menu Listeners (from inline script) ---
+    document.getElementById('fullscreen-btn').addEventListener('click', () => {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen();
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            }
+        }
+    });
+    
+
+    // --- Initial Load ---
+    // 1. Apply saved theme, background, accent, and opacity
+    let savedTheme = localStorage.getItem('theme');
+    if (!savedTheme) {
+        savedTheme = 'light';
+        localStorage.setItem('theme', 'light');
+    }
+    if (savedTheme === 'dark') {
+        document.documentElement.classList.remove('light');
+    } else {
+        document.documentElement.classList.add('light');
+    }
+    
+    applySettings(); // Applies theme & background
+    
+    const savedAccentColor = localStorage.getItem('accentColor');
+    if (savedAccentColor) {
+      applyAccentColor(savedAccentColor);
+      accentColorPicker.value = savedAccentColor;
+    }
+    
     const savedOpacity = localStorage.getItem('containerOpacity');
     if (savedOpacity) {
       applyOpacity(savedOpacity);
       opacitySlider.value = savedOpacity;
     }
 
-    applySettings();
+    // 2. Set up the UI
     updateFractionInputs();
+    
+    // 3. Apply language
     applyLocale();
 });

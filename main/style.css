@@ -32,6 +32,9 @@
 .btn:hover {
   background: var(--accent-hover-color);
 }
+.fraction-count {
+  color: var(--text);
+}
 
 body {
   background: var(--background);
@@ -314,5 +317,33 @@ body.has-custom-bg {
 /* Fixes the bug where hidden elements are still shown */
 [hidden] {
   display: none !important;
+}
+
+#history-list {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  font-size: 1em;
+  color: var(--text);
+  padding: 0;
+  margin: 0;
+}
+
+.history-entry {
+  border-bottom: 1px solid var(--border);
+  padding: 8px 0;
+  word-break: break-word;
+}
+
+.history-entry:last-child {
+  border-bottom: none;
+}
+
+#clear-history-btn {
+  background: #e74c3c;
+  color: #fff;
+  margin-left: 0;
+}
+
+#clear-history-btn:hover {
+  background: #c0392b;
 }
 

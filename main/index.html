@@ -15,6 +15,7 @@
           <button data-mode="convert">Mixed ↔ Improper</button>
           <button data-mode="decimal">Fraction → Decimal</button>
           <button data-mode="fraction">Decimal → Fraction</button>
+          <button data-mode="simplify">Simplify Fraction</button>
         </div>
       </div>
       <div class="dropdown">
@@ -33,9 +34,7 @@
       <div class="dropdown">
         <button>Help</button>
         <div class="dropdown-menu">
-          <button onclick="alert('FractionCalc For Desktop\nVersion 1.5.0\nMade by Ashyraffa and Ratu')">About</button>
-          <button>Documentation</button>
-        </div>
+          <button id="about-btn">About</button> <button id="docs-btn">Documentation</button> </div>
       </div>
       <div class="dropdown">
         <button>View</button>
@@ -125,6 +124,16 @@
           <div id="decimal-to-fraction-result"></div>
         </div>
 
+        <div id="simplify-section" class="panel">
+          <div class="fraction">
+            <input type="number" id="simp_num" placeholder="Numerator" class="input">
+            <span class="sep">/</span>
+            <input type="number" id="simp_den" placeholder="Denominator" class="input">
+          </div>
+          <button id="btn-simplify" class="btn">Simplify</button>
+          <div id="simplify-result"></div>
+        </div>
+
         <div id="opacity-modal" class="modal" style="display: none;">
             <div class="modal-content">
                 <span class="close" id="opacity-close-btn">&times;</span>
@@ -132,37 +141,17 @@
                 <input type="range" id="opacity-slider" min="0" max="1" step="0.05">
             </div>
         </div>
+
+        <div id="history-modal" class="modal" style="display:none;">
+          <div class="modal-content" style="min-width:340px;max-width:95vw;">
+            <span class="close" id="history-close-btn">&times;</span>
+            <h4>Calculation History</h4>
+            <div id="history-list" style="max-height:350px;overflow-y:auto;margin-top:18px;text-align:left;"></div>
+            <button id="clear-history-btn" class="btn" style="margin-top:18px;">Clear History</button>
+          </div>
+        </div>
     </div>
     
     <script src="script.js"></script>
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Find the Documentation button in Help dropdown
-      const helpDropdown = document.querySelectorAll('.dropdown')[2];
-      if (helpDropdown) {
-        const docBtn = helpDropdown.querySelectorAll('.dropdown-menu button')[1];
-        if (docBtn) {
-          docBtn.addEventListener('click', function() {
-            // Electron
-            if (window.require) {
-              const { shell } = require('electron');
-              shell.openExternal('https://ashyraffa.github.io/FractionCalcSite/getstarted.html');
-            } else {
-              // Browser fallback
-              window.open('https://ashyraffa.github.io/FractionCalcSite/getstarted.html', '_blank');
-            }
-          });
-        }
-      }
-    });
-    </script>
-    <script>
-        const button = document.getElementById('fullscreen-btn');
-        button.addEventListener('click', () => {
-          if (document.documentElement.requestFullscreen) {
-            document.documentElement.requestFullscreen(); // Makes the whole page fullscreen
-          }
-        });
-    </script>
 </body>
 </html>
