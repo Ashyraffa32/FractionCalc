@@ -64,4 +64,4 @@ This project was started by two middle‑school friends who just wanted a better
 > Built with ❤️ by Ashyraffa and Ratu
 
 ## Contributors:
-- Nararinyan
+- ![Nararinyan](https://github.com/Nararinyan)
