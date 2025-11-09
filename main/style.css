@@ -8,9 +8,11 @@
   --input-bg: #f9fafb;
   --accent-color: var(--btn-primary);
   --accent-hover-color: var(--btn-hover);
-  --surface-opacity: 0.85;
+  /* --surface-opacity: 0.85;  <-- This is no longer needed */
   --surface-color-rgb: 255, 255, 255;
+  --container-opacity: 1; /* This is the default, controlled by JS */
 }
+
 
 :root.dark-mode {
   --background: #121212;
@@ -22,8 +24,9 @@
   --input-bg: #1f1f1f;
   --accent-color: var(--btn-primary);
   --accent-hover-color: var(--btn-hover);
-  --surface-opacity: 0.85;
+  /* --surface-opacity: 0.85; <-- This is no longer needed */
   --surface-color-rgb: 45, 45, 45;
+  --container-opacity: 1; /* This is the default, controlled by JS */
 }
 
 .btn, .fraction input[type="number"]:focus, select#operator:focus {
@@ -125,17 +128,24 @@ input:hover {
   box-shadow: 0 4px 24px rgba(0,0,0,0.10);
   text-align: center;
   box-sizing: border-box;
-  background: rgba(var(--surface-color-rgb), var(--surface-opacity));
+  /*
+    ======================================
+    FIX #1: 
+    Changed 'background' to 'background-color'
+    Changed 'var(--surface-opacity)' to 'var(--container-opacity)'
+    This makes the container respond to the slider in BOTH modes.
+    ======================================
+  */
+  background-color: rgba(var(--surface-color-rgb), var(--container-opacity));
   backdrop-filter: blur(30px);
+  transition: background-color 0.3s ease;
+  backdrop-filter: blur(8px); 
+  -webkit-backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(30px);
   transition: all 0.3s ease;
   max-width: 900px;
   margin: 90px auto 20px auto;
   min-height: 400px;
-}
-
-:root.dark-mode .container {
-  background: rgba(var(--surface-color-rgb), var(--surface-opacity));
 }
 
 /* New section for desktop layout */
@@ -147,6 +157,22 @@ input:hover {
     align-items: center;
   }
 }
+
+/*
+  ======================================
+  FIX #2:
+  This entire rule was redundant and caused the bug.
+  The main .container rule above now handles this.
+  I have deleted it.
+  ======================================
+*/
+/*
+:root.dark-mode .container {
+  background: rgba(var(--surface-color-rgb), var(--surface-opacity));
+  background-color: rgba(var(--surface-color-rgb), var(--container-opacity));
+}
+*/
+
 
 .panel {
     display: none;
@@ -298,14 +324,24 @@ body.has-custom-bg {
 }
 
 .container.has-custom-bg {
-  background-color: rgba(255, 255, 255, 0.85);
+  background-color: rgba(var(--surface-color-rgb), var(--container-opacity));
   backdrop-filter: blur(30px);
   -webkit-backdrop-filter: blur(30px);
 }
 
+/*
+  ======================================
+  FIX #3:
+  This rule was overriding the correct opacity setting
+  when a custom background was enabled in dark mode.
+  It is now deleted.
+  ======================================
+*/
+/*
 :root.dark-mode .container.has-custom-bg {
   background-color: rgba(45, 45, 45, 0.85);
 }
+*/
 
 .hint {
     color: var(--text);
@@ -346,4 +382,3 @@ body.has-custom-bg {
 #clear-history-btn:hover {
   background: #c0392b;
 }
-

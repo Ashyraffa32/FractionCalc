@@ -2,11 +2,6 @@
 const ribbon = document.querySelector('.ribbon');
 const modeButtons = document.querySelectorAll('.dropdown-menu button[data-mode]');
 const panels = document.querySelectorAll('.panel');
-const aboutOpenBtn = document.getElementById('about-open-btn');
-const aboutCloseBtn = document.getElementById('about-close-btn');
-const aboutModal = document.getElementById('about-modal');
-const openDocsBtn = document.getElementById('open-docs-btn');
-const fractionCountSelect = document.getElementById('fraction-count');
 const toggleThemeBtn = document.getElementById('toggle-theme-btn');
 const uploadBgBtn = document.getElementById('upload-bg-btn');
 const fileInput = document.getElementById('bg-upload');
@@ -14,734 +9,825 @@ const resetBgBtn = document.getElementById('reset-bg-btn');
 const accentColorPicker = document.getElementById('accent-color-picker');
 const changeAccentBtn = document.getElementById('change-accent-btn');
 const opacitySlider = document.getElementById('opacity-slider');
-const openOpacityModalBtn = document.getElementById('open-opacity-modal-btn');
-const opacityModal = document.getElementById('opacity-modal');
-const opacityCloseBtn = document.getElementById('opacity-close-btn');
+const toggleLangBtn = document.getElementById('toggle-lang-btn');
+const calcBtn = document.getElementById('calc-btn');
+const convertBtn = document.getElementById('btn-convert-mixed'); // Tombol Convert
+const toggleConvertMode = document.getElementById('toggle-convert-mode');
 const showExplanationCheckbox = document.getElementById('show-explanation-checkbox');
 const explanationBox = document.getElementById('explanation-box');
-const fullscreenBtn = document.getElementById('fullscreen-btn');
-const conv_whole = document.getElementById('conv_whole');
-const conv_num = document.getElementById('conv_num');
-const conv_den = document.getElementById('conv_den');
-const dec_num = document.getElementById('dec_num');
-const dec_den = document.getElementById('dec_den');
-const dec_input_fraction = document.getElementById('dec_input_fraction');
-const simp_num = document.getElementById('simp_num');
-const simp_den = document.getElementById('simp_den');
 
-// --- State Variable ---
-let latestExplanation = ''; // <-- FIX #1: Declare variable in a scope all functions can access
 
-// --- Localization strings ---
+// === Localization Data ===
 const locales = {
-  en: {
-    conv_whole: "Whole",
-    conv_num: "Numerator",
-    conv_den: "Denominator",
-    dec_input_fraction: "Enter a decimal...",
-    dec_num: "Numerator",
-    dec_den: "Denominator", 
-    showExplanationCheckbox: "Show Explanation",
-    fullscreenBtn: "Toggle Fullscreen",
-    mode: "Mode",
-    operate: "Operate Fractions",
-    convert: "Mixed ↔ Improper",
-    decimal: "Fraction → Decimal",
-    fraction: "Decimal → Fraction",
-    simplify: "Simplify Fraction",
-    options: "Options",
-    toggleTheme: "Toggle Theme",
-    changeWallpaper: "Change Wallpaper...",
-    resetWallpaper: "Reset to Default",
-    switchLang: "Switch Language",
-    accentColor: "Change Accent Color...",
-    opacity: "Adjust Container Opacity...",
-    help: "Help",
-    about: "About",
-    aboutMsg: "FractionCalc For Desktop\nVersion 1.6.0\nMade by Ashyraffa and Ratu",
-    documentation: "Documentation",
-    view: "View",
-    howMany: "How many fractions?",
-    calculate: "Calculate",
-    result: "Result:",
-    hint: "Leave \"Whole\" empty or 0 for proper fractions. Fill \"Whole\" for mixed numbers.",
-    convertBtn: "Convert",
-    improper: "Improper Fraction:",
-    invalidDen: "Denominator must not be empty or zero.",
-    invalidInput: "Invalid input!",
-    cannotDivide: "Cannot divide by zero!",
-    toDecimal: "To Decimal",
-    decimalResult: "Decimal:",
-    decToFrac: "Convert to Fraction",
-    decFracResult: "Result:",
-    invalidDecimal: "Invalid input.",
-    viewHistoryBtn: "View History",
-    historyTitle: "Calculation History",
-    clearHistoryBtn: "Clear History",
-    opacityTitle: "Set Container Opacity",
-    simp_den: "Denominator",
-    simp_num: "Numerator",
-    btnSimplify: "Simplify",
-    simplifyResult: "Simplified:",
-    // Explanation Strings
-    expStep1: "Step 1: Convert all mixed numbers to improper fractions.",
-    expMixedToImproper: "  - F{i}: {whole} {num}/{den} = ({whole} * {den} + {num})/{den} = {impNum}/{den}",
-    expIsProper: "  - F{i}: {num}/{den} is a proper fraction.",
-    expStep2: "Step 2: Perform the operation: {expression}",
-    expCalcStep: "\nCalculation {i}: ({num1}/{den1}) {op} ({num2}/{den2})",
-    expFindLCM: "  - Find a common denominator (LCM of {den1} and {den2}): {lcm}",
-    expAdjustFractions: "  - Adjust fractions: ({num1}/{den1}) = ({newNum1}/{lcm}), ({num2}/{den2}) = ({newNum2}/{lcm})",
-    expPerformOp: "  - Perform operation: ({newNum1} {op} {newNum2}) / {lcm}",
-    expMultiplyNumerators: "  - Multiply numerators: {num1} * {num2} = {resNum}",
-    expMultiplyDenominators: "  - Multiply denominators: {den1} * {den2} = {resDen}",
-    expInvertAndMultiply: "  - Invert the second fraction and multiply: ({num1}/{den1}) * ({den2}/{num2})",
-    expIntermediateResult: "  - Intermediate Result: {num}/{den}",
-    expStep3: "Step 3: Simplify the final fraction: {num}/{den}",
-    expFindGCD: "  - Find the Greatest Common Divisor (GCD) of {num} and {den}: {gcd}",
-    expDivideByGCD: "  - Divide both numerator and denominator by the GCD:",
-    expDivideNumerator: "  - {num} / {gcd} = {resNum}",
-    expDivideDenominator: "  - {den} / {gcd} = {resDen}",
-    expSimplestForm: "  - The fraction is already in its simplest form."
-  },
-  id: {
-    conv_whole: "Bilangan Utuh",
-    conv_num: "Pembilang",
-    conv_den: "Penyebut",
-    dec_input_fraction: "Masukkan desimal...",
-    dec_num: "Pembilang",
-    dec_den: "Penyebut",
-    showExplanationCheckbox: "Penjelasan/Cara",
-    fullscreenBtn: "Beralih ke Layar Penuh", 
-    mode: "Mode",
-    operate: "Operasi Pecahan",
-    convert: "Campuran ↔ Tidak Biasa",
-    decimal: "Pecahan → Desimal",
-    fraction: "Desimal → Pecahan",
-    simplify: "Sederhanakan Pecahan",
-    options: "Opsi",
-    toggleTheme: "Ganti Tema",
-    changeWallpaper: "Ganti Wallpaper...",
-    resetWallpaper: "Kembali ke Default",
-    accentColor: "Ganti Warna Aksen...",
-    opacity: "Sesuaikan Opasitas Kontainer...",
-    switchLang: "Ganti Bahasa",
-    help: "Bantuan",
-    about: "Tentang",
-    aboutMsg: "FractionCalc Untuk Desktop\nVersi 1.6.0\nDibuat oleh Ashyraffa dan Ratu",
-    documentation: "Dokumentasi",
-    view: "Tampilan",
-    howMany: "Berapa banyak pecahan?",
-    calculate: "Hitung",
-    result: "Hasil:",
-    hint: "Kosongkan \"Whole\" atau isi 0 untuk pecahan biasa. Isi \"Whole\" untuk pecahan campuran.",
-    convertBtn: "Konversi",
-    improper: "Pecahan Tidak Biasa:",
-    invalidDen: "Penyebut tidak boleh kosong atau nol.",
-    invalidInput: "Input tidak valid!",
-    cannotDivide: "Tidak dapat membagi dengan nol!",
-    toDecimal: "Ke Desimal",
-    decimalResult: "Desimal:",
-    decToFrac: "Konversi ke Pecahan",
-    decFracResult: "Hasil:",
-    invalidDecimal: "Input tidak valid.",
-    viewHistoryBtn: "Lihat Riwayat",
-    historyTitle: "Riwayat Perhitungan",
-    clearHistoryBtn: "Hapus Riwayat",
-    opacityTitle: "Atur Opasitas Kontainer",
-    simp_den: "Penyebut",
-    simp_num: "Pembilang",
-    btnSimplify: "Sederhanakan",
-    simplifyResult: "Disederhanakan:",
-    // Explanation Strings
-    expStep1: "Langkah 1: Ubah semua bilangan campuran menjadi pecahan biasa.",
-    expMixedToImproper: "  - P{i}: {whole} {num}/{den} = ({whole} * {den} + {num})/{den} = {impNum}/{den}",
-    expIsProper: "  - P{i}: {num}/{den} sudah merupakan pecahan biasa.",
-    expStep2: "Langkah 2: Lakukan operasi: {expression}",
-    expCalcStep: "\nPerhitungan {i}: ({num1}/{den1}) {op} ({num2}/{den2})",
-    expFindLCM: "  - Cari penyebut yang sama (KPK dari {den1} dan {den2}): {lcm}",
-    expAdjustFractions: "  - Sesuaikan pecahan: ({num1}/{den1}) = ({newNum1}/{lcm}), ({num2}/{den2}) = ({newNum2}/{lcm})",
-    expPerformOp: "  - Lakukan operasi: ({newNum1} {op} {newNum2}) / {lcm}",
-    expMultiplyNumerators: "  - Kalikan pembilang: {num1} * {num2} = {resNum}",
-    expMultiplyDenominators: "  - Kalikan penyebut: {den1} * {den2} = {resDen}",
-    expInvertAndMultiply: "  - Balikkan pecahan kedua dan kalikan: ({num1}/{den1}) * ({den2}/{num2})",
-    expIntermediateResult: "  - Hasil Sementara: {num}/{den}",
-    expStep3: "Langkah 3: Sederhanakan pecahan akhir: {num}/{den}",
-    expFindGCD: "  - Cari Pembagi Persekutuan Terbesar (FPB) dari {num} dan {den}: {gcd}",
-    expDivideByGCD: "  - Bagi pembilang dan penyebut dengan FPB:",
-    expDivideNumerator: "  - {num} / {gcd} = {resNum}",
-    expDivideDenominator: "  - {den} / {gcd} = {resDen}",
-    expSimplestForm: "  - Pecahan sudah dalam bentuk paling sederhana."
-  }
+    en: {
+        // Ribbon
+        mode: "Mode",
+        operate: "Operate Fractions",
+        convert: "Mixed ↔ Improper",
+        decimal: "Fraction → Decimal",
+        fraction: "Decimal → Fraction",
+        simplify: "Simplify Fraction",
+        options: "Options",
+        toggleTheme: "Toggle Theme",
+        changeWallpaper: "Change Wallpaper...",
+        resetWallpaper: "Reset to Default",
+        accentColor: "Change Accent Color...",
+        opacity: "Adjust Element Opacity...",
+        toggleLangBtn: "Switch Language",
+        help: "Help",
+        about: "About",
+        documentation: "Documentation",
+        view: "View",
+        fullscreen: "Toggle Full Screen",
+        
+        // Operate Panel
+        howMany: "How many fractions?",
+        calculate: "Calculate",
+        showExplanationCheckbox: "Show Explanation",
+        
+        // Convert Panel
+        convertToggleLabel: "Convert Improper ↔ Mixed",
+        convertBtn: "Convert",
+        
+        // Decimal Panel
+        toDecimal: "To Decimal",
+        
+        // Fraction Panel
+        toFraction: "Convert to Fraction",
+        
+        // Simplify Panel
+        simplifyBtn: "Simplify",
+        
+        // Modals
+        opacityTitle: "Set Container Opacity",
+        historyTitle: "Calculation History",
+        clearHistory: "Clear History",
+        
+        // Placeholders
+        whole: "Whole",
+        numerator: "Numerator",
+        denominator: "Denominator",
+        enterDecimal: "Enter a decimal...",
+
+        // Results & Errors
+        invalidInput: "Invalid input. Check denominators (must be non-zero).",
+        invalidDecimal: "Invalid decimal input.",
+        decFracResult: "Fraction:",
+        simplifyResult: "Simplified:",
+        language: "Language",
+        aboutMsg: "FractionCalc (1.6.0) - Made by Ashyraffa and Ratu",
+        mixedToImproper: "Improper Fraction:",
+        improperToMixed: "Mixed Number:",
+        result: "Result:",
+        explanation: "Explanation:",
+        emptyHistory: "No history yet.",
+        history: "History",
+
+        // === ADDED: Explanation Strings ===
+        expStep1: "Step 1: Convert all fractions to improper fractions.",
+        expFraction: "  - Fraction {i} ({original}) = {improper}",
+        expStep2: "Step 2: Find a common denominator (LCD is {lcd}).",
+        expAdjust: "  - {num}/{den} becomes {scaledNum}/{lcd}",
+        expStep3: "Step 3: Perform operation:",
+        expOperation: "  - {expression} = {finalNum}/{lcd}",
+        expStep3Multiply: "Step 3: Perform multiplication:",
+        expStep3Divide: "Step 3: Perform division:",
+        expOpMultiply: "  - {expression}",
+        expOpDivide: "  - {expression}",
+        expUnsimplified: "\nUnsimplified Result: {num}/{den}",
+        expStep4: "Step 4: Simplify and convert to mixed number.",
+        expSimplified: "  - Simplified: {num}/{den}",
+        expFinalMixed: "  - Final Result: {result}",
+    },
+    id: {
+        // Ribbon
+        mode: "Mode",
+        operate: "Operasi Pecahan",
+        convert: "Campuran ↔ Biasa",
+        decimal: "Pecahan → Desimal",
+        fraction: "Desimal → Pecahan",
+        simplify: "Sederhanakan Pecahan",
+        options: "Opsi",
+        toggleTheme: "Ganti Tema",
+        changeWallpaper: "Ganti Wallpaper...",
+        resetWallpaper: "Reset Wallpaper",
+        accentColor: "Ganti Warna Aksen...",
+        opacity: "Atur Opasitas Elemen...",
+        toggleLangBtn: "Ganti Bahasa",
+        help: "Bantuan",
+        about: "Tentang",
+        documentation: "Dokumentasi",
+        view: "Tampilan",
+        fullscreen: "Toggle Layar Penuh",
+
+        // Operate Panel
+        howMany: "Berapa banyak pecahan?",
+        calculate: "Hitung",
+        showExplanationCheckbox: "Tampilkan Penjelasan",
+
+        // Convert Panel
+        convertToggleLabel: "Ubah Biasa ↔ Campuran",
+        convertBtn: "Ubah",
+
+        // Decimal Panel
+        toDecimal: "Ke Desimal",
+
+        // Fraction Panel
+        toFraction: "Ubah ke Pecahan",
+
+        // Simplify Panel
+        simplifyBtn: "Sederhanakan",
+        
+        // Modals
+        opacityTitle: "Atur Opasitas Kontainer",
+        historyTitle: "Riwayat Perhitungan",
+        clearHistory: "Bersihkan Riwayat",
+
+        // Placeholders
+        whole: "Utuh",
+        numerator: "Pembilang",
+        denominator: "Penyebut",
+        enterDecimal: "Masukkan desimal...",
+        
+        // Results & Errors
+        invalidInput: "Input tidak valid. Periksa penyebut (tidak boleh nol).",
+        invalidDecimal: "Input desimal tidak valid.",
+        decFracResult: "Pecahan:",
+        simplifyResult: "Disederhanakan:",
+        language: "Bahasa",
+        aboutMsg: "FractionCalc (1.6.0) - Dibuat oleh Ashyraffa dan Ratu",
+        mixedToImproper: "Pecahan Biasa:",
+        improperToMixed: "Pecahan Campuran:",
+        result: "Hasil:",
+        explanation: "Penjelasan:",
+        emptyHistory: "Belum ada riwayat.",
+        history: "Riwayat",
+        
+        // === ADDED: Explanation Strings (Indonesian) ===
+        expStep1: "Langkah 1: Ubah semua pecahan menjadi pecahan biasa.",
+        expFraction: "  - Pecahan {i} ({original}) = {improper}",
+        expStep2: "Langkah 2: Cari penyebut yang sama (KPK adalah {lcd}).",
+        expAdjust: "  - {num}/{den} menjadi {scaledNum}/{lcd}",
+        expStep3: "Langkah 3: Lakukan operasi:",
+        expOperation: "  - {expression} = {finalNum}/{lcd}",
+        expStep3Multiply: "Langkah 3: Lakukan perkalian:",
+        expStep3Divide: "Langkah 3: Lakukan pembagian:",
+        expOpMultiply: "  - {expression}",
+        expOpDivide: "  - {expression}",
+        expUnsimplified: "\nHasil Belum Disederhanakan: {num}/{den}",
+        expStep4: "Langkah 4: Sederhanakan dan ubah ke pecahan campuran.",
+        expSimplified: "  - Disederhanakan: {num}/{den}",
+        expFinalMixed: "  - Hasil Akhir: {result}",
+    }
 };
 
-// --- Localization UI update ---
-function applyLocale() {
-  const lang = localStorage.getItem('locale') || 'en';
-  const t = locales[lang];
+// --- Helper Functions ---
 
-  // Ribbon
-  document.querySelectorAll('.dropdown')[0].querySelector('button').innerText = t.mode;
-  const modeBtns = document.querySelectorAll('.dropdown-menu button[data-mode]');
-  modeBtns[0].innerText = t.operate;
-  modeBtns[1].innerText = t.convert;
-  modeBtns[2].innerText = t.decimal;
-  modeBtns[3].innerText = t.fraction;
-  modeBtns[4].innerText = t.simplify; 
-
-  document.querySelectorAll('.dropdown')[1].querySelector('button').innerText = t.options;
-  document.getElementById('toggle-theme-btn').innerText = t.toggleTheme;
-  document.getElementById('upload-bg-btn').innerText = t.changeWallpaper;
-  document.getElementById('reset-bg-btn').innerText = t.resetWallpaper;
-  document.getElementById('toggle-lang-btn').innerText = t.switchLang;
-  document.getElementById('change-accent-btn').innerText = t.accentColor;
-  document.getElementById('open-opacity-modal-btn').innerText = t.opacity;
-
-  document.querySelectorAll('.dropdown')[2].querySelector('button').innerText = t.help;
-  document.getElementById('about-btn').innerText = t.about;
-  document.getElementById('docs-btn').innerText = t.documentation;
-
-  // View dropdown
-  document.querySelectorAll('.dropdown')[3].querySelector('button').innerText = t.view;
-  document.getElementById('fullscreen-btn').innerText = t.fullscreenBtn;
-  
-  const viewHistoryBtnEl = document.getElementById('view-history-btn');
-  if (viewHistoryBtnEl) viewHistoryBtnEl.innerText = t.viewHistoryBtn;
-
-  // Main UI
-  document.querySelector('label[for="fraction-count"]').innerText = t.howMany;
-  document.getElementById('calc-btn').innerText = t.calculate;
-  
-  const hintEl = document.querySelector('.hint');
-  if (hintEl) hintEl.innerText = t.hint;
-  document.getElementById('btn-convert-mixed').innerText = t.convertBtn;
-  document.getElementById('btn-frac-to-dec').innerText = t.toDecimal;
-  document.getElementById('btn-dec-to-frac').innerText = t.decToFrac;
-
-  // Checkbox label
-  const explanationLabel = document.querySelector('.label-checkbox');
-  if (explanationLabel && explanationLabel.lastChild.nodeType === Node.TEXT_NODE) {
-    explanationLabel.lastChild.textContent = ' ' + t.showExplanationCheckbox;
-  }
-
-  // Modal titles
-  document.querySelector('#opacity-modal .modal-content h4').innerText = t.opacityTitle;
-  const historyTitleEl = document.querySelector('#history-modal .modal-content h4');
-  if (historyTitleEl) historyTitleEl.innerText = t.historyTitle;
-  const clearHistoryBtnEl = document.getElementById('clear-history-btn');
-  if (clearHistoryBtnEl) clearHistoryBtnEl.innerText = t.clearHistoryBtn; 
-
-  // Placeholders
-  for (let i = 1; i <= 4; i++) {
-    const whole = document.getElementById('whole' + i);
-    const num = document.getElementById('num' + i);
-    const den = document.getElementById('den' + i);
-    if (whole) whole.placeholder = t.conv_whole;
-    if (num) num.placeholder = t.conv_num;
-    if (den) den.placeholder = t.conv_den;
-  }
-  document.getElementById('conv_whole').placeholder = t.conv_whole;
-  document.getElementById('conv_num').placeholder = t.conv_num;
-  document.getElementById('conv_den').placeholder = t.conv_den;
-  document.getElementById('dec_num').placeholder = t.dec_num;
-  document.getElementById('dec_den').placeholder = t.dec_den;
-  document.getElementById('dec_input_fraction').placeholder = t.dec_input_fraction;
-  
-  const simpNum = document.getElementById('simp_num');
-  const simpDen = document.getElementById('simp_den');
-  if (simpNum) simpNum.placeholder = t.simp_num;
-  if (simpDen) simpDen.placeholder = t.simp_den;
-  const btnSimp = document.getElementById('btn-simplify');
-  if (btnSimp) btnSimp.innerText = t.btnSimplify;
-  const simpResult = document.getElementById('simplify-result');
-  if (simpResult) simpResult.innerText = "";
-}
-
-// --- Math utility functions ---
+// Greatest Common Divisor
 function gcd(a, b) {
     return b === 0 ? a : gcd(b, a % b);
 }
 
+// Least Common Multiple
 function lcm(a, b) {
-    return (Math.abs(a * b)) / gcd(a, b);
+    if (a === 0 || b === 0) return 0;
+    return Math.abs(a * b) / gcd(Math.abs(a), Math.abs(b));
 }
 
-// --- UI functions ---
-function switchMode(mode) {
-    panels.forEach(panel => {
-        panel.classList.remove('show');
-    });
-    document.getElementById(mode + '-section').classList.add('show');
-    applyLocale(); // Ensure UI is localized after mode switch
-}
+// Simplify a Fraction
+function simplify(num, den) {
+    const divisor = gcd(Math.abs(num), Math.abs(den));
+    let simpNum = num / divisor;
+    let simpDen = den / divisor;
 
-function updateFractionInputs() {
-    const count = parseInt(fractionCountSelect.value);
-    for (let i = 1; i <= 4; i++) {
-        const fracEl = document.getElementById('fraction' + i);
-        if (fracEl) {
-            if (i > count) {
-                fracEl.setAttribute('hidden', '');
-            } else {
-                fracEl.removeAttribute('hidden');
-            }
-        }
+    // Pastikan tanda negatif hanya ada di pembilang jika ada
+    if (simpDen < 0) {
+        simpNum = -simpNum;
+        simpDen = -simpDen;
     }
+    return { num: simpNum, den: simpDen };
 }
 
-// --- Main fraction operation logic ---
-function calculate() {
-    latestExplanation = ''; // <-- FIX #2: Clear any old explanation at the start
+// Convert Mixed to Improper
+function convertMixedToImproper(whole, num, den) {
+    if (den === 0) return null;
+    let newNum = whole * den + num;
+    // Perhatikan tanda negatif pada bilangan bulat
+    if (whole < 0 && num > 0) {
+        newNum = whole * den - num;
+    } else if (whole > 0 && num < 0) {
+        newNum = whole * den + num;
+    }
+    // Handle kasus whole negatif
+    if (whole < 0) {
+        newNum = whole * den - Math.abs(num);
+    } else {
+         newNum = whole * den + num;
+    }
+    return simplify(newNum, den);
+}
+
+// Convert Improper to Mixed
+function convertImproperToMixed(num, den) {
+    if (den === 0) return null;
+    const sign = num < 0 ? -1 : 1;
+    const absNum = Math.abs(num);
+    const absDen = Math.abs(den);
     
+    let whole = Math.floor(absNum / absDen) * sign;
+    let newNum = absNum % absDen;
+    let newDen = absDen;
+
+    // Sederhanakan pecahan sisanya
+    const simplifiedRemainder = simplify(newNum, newDen);
+    newNum = simplifiedRemainder.num;
+    newDen = simplifiedRemainder.den;
+    
+    return { whole: whole, num: newNum, den: newDen };
+}
+
+// Format Fraction for display
+function formatFraction({ whole, num, den }) {
+    if (den === 0) return "Undefined";
+    if (num === 0) return whole.toString();
+    if (whole === 0) return `${num}/${den}`;
+    return `${whole} ${num}/${den}`;
+}
+
+// --- Core Conversion & Operation Functions ---
+
+function simplifyFraction() {
     const lang = localStorage.getItem('locale') || 'en';
     const t = locales[lang];
-    const count = parseInt(fractionCountSelect.value);
-    const operator = document.getElementById('operator').value;
-    let explanation = '';
-    let originalInputs = [];
-    let nums = [], dens = [];
+    const num = parseInt(document.getElementById("simp_num").value);
+    const den = parseInt(document.getElementById("simp_den").value);
+    const resultEl = document.getElementById("simplify-result");
 
-    // 1. Get and validate inputs, convert mixed to improper
-    explanation += t.expStep1 + '\n';
-    for (let i = 1; i <= count; i++) {
-        const whole = parseInt(document.getElementById('whole' + i).value) || 0;
-        const num = parseInt(document.getElementById('num' + i).value) || 0;
-        const den = parseInt(document.getElementById('den' + i).value);
-
-        originalInputs.push(`${whole ? whole + ' ' : ''}${num}/${den}`);
-
-        if (isNaN(den) || den === 0) {
-            document.getElementById("result").innerText = t.invalidDen;
-            explanationBox.style.display = 'none';
-            return;
-        }
-
-        const impNum = Math.abs(whole) * den + num;
-        nums.push(whole < 0 ? -impNum : impNum);
-        dens.push(den);
-        
-        if (whole !== 0) {
-            explanation += t.expMixedToImproper
-                .replace('{i}', i)
-                .replace(/{whole}/g, whole)
-                .replace('{num}', num)
-                .replace(/{den}/g, den)
-                .replace('{impNum}', nums[i-1]) + '\n';
-        } else {
-            explanation += t.expIsProper
-                .replace('{i}', i)
-                .replace('{num}', num)
-                .replace('{den}', den) + '\n';
-        }
-    }
-    explanation += '------------------------------------------------\n';
-
-    // 2. Perform calculations step-by-step
-    let resultNum = nums[0];
-    let resultDen = dens[0];
-    
-    explanation += t.expStep2.replace('{expression}', originalInputs.join(` ${operator} `)) + '\n';
-
-    for (let i = 1; i < count; i++) {
-        let currentExplanation = t.expCalcStep
-            .replace('{i}', i)
-            .replace('{num1}', resultNum)
-            .replace('{den1}', resultDen)
-            .replace('{op}', operator)
-            .replace('{num2}', nums[i])
-            .replace('{den2}', dens[i]) + '\n';
-        
-        switch (operator) {
-            case "+":
-            case "-":
-                let commonDen = lcm(resultDen, dens[i]);
-                let newNum1 = resultNum * (commonDen / resultDen);
-                let newNum2 = nums[i] * (commonDen / dens[i]);
-                currentExplanation += t.expFindLCM
-                    .replace('{den1}', resultDen)
-                    .replace('{den2}', dens[i])
-                    .replace('{lcm}', commonDen) + '\n';
-                currentExplanation += t.expAdjustFractions
-                    .replace('{num1}', resultNum)
-                    .replace('{den1}', resultDen)
-                    .replace('{newNum1}', newNum1)
-                    .replace('{num2}', nums[i])
-                    .replace('{den2}', dens[i])
-                    .replace('{newNum2}', newNum2)
-                    .replace(/{lcm}/g, commonDen) + '\n';
-                currentExplanation += t.expPerformOp
-                    .replace('{newNum1}', newNum1)
-                    .replace('{op}', operator)
-                    .replace('{newNum2}', newNum2)
-                    .replace('{lcm}', commonDen) + '\n';
-                resultNum = (operator === "+") ? newNum1 + newNum2 : newN1 - newNum2;
-                resultDen = commonDen;
-                break;
-            case "*":
-                currentExplanation += t.expMultiplyNumerators
-                    .replace('{num1}', resultNum)
-                    .replace('{num2}', nums[i])
-                    .replace('{resNum}', resultNum * nums[i]) + '\n';
-                currentExplanation += t.expMultiplyDenominators
-                    .replace('{den1}', resultDen)
-                    .replace('{den2}', dens[i])
-                    .replace('{resDen}', resultDen * dens[i]) + '\n';
-                resultNum *= nums[i];
-                resultDen *= dens[i];
-                break;
-            case "/":
-                if (nums[i] === 0) {
-                    document.getElementById("result").innerText = t.cannotDivide;
-                    explanationBox.style.display = 'none';
-                    return;
-                }
-                currentExplanation += t.expInvertAndMultiply
-                    .replace('{num1}', resultNum)
-                    .replace('{den1}', resultDen)
-                    .replace('{num2}', nums[i])
-                    .replace('{den2}', dens[i]) + '\n';
-                currentExplanation += t.expMultiplyNumerators
-                    .replace('{num1}', resultNum)
-                    .replace('{num2}', dens[i])
-                    .replace('{resNum}', resultNum * dens[i]) + '\n';
-                currentExplanation += t.expMultiplyDenominators
-                    .replace('{den1}', resultDen)
-                    .replace('{num2}', nums[i])
-                    .replace('{resDen}', resultDen * nums[i]) + '\n';
-                resultNum *= dens[i];
-                resultDen *= nums[i];
-                break;
-        }
-        currentExplanation += t.expIntermediateResult
-            .replace('{num}', resultNum)
-            .replace('{den}', resultDen) + '\n';
-        explanation += currentExplanation;
-    }
-    explanation += '------------------------------------------------\n';
-
-    // 3. Simplify the final result
-    explanation += t.expStep3
-        .replace('{num}', resultNum)
-        .replace('{den}', resultDen) + '\n';
-    
-    const simplifyGCD = gcd(Math.abs(resultNum), Math.abs(resultDen));
-    
-    if (simplifyGCD > 1) {
-        explanation += t.expFindGCD
-            .replace('{num}', Math.abs(resultNum))
-            .replace('{den}', Math.abs(resultDen))
-            .replace('{gcd}', simplifyGCD) + '\n';
-        explanation += t.expDivideByGCD + '\n';
-        explanation += t.expDivideNumerator
-            .replace('{num}', resultNum)
-            .replace('{gcd}', simplifyGCD)
-            .replace('{resNum}', resultNum / simplifyGCD) + '\n';
-        explanation += t.expDivideDenominator
-            .replace('{den}', resultDen)
-            .replace('{gcd}', simplifyGCD)
-            .replace('{resDen}', resultDen / simplifyGCD) + '\n';
-        resultNum /= simplifyGCD;
-        resultDen /= simplifyGCD;
-    } else {
-        explanation += t.expSimplestForm + '\n';
-    }
-
-    let resultStr = (resultDen === 1) ? `${resultNum}` : `${resultNum}/${resultDen}`;
-    document.getElementById("result").innerText = `${t.result} ${resultStr}`;
-    // Save to history (mode: Operate)
-    // saveToHistory({
-    //   mode: 'Operate',
-    //   input: originalInputs.join(` ${operator} `),
-    //   result: resultStr,
-    //   time: new Date().toLocaleString()
-    // });
-    // 4. Display or hide the explanation box
-    latestExplanation = explanation; // Save the latest explanation
-    updateExplanationBox();
-}
-
-// --- Explanation Box Logic ---
-function updateExplanationBox() {
-    if (showExplanationCheckbox.checked && latestExplanation) {
-        explanationBox.innerText = latestExplanation;
-        explanationBox.style.display = 'block';
-    } else {
-        explanationBox.style.display = 'none';
-    }
-}
-
-// --- Conversion logic ---
-function convertMixed() {
-    const lang = localStorage.getItem('locale') || 'en';
-    const t = locales[lang];
-    const whole = parseInt(document.getElementById("conv_whole").value) || 0;
-    const num = parseInt(document.getElementById("conv_num").value) || 0;
-    const den = parseInt(document.getElementById("conv_den").value);
-    if (isNaN(den) || den === 0) {
-        document.getElementById("convert-result").innerText = t.invalidDen;
+    if (isNaN(num) || isNaN(den) || den === 0) {
+        resultEl.innerText = t.invalidInput;
         return;
     }
-    const improper = Math.abs(whole) * den + num;
-    const resultNum = whole < 0 ? -improper : improper;
-    const resultStr = `${t.improper} ${resultNum}/${den}`;
-    document.getElementById("convert-result").innerText = resultStr;
-    // saveToHistory({
-    //   mode: 'Convert',
-    //   input: `${whole ? whole + ' ' : ''}${num}/${den}`,
-    //   result: `${resultNum}/${den}`,
-    //   time: new Date().toLocaleString()
-    // });
+
+    const simplified = simplify(num, den);
+    let resultStr = simplified.den === 1 ? `${simplified.num}` : `${simplified.num}/${simplified.den}`;
+    resultEl.innerText = `${t.simplifyResult} ${resultStr}`;
 }
 
+// Fraction to Decimal 
 function convertDecimal() {
     const lang = localStorage.getItem('locale') || 'en';
     const t = locales[lang];
     const num = parseInt(document.getElementById("dec_num").value);
     const den = parseInt(document.getElementById("dec_den").value);
+    const resultEl = document.getElementById("decimal-result");
+
     if (isNaN(num) || isNaN(den) || den === 0) {
-        document.getElementById("decimal-result").innerText = t.invalidInput;
+        resultEl.innerText = t.invalidInput;
         return;
     }
-    const resultStr = `${num/den}`;
-    document.getElementById("decimal-result").innerText = `${t.decimalResult} ${resultStr}`;
-    // saveToHistory({
-    //   mode: 'Fraction → Decimal',
-    //   input: `${num}/${den}`,
-    //   result: resultStr,
-    //   time: new Date().toLocaleString()
-    // });
+    const result = (num / den).toString();
+    resultEl.innerText = result;
 }
 
+// Decimal to Fraction 
 function convertDecimalToFraction() {
     const lang = localStorage.getItem('locale') || 'en';
     const t = locales[lang];
-    const decimalInput = parseFloat(document.getElementById("dec_input_fraction").value);
-    if (isNaN(decimalInput)) {
-        document.getElementById("decimal-to-fraction-result").innerText = t.invalidDecimal;
+    const decInput = document.getElementById("dec_input_fraction").value;
+    const resultDiv = document.getElementById("decimal-to-fraction-result");
+    const decimal = parseFloat(decInput);
+
+    if (isNaN(decimal)) {
+        resultDiv.innerText = t.invalidDecimal || "Invalid input.";
         return;
     }
-    let tolerance = 1.0E-6;
-    let h1 = 1, h2 = 0;
-    let k1 = 0, k2 = 1;
-    let b = decimalInput;
+
+    // Algorithm to convert decimal to fraction (lanjutan dari kode sebelumnya)
+    const tolerance = 1.0E-9; 
+    let h1 = 1, h2 = 0, k1 = 0, k2 = 1;
+    let b = decimal;
     do {
         let a = Math.floor(b);
-        let aux = h1;
-        h1 = a * h1 + h2;
-        h2 = aux;
-        aux = k1;
-        k1 = a * k1 + k2;
-        k2 = aux;
+        let aux = h1; h1 = a * h1 + h2; h2 = aux;
+        aux = k1; k1 = a * k1 + k2; k2 = aux;
         b = 1 / (b - a);
-    } while (Math.abs(decimalInput - h1 / k1) > decimalInput * tolerance && k1 < 10000);
-    const resultStr = `${h1}/${k1}`;
-    document.getElementById("decimal-to-fraction-result").innerText = `${t.decFracResult} ${resultStr}`;
-    // saveToHistory({
-    //   mode: 'Decimal → Fraction',
-    //   input: decimalInput,
-    //   result: resultStr,
-    //   time: new Date().toLocaleString()
-    // });
-}
+    } while (Math.abs(decimal - h1 / k1) > decimal * tolerance);
 
-// --- Simplify Logic ---
-function simplifyFraction() {
-  const lang = localStorage.getItem('locale') || 'en';
-  const t = locales[lang];
-  const num = parseInt(document.getElementById("simp_num").value);
-  const den = parseInt(document.getElementById("simp_den").value);
-  const resultDiv = document.getElementById("simplify-result");
-  if (isNaN(num) || isNaN(den) || den === 0) {
-    resultDiv.innerText = t.invalidSimp || t.invalidInput || "Invalid input!";
-    return;
-  }
-  const divisor = gcd(Math.abs(num), Math.abs(den));
-  const simpNum = num / divisor;
-  const simpDen = den / divisor;
-  let resultStr = simpDen === 1 ? `${simpNum}` : `${simpNum}/${simpDen}`;
-  resultDiv.innerText = `${t.simplifyResult || "Simplified:"} ${resultStr}`;
-  // saveToHistory({
-  //   mode: t.simplify || "Simplify",
-  //   input: `${num}/${den}`,
-  //   result: resultStr,
-  //   time: new Date().toLocaleString()
-  // });
-}
-// NOTE: I have commented out saveToHistory() as the function definition was not provided. 
-// If you have that function, you can uncomment these lines.
-
-// --- Settings logic (Theme & Wallpaper) ---
-function applySettings() {
-    const savedTheme = localStorage.getItem('themeMode');
-    if (savedTheme === 'dark') {
-        document.documentElement.classList.add('dark-mode');
-    } else {
-        document.documentElement.classList.remove('dark-mode');
-    }
-
-    const savedBG = localStorage.getItem('customBackground');
-    if (savedBG) {
-        document.body.style.backgroundImage = `url('${savedBG}')`;
-        document.body.classList.add('has-custom-bg');
-    } else {
-        document.body.style.backgroundImage = '';
-        document.body.classList.remove('has-custom-bg');
-    }
-}
-
-function toggleTheme() {
-    const isDarkMode = document.documentElement.classList.contains('dark-mode');
-    if (isDarkMode) {
-        localStorage.setItem('themeMode', 'light');
-    } else {
-        localStorage.setItem('themeMode', 'dark');
-    }
-    applySettings();
-}
-
-// --- Color Manipulation Helper ---
-// pSBC function for color manipulation
-const pSBC = (p, c0, c1, l) => {
-    let r, g, b, P, f, t, h, i = parseInt, m = Math.round, a = typeof (c1) == "string";
-    if (typeof (p) != "number" || p < -1 || p > 1 || typeof (c0) != "string" || (c0[0] != 'r' && c0[0] != '#') || (c1 && !a)) return null;
-    let pSBCr = (d) => {
-        let n = d.length, x = {};
-        if (n > 9) {
-            [r, g, b, a] = d = d.split(","), n = d.length;
-            if (n < 3 || n > 4) return null;
-            x.r = i(r.slice(4)), x.g = i(g), x.b = i(b), x.a = a ? parseFloat(a) : -1
-        } else {
-            if (n == 8 || n == 6 || n < 4) return null;
-            if (n < 6) d = "#" + d[1] + d[1] + d[2] + d[2] + d[3] + d[3] + (n > 4 ? d[4] + d[4] : "");
-            d = i(d.slice(1), 16);
-            if (n == 9 || n == 5) x.r = d >> 24 & 255, x.g = d >> 16 & 255, x.b = d >> 8 & 255, x.a = m((d & 255) / 0.255) / 1000;
-            else x.r = d >> 16, x.g = d >> 8 & 255, x.b = d & 255, x.a = -1
-        } return x
-    };
-    h = c0.length > 9, h = a ? c1.length > 9 ? true : c1 == "c" ? !h : false : h, f = pSBCr(c0), P = p < 0, t = c1 && c1 != "c" ? pSBCr(c1) : P ? { r: 0, g: 0, b: 0, a: -1 } : { r: 255, g: 255, b: 255, a: -1 }, p = P ? p * -1 : p, P = 1 - p;
-    if (!f || !t) return null;
-    if (l) r = m(P * f.r + p * t.r), g = m(P * f.g + p * t.g), b = m(P * f.b + p * t.b);
-    else r = m((P * f.r ** 2 + p * t.r ** 2) ** 0.5), g = m((P * f.g ** 2 + p * t.g ** 2) ** 0.5), b = m((P * f.b ** 2 + p * t.b ** 2) ** 0.5);
-    a = f.a, t = t.a, f = a >= 0 || t >= 0, a = f ? a < 0 ? t : t < 0 ? a : a * P + t * p : 0;
-    if (h) return "rgb" + (f ? "a(" : "(") + r + "," + g + "," + b + (f ? "," + m(a * 1000) / 1000 : "") + ")";
-    else return "#" + (4294967296 + r * 16777216 + g * 65536 + b * 256 + (f ? m(a * 255) : 0)).toString(16).slice(1, f ? undefined : -2)
-}
-
-
-// --- SINGLE INITIALIZATION BLOCK ---
-// This runs only after the entire HTML page is loaded
-document.addEventListener('DOMContentLoaded', () => {
-
-    // --- Helper functions that need the DOM ---
-    function applyAccentColor(color) {
-      document.documentElement.style.setProperty('--btn-primary', color);
-      const hoverColor = pSBC(-0.2, color);
-      if(hoverColor) {
-        document.documentElement.style.setProperty('--btn-hover', hoverColor);
-      }
-    }
+    let resultStr = (k1 === 1) ? `${h1}` : `${h1}/${k1}`;
     
-    function applyOpacity(value) {
-      document.documentElement.style.setProperty('--surface-opacity', value);
+    resultDiv.innerText = `${t.decFracResult} ${resultStr}`;
+}
+
+// Mixed ↔ Improper (Reconstructed)
+function convertFraction() {
+    const lang = localStorage.getItem('locale') || 'en';
+    const t = locales[lang];
+    const wholeEl = document.getElementById('conv_whole');
+    const numEl = document.getElementById('conv_num');
+    const denEl = document.getElementById('conv_den');
+    const resultEl = document.getElementById('convert-result');
+    
+    const num = parseInt(numEl.value);
+    const den = parseInt(denEl.value);
+    const whole = parseInt(wholeEl.value) || 0; // Bilangan bulat bisa kosong
+
+    if (isNaN(num) || isNaN(den) || den === 0) {
+        resultEl.innerText = t.invalidInput;
+        return;
     }
 
-    // --- Main Event Listeners ---
-    modeButtons.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            switchMode(e.target.dataset.mode);
+    if (toggleConvertMode.checked) {
+        // Mode: Improper → Mixed
+        // Input: num, den (Whole diabaikan)
+        const result = convertImproperToMixed(num, den);
+        if (!result) { resultEl.innerText = t.invalidInput; return; }
+        
+        let resultStr = result.whole !== 0 ? `${result.whole} ${result.num}/${result.den}` : `${result.num}/${result.den}`;
+        if (result.num === 0) resultStr = result.whole.toString(); // Handle jika sisanya 0
+
+        resultEl.innerText = `${t.improperToMixed} ${resultStr}`;
+
+    } else {
+        // Mode: Mixed → Improper (Default)
+        // Input: whole, num, den
+        const result = convertMixedToImproper(whole, num, den);
+        if (!result) { resultEl.innerText = t.invalidInput; return; }
+
+        let resultStr = result.den === 1 ? `${result.num}` : `${result.num}/${result.den}`;
+        resultEl.innerText = `${t.mixedToImproper} ${resultStr}`;
+    }
+}
+
+
+// ==========================================================
+//  FIXED: calculateFraction Function (Now fully localized)
+// ==========================================================
+function calculateFraction() {
+    const lang = localStorage.getItem('locale') || 'en';
+    const t = locales[lang]; // Get translation object
+    const count = parseInt(document.getElementById('fraction-count').value);
+    const operator = document.getElementById('operator').value;
+    const resultEl = document.getElementById('result');
+    const explanationOn = showExplanationCheckbox.checked;
+    explanationBox.style.display = 'none';
+    explanationBox.innerText = ''; // Clear previous explanation
+
+    let fractions = [];
+    let isValid = true;
+    let explanation = "";
+
+    // 1. Parse and Convert all fractions to Improper
+    if (explanationOn) explanation += t.expStep1 + '\n';
+    
+    for (let i = 1; i <= count; i++) {
+        const whole = parseInt(document.getElementById(`whole${i}`).value) || 0;
+        const num = parseInt(document.getElementById(`num${i}`).value);
+        const den = parseInt(document.getElementById(`den${i}`).value);
+
+        if (isNaN(num) || isNaN(den) || den === 0) {
+            isValid = false;
+            break;
+        }
+        
+        const originalStr = `${whole !== 0 ? `${whole} ` : ''}${num}/${den}`;
+        const improper = convertMixedToImproper(whole, num, den);
+        fractions.push(improper);
+        
+        if (explanationOn) {
+            explanation += t.expFraction
+                .replace('{i}', i)
+                .replace('{original}', originalStr)
+                .replace('{improper}', `${improper.num}/${improper.den}`) + '\n';
+        }
+    }
+
+    if (!isValid) {
+        resultEl.innerText = t.invalidInput;
+        return;
+    }
+
+    // --- LOGIC FOR + AND - (Needs Common Denominator) ---
+    if (operator === '+' || operator === '-') {
+        // 2. Find Common Denominator (LCD)
+        let finalDen = fractions[0].den;
+        for (let i = 1; i < fractions.length; i++) {
+            finalDen = lcm(finalDen, fractions[i].den);
+        }
+        if (explanationOn) explanation += '\n' + t.expStep2.replace('{lcd}', finalDen) + '\n';
+
+        // 3. Perform Operation
+        let finalNum = 0;
+        let opExpression = ""; // For explanation
+        
+        fractions.forEach((frac, index) => {
+            const scaledNum = frac.num * (finalDen / frac.den);
+            
+            if (explanationOn) {
+                explanation += t.expAdjust
+                    .replace('{num}', frac.num)
+                    .replace('{den}', frac.den)
+                    .replace('{scaledNum}', scaledNum)
+                    .replace('{lcd}', finalDen) + '\n';
+                
+                opExpression += `${index > 0 ? ` ${operator} ` : ''}(${scaledNum})`;
+            }
+            
+            if (index === 0) {
+                finalNum = scaledNum;
+            } else {
+                if (operator === '+') finalNum += scaledNum;
+                if (operator === '-') finalNum -= scaledNum;
+            }
         });
-    });
-    
-    fractionCountSelect.addEventListener('change', updateFractionInputs);
-    document.getElementById('calc-btn').addEventListener('click', calculate);
-    document.getElementById('btn-convert-mixed').addEventListener('click', convertMixed);
-    document.getElementById('btn-frac-to-dec').addEventListener('click', convertDecimal);
-    document.getElementById('btn-dec-to-frac').addEventListener('click', convertDecimalToFraction);
-    document.getElementById('btn-simplify').addEventListener('click', simplifyFraction);
 
-    // Explanation checkbox
-    showExplanationCheckbox.addEventListener('change', updateExplanationBox);
+        if (explanationOn) {
+            explanation += '\n' + t.expStep3 + '\n';
+            explanation += t.expOperation
+                .replace('{expression}', opExpression)
+                .replace('{finalNum}', finalNum)
+                .replace('{lcd}', finalDen) + '\n';
+        }
+        
+        // 4. Simplify and Convert to Mixed Number
+        const simplified = simplify(finalNum, finalDen);
+        const finalMixed = convertImproperToMixed(simplified.num, simplified.den);
+        const resultStr = formatFraction(finalMixed);
+        resultEl.innerText = `${t.result} ${resultStr}`;
 
-    // --- Options Menu Listeners ---
-    toggleThemeBtn.addEventListener('click', toggleTheme);
+        if (explanationOn) {
+            explanation += t.expUnsimplified.replace('{num}', finalNum).replace('{den}', finalDen) + '\n';
+            explanation += '\n' + t.expStep4 + '\n';
+            explanation += t.expSimplified.replace('{num}', simplified.num).replace('{den}', simplified.den) + '\n';
+            explanation += t.expFinalMixed.replace('{result}', resultStr) + '\n';
+            explanationBox.innerText = explanation;
+            explanationBox.style.display = 'block';
+        }
     
-    uploadBgBtn.addEventListener('click', () => fileInput.click());
+    // --- LOGIC FOR * AND / (No Common Denominator Needed) ---
+    } else {
+        let resultNum = fractions[0].num;
+        let resultDen = fractions[0].den;
+        let opExpression = `(${resultNum}/${resultDen})`;
+        
+        if (explanationOn) {
+            explanation += '\n' + (operator === '*' ? t.expStep3Multiply : t.expStep3Divide) + '\n';
+        }
+
+        for (let i = 1; i < fractions.length; i++) {
+            const frac = fractions[i];
+            opExpression += ` ${operator} (${frac.num}/${frac.den})`;
+
+            if (operator === '*') {
+                resultNum *= frac.num;
+                resultDen *= frac.den;
+            } else if (operator === '/') {
+                // Invert and multiply
+                resultNum *= frac.den;
+                resultDen *= frac.num;
+            }
+        }
+        
+        if (explanationOn) {
+            explanation += (operator === '*' ? t.expOpMultiply : t.expOpDivide).replace('{expression}', opExpression) + '\n';
+        }
+
+        // 4. Simplify and Convert to Mixed Number
+        const simplified = simplify(resultNum, resultDen);
+        const finalMixed = convertImproperToMixed(simplified.num, simplified.den);
+        const resultStr = formatFraction(finalMixed);
+        resultEl.innerText = `${t.result} ${resultStr}`;
+
+        if (explanationOn) {
+            explanation += t.expUnsimplified.replace('{num}', resultNum).replace('{den}', resultDen) + '\n';
+            explanation += '\n' + t.expStep4 + '\n';
+            explanation += t.expSimplified.replace('{num}', simplified.num).replace('{den}', simplified.den) + '\n';
+            explanation += t.expFinalMixed.replace('{result}', resultStr) + '\n';
+            explanationBox.innerText = explanation;
+            explanationBox.style.display = 'block';
+        }
+    }
+}
+// ==========================================================
+//  END OF FIX
+// ==========================================================
+
+
+// --- Apply Settings (Theme, Wallpaper, Accent, Opacity) ---
+function applySettings() {
+    // Apply Theme
+    const theme = localStorage.getItem('theme');
+    document.documentElement.classList.toggle('dark-mode', theme === 'dark');
+
+    // Apply Wallpaper
+    const customBg = localStorage.getItem('customBackground');
+    const body = document.body;
+    body.classList.toggle('has-custom-bg', !!customBg);
+    body.style.backgroundImage = customBg ? `url('${customBg}')` : 'none';
+
+    // Apply Accent
+    const accentColor = localStorage.getItem('accentColor');
+    if (accentColor) {
+        document.documentElement.style.setProperty('--btn-primary', accentColor);
+        document.documentElement.style.setProperty('--accent-color', accentColor); // Ensure this is set
+    }
+
+    // Apply Opacity
+    const opacity = localStorage.getItem('containerOpacity');
+    document.documentElement.style.setProperty('--container-opacity', opacity || 1);
+
+    if (opacitySlider) {
+        opacitySlider.value = opacity || 1;
+    }
+
+    // Apply Language 
+    updateTextForLanguage(); // <-- THIS IS THE KEY
+}
+
+// --- FIXED LOCALIZATION FUNCTION ---
+function updateTextForLanguage() {
+    const lang = localStorage.getItem('locale') || 'en';
+    const t = locales[lang];
+    if (!t) return; // Failsafe
+
+    // Helper to find and set text
+    const setText = (selector, key, isPlaceholder = false) => {
+        const el = document.querySelector(selector);
+        if (el) {
+            if (isPlaceholder) {
+                el.placeholder = t[key];
+            } else {
+                el.innerText = t[key];
+            }
+        }
+    };
+
+    // --- Ribbon ---
+    // Dropdown Titles
+    setText('.dropdown:nth-child(1) > button', 'mode');
+    setText('.dropdown:nth-child(2) > button', 'options');
+    setText('.dropdown:nth-child(3) > button', 'help');
+    setText('.dropdown:nth-child(4) > button', 'view');
+
+    // Mode Menu
+    setText('button[data-mode="operate"]', 'operate');
+    setText('button[data-mode="convert"]', 'convert');
+    setText('button[data-mode="decimal"]', 'decimal');
+    setText('button[data-mode="fraction"]', 'fraction');
+    setText('button[data-mode="simplify"]', 'simplify');
     
-    fileInput.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = function(evt) {
-            const dataURL = evt.target.result;
-            localStorage.setItem('customBackground', dataURL);
+    // Options Menu
+    setText('#toggle-theme-btn', 'toggleTheme');
+    setText('#upload-bg-btn', 'changeWallpaper');
+    setText('#reset-bg-btn', 'resetWallpaper');
+    setText('#change-accent-btn', 'accentColor');
+    setText('#open-opacity-modal-btn', 'opacity');
+    setText('#toggle-lang-btn', 'toggleLangBtn');
+
+    // Help Menu
+    setText('#about-btn', 'about');
+    setText('#docs-btn', 'documentation');
+
+    // View Menu
+    setText('#fullscreen-btn', 'fullscreen');
+
+    // --- Main Panels ---
+    
+    // Operate
+    setText('label[for="fraction-count"]', 'howMany');
+    setText('#calc-btn', 'calculate');
+    // Special handler for label text node
+    const explanationLabel = document.getElementById('show-explanation-checkbox')?.parentElement;
+    if (explanationLabel && explanationLabel.lastChild.nodeType === Node.TEXT_NODE) {
+        explanationLabel.lastChild.textContent = ' ' + t.showExplanationCheckbox;
+    }
+    
+    // Convert
+    setText('#btn-convert-mixed', 'convertBtn');
+    // Special handler for label text node
+    const convertLabel = document.getElementById('toggle-convert-mode')?.parentElement;
+    if (convertLabel && convertLabel.lastChild.nodeType === Node.TEXT_NODE) {
+        convertLabel.lastChild.textContent = ' ' + t.convertToggleLabel;
+    }
+
+    // Decimal
+    setText('#btn-frac-to-dec', 'toDecimal');
+    
+    // Fraction
+    setText('#btn-dec-to-frac', 'toFraction');
+    
+    // Simplify
+    setText('#btn-simplify', 'simplifyBtn');
+
+    // --- Placeholders ---
+    const placeholderKeys = {
+        'whole1': 'whole', 'num1': 'numerator', 'den1': 'denominator',
+        'whole2': 'whole', 'num2': 'numerator', 'den2': 'denominator',
+        'whole3': 'whole', 'num3': 'numerator', 'den3': 'denominator',
+        'whole4': 'whole', 'num4': 'numerator', 'den4': 'denominator',
+        'conv_whole': 'whole', 'conv_num': 'numerator', 'conv_den': 'denominator',
+        'dec_num': 'numerator', 'dec_den': 'denominator',
+        'simp_num': 'numerator', 'simp_den': 'denominator',
+        'dec_input_fraction': 'enterDecimal'
+    };
+
+    for (const [id, key] of Object.entries(placeholderKeys)) {
+        const el = document.getElementById(id);
+        if (el) {
+            el.placeholder = t[key];
+        }
+    }
+    
+    // --- Modals ---
+    setText('#opacity-modal h4', 'opacityTitle');
+    setText('#history-modal h4', 'historyTitle');
+    setText('#clear-history-btn', 'clearHistory');
+}
+// ==========================================================
+//  END OF LOCALIZATION FIX
+// ==========================================================
+
+
+// --- Main Event Listeners (Semua cuma di sini, tidak ada duplikat!) ---
+
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Apply Initial Settings
+    applySettings(); // This will now apply all translations on load
+
+    // 2. Button Listeners (Theme, Wallpaper, Language, Opacity Modal)
+
+    // Dark Mode (FIXED)
+    if (toggleThemeBtn) {
+        toggleThemeBtn.addEventListener('click', () => {
+            const currentTheme = localStorage.getItem('theme') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', currentTheme);
             applySettings();
-        };
-        reader.readAsDataURL(file);
-    });
-    
-    resetBgBtn.addEventListener('click', () => {
-        localStorage.removeItem('customBackground');
-        applySettings();
-    });
+        });
+    }
 
-    // Language
-    document.getElementById('toggle-lang-btn').addEventListener('click', () => {
-      const current = localStorage.getItem('locale') || 'en';
-      localStorage.setItem('locale', current === 'en' ? 'id' : 'en');
-      applyLocale();
-    });
+    // Wallpaper Change (FIXED)
+    if (uploadBgBtn && fileInput && resetBgBtn) {
+        uploadBgBtn.addEventListener('click', () => fileInput.click());
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                const dataURL = evt.target.result;
+                localStorage.setItem('customBackground', dataURL);
+                applySettings();
+                e.target.value = ''; // Reset input value
+            };
+            reader.readAsDataURL(file);
+        });
+
+        resetBgBtn.addEventListener('click', () => {
+            localStorage.removeItem('customBackground');
+            applySettings();
+        });
+    }
 
     // Accent Color
-    changeAccentBtn.addEventListener('click', () => accentColorPicker.click());
+    if (changeAccentBtn && accentColorPicker) {
+        changeAccentBtn.addEventListener('click', () => accentColorPicker.click());
+        accentColorPicker.addEventListener('change', (e) => { // 'change' is better than 'input' for color picker
+            localStorage.setItem('accentColor', e.target.value);
+            applySettings();
+        });
+    }
+
+    // Language Toggle (FIXED)
+    if (toggleLangBtn) {
+        toggleLangBtn.addEventListener('click', () => {
+            const currentLang = localStorage.getItem('locale') === 'id' ? 'en' : 'id';
+            localStorage.setItem('locale', currentLang);
+            applySettings(); // This will re-run the updated localization function
+        });
+    }
     
-    accentColorPicker.addEventListener('input', (e) => {
-      const newColor = e.target.value;
-      applyAccentColor(newColor);
-      localStorage.setItem('accentColor', newColor);
+    // Opacity Modal (Perlu buka tutup modal)
+    const opacityModal = document.getElementById('opacity-modal');
+    const openOpacityModalBtn = document.getElementById('open-opacity-modal-btn');
+    const opacityCloseBtn = document.getElementById('opacity-close-btn');
+
+    if (openOpacityModalBtn) {
+        openOpacityModalBtn.addEventListener('click', () => {
+            if (opacityModal) opacityModal.style.display = 'flex';
+        });
+    }
+    if (opacityCloseBtn) {
+        opacityCloseBtn.addEventListener('click', () => {
+            if (opacityModal) opacityModal.style.display = 'none';
+        });
+    }
+
+
+    // 3. Mode Switching (FIXED)
+    modeButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const mode = e.target.dataset.mode;
+            panels.forEach(panel => panel.classList.remove('show'));
+            const activePanel = document.getElementById(`${mode}-section`);
+            if (activePanel) activePanel.classList.add('show');
+            
+            // Atur default mode saat pertama kali ganti ke mode Convert
+            if (mode === 'convert') {
+                const wholeEl = document.getElementById('conv_whole');
+                const slashEl = document.querySelector('#convert-section .slash');
+                if (wholeEl) wholeEl.hidden = false;
+                if (slashEl) slashEl.hidden = false;
+                if (toggleConvertMode) toggleConvertMode.checked = false; // Default: Mixed -> Improper
+            }
+        });
     });
 
-    // Opacity Modal
-    openOpacityModalBtn.addEventListener('click', () => {
-        opacityModal.style.display = 'flex';
-        const savedOpacity = localStorage.getItem('containerOpacity') || '0.85';
-        opacitySlider.value = savedOpacity;
-    });
-    
-    opacityCloseBtn.addEventListener('click', () => {
-        opacityModal.style.display = 'none';
-    });
-    
-    opacitySlider.addEventListener('input', (e) => {
-      const newOpacity = e.target.value;
-      applyOpacity(newOpacity);
-      localStorage.setItem('containerOpacity', newOpacity);
-    });
+    // 4. Conversion/Operation Button Clicks (LOGIC RE-ADDED)
 
-    // Close modal on outside click
-    window.addEventListener('click', (e) => {
-        if (e.target === opacityModal) {
-            opacityModal.style.display = 'none';
-        }
-    });
+    // Operate Fractions
+    if (calcBtn) {
+        calcBtn.addEventListener('click', calculateFraction);
+    }
+    
+    // Mixed ↔ Improper
+    if (convertBtn) {
+        convertBtn.addEventListener('click', convertFraction);
+    }
+    
+    // Logic tampilan toggle Convert Mode
+    if (toggleConvertMode) {
+        toggleConvertMode.addEventListener('change', (e) => {
+            const isImproperToMixed = e.target.checked;
+            const wholeEl = document.getElementById('conv_whole');
+            const slashEl = document.querySelector('#convert-section .slash');
 
-    // --- Help Menu Listeners (from inline script) ---
+            if (isImproperToMixed) {
+                // Improper → Mixed: Hide Whole Number input
+                if (wholeEl) wholeEl.hidden = true;
+                if (slashEl) slashEl.hidden = true;
+            } else {
+                // Mixed → Improper: Show Whole Number input
+                if (wholeEl) wholeEl.hidden = false;
+                if (slashEl) slashEl.hidden = false;
+            }
+        });
+    }
+
+
+    // Decimal to Fraction
+    const decToFracBtn = document.getElementById('btn-dec-to-frac');
+    if (decToFracBtn) {
+        decToFracBtn.addEventListener('click', convertDecimalToFraction);
+    }
+
+    // Fraction to Decimal
+    const fracToDecBtn = document.getElementById('btn-frac-to-dec'); // ID di HTML adalah 'btn-frac-to-dec', bukan 'btn-dec'
+    if (fracToDecBtn) {
+        fracToDecBtn.addEventListener('click', convertDecimal);
+    }
+    
+    // Simplify Fraction
+    const simplifyBtn = document.getElementById('btn-simplify');
+    if (simplifyBtn) {
+        simplifyBtn.addEventListener('click', simplifyFraction);
+    }
+
+    // 5. Opacity Slider
+    if (opacitySlider) {
+        opacitySlider.addEventListener('input', (e) => {
+            const opacity = e.target.value;
+            localStorage.setItem('containerOpacity', opacity);
+            applySettings();
+        });
+    }
+    
+    // 6. Fraction Count Selector (Show/Hide fraction inputs)
+    const fractionCountSelect = document.getElementById('fraction-count');
+    if (fractionCountSelect) {
+        fractionCountSelect.addEventListener('change', (e) => {
+            const count = parseInt(e.target.value);
+            for (let i = 3; i <= 4; i++) {
+                const fracDiv = document.getElementById(`fraction${i}`);
+                if (fracDiv) {
+                    fracDiv.hidden = (i > count);
+                }
+            }
+        });
+    }
+    
+    // Set default mode (operate-section)
+    document.getElementById('operate-section').classList.add('show');
+    
+    // Restore Help and View functions
     document.getElementById('about-btn').addEventListener('click', () => {
         const lang = localStorage.getItem('locale') || 'en';
         alert(locales[lang].aboutMsg);
     });
 
     document.getElementById('docs-btn').addEventListener('click', () => {
-        const url = 'https://ashyraffa32.github.io/FractionCalcSite/getstarted.html';
-        // Electron
-        if (window.require) {
-          const { shell } = require('electron');
-          shell.openExternal(url);
-        } else {
-          // Browser fallback
-          window.open(url, '_blank');
-        }
+        const url = 'https.github.com/Ashyraffa/FractionCalc-Desktop/blob/main/README.md';
+        window.open(url, '_blank');
     });
 
-    // --- View Menu Listeners (from inline script) ---
     document.getElementById('fullscreen-btn').addEventListener('click', () => {
         if (!document.fullscreenElement) {
             document.documentElement.requestFullscreen();
@@ -751,38 +837,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
-    
 
-    // --- Initial Load ---
-    // 1. Apply saved theme, background, accent, and opacity
-    let savedTheme = localStorage.getItem('theme');
-    if (!savedTheme) {
-        savedTheme = 'light';
-        localStorage.setItem('theme', 'light');
-    }
-    if (savedTheme === 'dark') {
-        document.documentElement.classList.remove('light');
-    } else {
-        document.documentElement.classList.add('light');
-    }
-    
-    applySettings(); // Applies theme & background
-    
-    const savedAccentColor = localStorage.getItem('accentColor');
-    if (savedAccentColor) {
-      applyAccentColor(savedAccentColor);
-      accentColorPicker.value = savedAccentColor;
-    }
-    
-    const savedOpacity = localStorage.getItem('containerOpacity');
-    if (savedOpacity) {
-      applyOpacity(savedOpacity);
-      opacitySlider.value = savedOpacity;
-    }
-
-    // 2. Set up the UI
-    updateFractionInputs();
-    
-    // 3. Apply language
-    applyLocale();
 });
+
+// (i'm lazy to maintain btw lol)
+// (anyways this is the end of script.js haha lol go brrrrr)

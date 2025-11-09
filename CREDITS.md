@@ -4,4 +4,4 @@ Built by:
 - [@Ratu](https://www.instagram.com/aceevnxy_1.1/) - she doesnt have a GitHub account
 
 ## Contributors
-- [@Nararinyan](https://github.com/Nararinyan) - first contributor
+- [@Nararinyan](https://github.com/Nararinyan) - first contributor, and AUR manager for FractionCalc
