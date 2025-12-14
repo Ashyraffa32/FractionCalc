@@ -16,6 +16,13 @@ androidinstaller/
 # Mac system files
 .DS_Store
 
+#important files
+.png
+.ico
+capacitor.config.ts
+main.js
+.json
+
 # Logs
 *.log
 
