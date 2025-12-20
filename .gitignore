@@ -3,6 +3,7 @@ node_modules/
 dist/
 android/
 androidinstaller/
+fractioncalc/
 
 # Electron build output
 *.exe

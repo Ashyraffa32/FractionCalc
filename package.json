@@ -1,6 +1,6 @@
 {
   "name": "fractioncalc",
-  "version": "1.6.0",
+  "version": "1.6.4",
   "description": "FractionCalc",
   "main": "main.js",
   "author": "Ashyraffa and Ratu",
@@ -8,10 +8,11 @@
   "scripts": {
     "start": "electron .",
     "build": "electron-builder",
-    "build:win": "npx electron-builder --win nsis",
+    "build:win": "npx electron-builder --win nsis --x64 --arm64",
     "build:linux": "electron-builder --linux deb AppImage"
   },
   "devDependencies": {
+    "@electron-forge/cli": "^7.10.2",
     "electron": "^37.2.6",
     "electron-builder": "^26.0.12"
   },

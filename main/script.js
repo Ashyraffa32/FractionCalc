@@ -22,18 +22,18 @@ const locales = {
     en: {
         // Ribbon
         mode: "Mode",
-        operate: "Operate Fractions",
-        convert: "Mixed ↔ Improper",
-        decimal: "Fraction → Decimal",
-        fraction: "Decimal → Fraction",
-        simplify: "Simplify Fraction",
+        operate: "Operate Fractions (Alt+1)",
+        convert: "Mixed ↔ Improper (Alt+2)",
+        decimal: "Fraction → Decimal (Alt+3)",
+        fraction: "Decimal → Fraction (Alt+4)",
+        simplify: "Simplify Fraction (Alt+5)",
         options: "Options",
-        toggleTheme: "Toggle Theme",
+        toggleTheme: "Toggle Theme (Ctrl+T)",
         changeWallpaper: "Change Wallpaper...",
         resetWallpaper: "Reset to Default",
         accentColor: "Change Accent Color...",
         opacity: "Adjust Element Opacity...",
-        toggleLangBtn: "Switch Language",
+        toggleLangBtn: "Switch Language (Ctrl+L)",
         help: "Help",
         about: "About",
         documentation: "Documentation",
@@ -43,7 +43,7 @@ const locales = {
         // Operate Panel
         howMany: "How many fractions?",
         calculate: "Calculate",
-        showExplanationCheckbox: "Show Explanation",
+        showExplanationCheckbox: "Show Explanation (Ctrl+E)",
         
         // Convert Panel
         convertToggleLabel: "Convert Improper ↔ Mixed",
@@ -75,7 +75,7 @@ const locales = {
         decFracResult: "Fraction:",
         simplifyResult: "Simplified:",
         language: "Language",
-        aboutMsg: "FractionCalc (1.6.0) - Made by Ashyraffa and Ratu",
+        aboutMsg: "FractionCalc (1.6.4) - Made by Ashyraffa and Ratu",
         mixedToImproper: "Improper Fraction:",
         improperToMixed: "Mixed Number:",
         result: "Result:",
@@ -102,18 +102,18 @@ const locales = {
     id: {
         // Ribbon
         mode: "Mode",
-        operate: "Operasi Pecahan",
-        convert: "Campuran ↔ Biasa",
-        decimal: "Pecahan → Desimal",
-        fraction: "Desimal → Pecahan",
-        simplify: "Sederhanakan Pecahan",
+        operate: "Operasi Pecahan (Alt+1)",
+        convert: "Campuran ↔ Biasa (Alt+2)",
+        decimal: "Pecahan → Desimal (Alt+3)",
+        fraction: "Desimal → Pecahan (Alt+4)",
+        simplify: "Sederhanakan Pecahan (Alt+5)",
         options: "Opsi",
-        toggleTheme: "Ganti Tema",
+        toggleTheme: "Ganti Tema (Ctrl+T)",
         changeWallpaper: "Ganti Wallpaper...",
         resetWallpaper: "Reset Wallpaper",
         accentColor: "Ganti Warna Aksen...",
         opacity: "Atur Opasitas Elemen...",
-        toggleLangBtn: "Ganti Bahasa",
+        toggleLangBtn: "Ganti Bahasa (Ctrl+L)",
         help: "Bantuan",
         about: "Tentang",
         documentation: "Dokumentasi",
@@ -123,7 +123,7 @@ const locales = {
         // Operate Panel
         howMany: "Berapa banyak pecahan?",
         calculate: "Hitung",
-        showExplanationCheckbox: "Tampilkan Penjelasan",
+        showExplanationCheckbox: "Tampilkan Penjelasan (Ctrl+E)",
 
         // Convert Panel
         convertToggleLabel: "Ubah Biasa ↔ Campuran",
@@ -155,7 +155,7 @@ const locales = {
         decFracResult: "Pecahan:",
         simplifyResult: "Disederhanakan:",
         language: "Bahasa",
-        aboutMsg: "FractionCalc (1.6.0) - Dibuat oleh Ashyraffa dan Ratu",
+        aboutMsg: "FractionCalc (1.6.4) - Dibuat oleh Ashyraffa dan Ratu",
         mixedToImproper: "Pecahan Biasa:",
         improperToMixed: "Pecahan Campuran:",
         result: "Hasil:",
@@ -824,7 +824,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('docs-btn').addEventListener('click', () => {
-        const url = 'https.github.com/Ashyraffa/FractionCalc-Desktop/blob/main/README.md';
+        const url = 'https://ashyraffa32.github.io/FractionCalcSite/getstarted.html';
         window.open(url, '_blank');
     });
 
@@ -839,6 +839,100 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 });
+
+// Hahah keyboard shortcuts go brrrr
+// ... existing code ...
+
+// === KEYBOARD SHORTCUTS FUNCTION ===
+function setupKeyboardShortcuts() {
+    document.addEventListener('keydown', (e) => {
+        // 1. Handle Modals (Escape to close)
+        const modals = document.querySelectorAll('.modal');
+        const openModal = Array.from(modals).find(m => getComputedStyle(m).display !== 'none');
+
+        if (e.key === 'Escape' && openModal) {
+            openModal.style.display = 'none';
+            return; 
+        }
+
+        // Don't trigger other shortcuts if a modal is open (input safety)
+        if (openModal) return;
+
+        // 2. Global Shortcuts
+        // Ctrl + T: Toggle Theme
+        if ((e.ctrlKey || e.metaKey) && (e.key === 't' || e.key === 'T')) {
+            e.preventDefault(); 
+            document.getElementById('toggle-theme-btn').click();
+        }
+
+        // Ctrl + L: Toggle Language
+        if ((e.ctrlKey || e.metaKey) && (e.key === 'l' || e.key === 'L')) {
+            e.preventDefault(); 
+            document.getElementById('toggle-lang-btn').click();
+        }
+
+        // 3. Mode Switching (Alt + 1 to 5)
+        if (e.altKey) {
+            const modes = ['operate', 'convert', 'decimal', 'fraction', 'simplify'];
+            const keyNum = parseInt(e.key);
+            
+            if (keyNum >= 1 && keyNum <= 5) {
+                const modeName = modes[keyNum - 1];
+                const modeBtn = document.querySelector(`button[data-mode="${modeName}"]`);
+                if (modeBtn) modeBtn.click();
+            }
+        }
+
+        if ((e.ctrlKey || e.metaKey) && (e.key === 'e' || e.key === 'E')) {
+            e.preventDefault();
+            const operatePanel = document.getElementById('operate-section');
+            // Only toggle if we are currently looking at the Operate panel
+            if (operatePanel && operatePanel.classList.contains('show')) {
+                const checkBox = document.getElementById('show-explanation-checkbox');
+                if (checkBox) {
+                    checkBox.click(); // This visually toggles the check
+                }
+            }
+        }
+
+        // 4. Context-Aware "Enter" Key
+        if (e.key === 'Enter') {
+            // Find which panel is currently shown
+            const activePanel = document.querySelector('.panel.show');
+            if (activePanel) {
+                switch(activePanel.id) {
+                    case 'operate-section':
+                        document.getElementById('calc-btn').click();
+                        break;
+                    case 'convert-section':
+                        document.getElementById('btn-convert-mixed').click();
+                        break;
+                    case 'decimal-section':
+                        document.getElementById('btn-frac-to-dec').click();
+                        break;
+                    case 'fraction-section':
+                        document.getElementById('btn-dec-to-frac').click();
+                        break;
+                    case 'simplify-section':
+                        document.getElementById('btn-simplify').click();
+                        break;
+                }
+            }
+        }
+    });
+}
+
+// ... existing code ...
+
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Apply Initial Settings
+    applySettings(); 
+
+    // 2. Initialize Shortcuts (ADD THIS LINE HERE)
+    setupKeyboardShortcuts();
+
+});
+
 
 // (i'm lazy to maintain btw lol)
 // (anyways this is the end of script.js haha lol go brrrrr)

@@ -11,24 +11,24 @@
       <div class="dropdown">
         <button>Mode</button>
         <div class="dropdown-menu">
-          <button data-mode="operate">Operate Fractions</button>
-          <button data-mode="convert">Mixed ↔ Improper</button>
-          <button data-mode="decimal">Fraction → Decimal</button>
-          <button data-mode="fraction">Decimal → Fraction</button>
-          <button data-mode="simplify">Simplify Fraction</button>
+          <button data-mode="operate">Operate Fractions (Alt+1)</button>
+          <button data-mode="convert">Mixed ↔ Improper (Alt+2)</button>
+          <button data-mode="decimal">Fraction → Decimal (Alt+3)</button>
+          <button data-mode="fraction">Decimal → Fraction (Alt+4)</button>
+          <button data-mode="simplify">Simplify Fraction (Alt+5)</button>
         </div>
       </div>
       <div class="dropdown">
         <button>Options</button>
         <div class="dropdown-menu">
-         <button id="toggle-theme-btn">Toggle Theme</button>
+         <button id="toggle-theme-btn">Toggle Theme (Ctrl+T)</button>
          <button id="upload-bg-btn">Change Wallpaper...</button>
          <input type="file" id="bg-upload" accept="image/*" style="display: none;">
          <button id="reset-bg-btn">Reset to Default</button>
          <button id="change-accent-btn">Change Accent Color...</button>
          <input type="color" id="accent-color-picker" style="display: none;">
          <button id="open-opacity-modal-btn">Adjust Element Opacity...</button>
-         <button id="toggle-lang-btn">Switch Language</button>
+         <button id="toggle-lang-btn">Switch Language (Ctrl+L)</button>
         </div>
       </div>
       <div class="dropdown">
@@ -148,15 +148,6 @@
             </div>
         </div>
 
-        <div id="history-modal" class="modal" style="display:none;">
-          <div class="modal-content" style="min-width:340px;max-width:95vw;">
-            <span class="close" id="history-close-btn">&times;</span>
-            <h4>Calculation History</h4>
-            <div id="history-list" style="max-height:350px;overflow-y:auto;margin-top:18px;text-align:left;"></div>
-            <button id="clear-history-btn" class="btn" style="margin-top:18px;">Clear History</button>
-          </div>
-        </div>
-    </div>
     
     <script src="script.js"></script>
 </body>

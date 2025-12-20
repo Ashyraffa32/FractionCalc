@@ -8,7 +8,6 @@
   --input-bg: #f9fafb;
   --accent-color: var(--btn-primary);
   --accent-hover-color: var(--btn-hover);
-  /* --surface-opacity: 0.85;  <-- This is no longer needed */
   --surface-color-rgb: 255, 255, 255;
   --container-opacity: 1; /* This is the default, controlled by JS */
 }
