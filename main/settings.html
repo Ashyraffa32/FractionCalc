@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings</title>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <style>
+        :root {
+            /* Default Light Mode Vars */
+            --bg-color: #f2f2f7;
+            --sidebar-bg: #eaebef;
+            --white: #ffffff;
+            --text-primary: #000000;
+            --text-secondary: #8e8e93;
+            --accent-blue: #007aff;
+            --separator: #c6c6c8;
+            --danger: #ff3b30;
+        }
+
+        /* Dark Mode Override Class */
+        .dark-mode-active {
+            --bg-color: #000000;
+            --sidebar-bg: #1c1c1e;
+            --white: #1c1c1e;
+            --text-primary: #ffffff;
+            --text-secondary: #8e8e93;
+            --separator: #38383a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+            font-size: 17px;
+            transition: background-color 0.3s;
+        }
+
+        /* --- Sidebar --- */
+        .sidebar {
+            width: 320px;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--separator);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            flex-shrink: 0;
+            user-select: none;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar-header { padding: 15px; }
+
+        .sidebar-menu { list-style: none; padding: 0 15px; }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 2px;
+        }
+
+        .menu-item:active { background-color: rgba(128,128,128,0.2); }
+
+        .menu-item.active {
+            background-color: var(--accent-blue);
+            color: #fff;
+        }
+        .menu-item.active span { color: #fff !important; }
+
+        .icon-box {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            color: white;
+            font-size: 18px;
+        }
+
+        .menu-text { flex-grow: 1; font-weight: 400; }
+
+        /* --- Main Content --- */
+        .main-content {
+            flex-grow: 1;
+            background-color: var(--bg-color);
+            overflow-y: auto;
+            padding: 20px 40px;
+            transition: background-color 0.3s;
+        }
+
+        .content-title {
+            font-size: 34px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            margin-left: 10px;
+        }
+
+        .content-section { display: none; }
+        .content-section.active-section { display: block; animation: fadeIn 0.2s ease-in-out; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Settings Lists --- */
+        .settings-group {
+            background-color: var(--white);
+            border-radius: 10px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        .settings-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background-color: var(--white);
+            border-bottom: 0.5px solid var(--separator);
+            min-height: 48px;
+            cursor: pointer;
+        }
+        
+        .settings-row:last-child { border-bottom: none; }
+
+        .row-label { font-size: 17px; color: var(--text-primary); }
+        
+        .row-value {
+            color: var(--text-secondary);
+            font-size: 17px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .chevron { color: #c7c7cc; font-size: 18px; }
+
+        /* Inputs (Hidden/Custom) */
+        .color-preview {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 1px solid var(--separator);
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            width: 51px;
+            height: 31px;
+            -webkit-appearance: none;
+            background: #e9e9ea;
+            outline: none;
+            border-radius: 16px;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        .toggle-switch:checked { background: var(--accent-blue); }
+        .toggle-switch::before {
+            content: '';
+            position: absolute;
+            width: 27px;
+            height: 27px;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            background: #ffffff;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+            transition: 0.3s;
+        }
+        .toggle-switch:checked::before { left: 22px; }
+
+        /* Range Slider for Opacity */
+        .ios-slider {
+            -webkit-appearance: none;
+            width: 150px;
+            height: 4px;
+            background: var(--separator);
+            border-radius: 2px;
+            outline: none;
+        }
+        .ios-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #ffffff;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+            cursor: pointer;
+        }
+
+        /* Colors */
+        .bg-blue { background-color: #007aff; }
+        .bg-orange { background-color: #ff9500; }
+        .bg-gray { background-color: #8e8e93; }
+        .bg-green { background-color: #34c759; }
+        .bg-red { background-color: #ff3b30; }
+        
+        /* Back Button for Mobile/Small Screens context */
+        .back-link {
+            text-decoration: none;
+            color: var(--accent-blue);
+            font-size: 17px;
+            margin-bottom: 10px;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <a href="index.html" class="back-link"><ion-icon name="chevron-back"></ion-icon> Back to App</a>
+            <h2>Settings</h2>
+        </div>
+
+        <ul class="sidebar-menu">
+            <li class="menu-item active" data-target="general">
+                <div class="icon-box bg-gray"><ion-icon name="settings"></ion-icon></div>
+                <span class="menu-text">General</span>
+            </li>
+            <li class="menu-item" data-target="display">
+                <div class="icon-box bg-blue"><ion-icon name="contrast"></ion-icon></div>
+                <span class="menu-text">Personalization</span>
+            </li>
+            <li class="menu-item" data-target="about">
+                <div class="icon-box bg-orange"><ion-icon name="alert-circle-outline"></ion-icon></div>
+                <span class="menu-text">About</span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+
+        <div id="general" class="content-section active-section">
+            <h1 class="content-title">General</h1>
+            <div class="settings-group">
+                <div class="settings-row" id="lang-row">
+                    <span class="row-label">System Language</span>
+                    <div class="row-value">
+                        <span id="current-lang-text">English</span>
+                        <ion-icon name="chevron-forward" class="chevron"></ion-icon>
+                    </div>
+                </div>
+            </div>
+             <div class="settings-group">
+                <div class="settings-row" id="reset-data-btn">
+                    <span class="row-label" style="color: var(--danger);" onclick="localStorage.clear()">Delete All User Data</span>
+                </div>
+            </div>
+        </div>
+        
+        <div id="display" class="content-section">
+            <h1 class="content-title">Personalization</h1>
+            
+            <div class="settings-group">
+                <div class="settings-row">
+                    <span class="row-label">Dark Mode</span>
+                    <input type="checkbox" id="dark-mode-toggle" class="toggle-switch">
+                </div>
+                <div class="settings-row" id="wallpaper-row">
+                    <span class="row-label">Change Wallpaper</span>
+                    <div class="row-value">
+                        <span style="font-size: 14px;">Select Image</span>
+                        <ion-icon name="chevron-forward" class="chevron"></ion-icon>
+                    </div>
+                    <input type="file" id="bg-upload" accept="image/*" style="display: none;">
+                </div>
+                <div class="settings-row" id="reset-bg-btn">
+                    <span class="row-label" style="color: var(--accent-blue);">Reset Wallpaper</span>
+                </div>
+            </div>
+
+            <div class="settings-group">
+                <div class="settings-row" id="accent-row">
+                    <span class="row-label">Accent Color</span>
+                    <div class="row-value">
+                        <div id="accent-preview" class="color-preview" style="background-color: #007aff;"></div>
+                        <ion-icon name="chevron-forward" class="chevron"></ion-icon>
+                    </div>
+                    <input type="color" id="accent-color-picker" style="display: none;">
+                </div>
+                <div class="settings-row">
+                    <span class="row-label">Container Opacity</span>
+                    <div class="row-value">
+                        <input type="range" id="opacity-slider" class="ios-slider" min="0" max="1" step="0.05">
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-group">
+                <div class="settings-row" id="reset-settings-btn">
+                    <span class="row-label" style="color: var(--danger);">Reset Settings to Default</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="about" class="content-section">
+            <h1 class="content-title">About</h1>
+            <div class="settings-group">
+                <div class="settings-row">
+                    <span class="row-label">Version</span>
+                    <div class="row-value">1.6.5</div>
+                </div>
+                <div class="settings-row">
+                    <span class="row-label">Developer</span>
+                    <div class="row-value">Ashyraffa & Ratu</div>
+                </div>
+            </div>
+            <p style="color: var(--text-secondary); padding: 0 10px; font-size: 14px;">
+                 © 2026 FractionCalc.
+            </p>
+        </div>
+
+    </div>
+
+    <script>
+        // --- Localization Data for Settings ---
+        const settingsLocales = {
+            en: {
+                backToApp: "Back to App",
+                settings: "Settings",
+                general: "General",
+                personalization: "Personalization",
+                about: "About",
+                systemLanguage: "System Language",
+                english: "English",
+                indonesian: "Bahasa Indonesia",
+                deleteAllData: "Delete All User Data",
+                darkMode: "Dark Mode",
+                changeWallpaper: "Change Wallpaper",
+                selectImage: "Select Image",
+                resetWallpaper: "Reset Wallpaper",
+                accentColor: "Accent Color",
+                containerOpacity: "Container Opacity",
+                resetSettings: "Reset Settings to Default",
+                version: "Version",
+                developer: "Developer",
+                developers: "Ashyraffa & Ratu",
+                copyright: "© 2026 FractionCalc."
+            },
+            id: {
+                backToApp: "Kembali ke Aplikasi",
+                settings: "Pengaturan",
+                general: "Umum",
+                personalization: "Personalisasi",
+                about: "Tentang",
+                systemLanguage: "Bahasa Sistem",
+                english: "English",
+                indonesian: "Bahasa Indonesia",
+                deleteAllData: "Hapus Semua Data Pengguna",
+                darkMode: "Mode Gelap",
+                changeWallpaper: "Ganti Wallpaper",
+                selectImage: "Pilih Gambar",
+                resetWallpaper: "Reset Wallpaper",
+                accentColor: "Warna Aksen",
+                containerOpacity: "Opasitas Kontainer",
+                resetSettings: "Reset Pengaturan ke Default",
+                version: "Versi",
+                developer: "Pengembang",
+                developers: "Ashyraffa & Ratu",
+                copyright: "© 2026 FractionCalc."
+            }
+        };
+
+        // --- Function to Update Settings Text ---
+        function updateSettingsText() {
+            const lang = localStorage.getItem('locale') || 'en';
+            const t = settingsLocales[lang];
+            if (!t) return;
+
+            // Update sidebar
+            document.querySelector('.back-link').innerHTML = `<ion-icon name="chevron-back"></ion-icon> ${t.backToApp}`;
+            document.querySelector('.sidebar-header h2').innerText = t.settings;
+            document.querySelector('.menu-item[data-target="general"] .menu-text').innerText = t.general;
+            document.querySelector('.menu-item[data-target="display"] .menu-text').innerText = t.personalization;
+            document.querySelector('.menu-item[data-target="about"] .menu-text').innerText = t.about;
+
+            // Update content sections
+            document.querySelector('#general .content-title').innerText = t.general;
+            document.querySelector('#general #lang-row .row-label').innerText = t.systemLanguage;
+            document.querySelector('#general #reset-data-btn .row-label').innerText = t.deleteAllData;
+
+            document.querySelector('#display .content-title').innerText = t.personalization;
+            document.querySelector('#display .settings-row:nth-child(1) .row-label').innerText = t.darkMode;
+            document.querySelector('#display #wallpaper-row .row-label').innerText = t.changeWallpaper;
+            document.querySelector('#display #wallpaper-row .row-value span').innerText = t.selectImage;
+            document.querySelector('#display #reset-bg-btn .row-label').innerText = t.resetWallpaper;
+            document.querySelector('#display #accent-row .row-label').innerText = t.accentColor;
+            document.querySelector('#display .settings-row:nth-child(5) .row-label').innerText = t.containerOpacity;
+            document.querySelector('#display #reset-settings-btn .row-label').innerText = t.resetSettings;
+
+            document.querySelector('#about .content-title').innerText = t.about;
+            document.querySelector('#about .settings-row:nth-child(1) .row-label').innerText = t.version;
+            document.querySelector('#about .settings-row:nth-child(2) .row-label').innerText = t.developer;
+            document.querySelector('#about .settings-row:nth-child(2) .row-value').innerText = t.developers;
+            document.querySelector('#about p').innerText = t.copyright;
+        }
+
+        // --- 1. Navigation Logic ---
+        const menuItems = document.querySelectorAll('.menu-item');
+        const sections = document.querySelectorAll('.content-section');
+
+        menuItems.forEach(item => {
+            item.addEventListener('click', () => {
+                menuItems.forEach(el => el.classList.remove('active'));
+                item.classList.add('active');
+                const targetId = item.getAttribute('data-target');
+                sections.forEach(section => section.classList.remove('active-section'));
+                const targetSection = document.getElementById(targetId);
+                if (targetSection) targetSection.classList.add('active-section');
+            });
+        });
+
+        // --- 2. Personalization Logic ---
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        const wallpaperRow = document.getElementById('wallpaper-row');
+        const bgInput = document.getElementById('bg-upload');
+        const resetBgBtn = document.getElementById('reset-bg-btn');
+        const accentRow = document.getElementById('accent-row');
+        const accentInput = document.getElementById('accent-color-picker');
+        const accentPreview = document.getElementById('accent-preview');
+        const opacitySlider = document.getElementById('opacity-slider');
+        const langRow = document.getElementById('lang-row');
+        const langText = document.getElementById('current-lang-text');
+        const resetSettingsBtn = document.getElementById('reset-settings-btn');
+
+        // Helper: Apply Theme to *This* Page (so settings look like the app)
+        function syncVisuals() {
+            // Theme
+            const isDark = localStorage.getItem('theme') === 'dark';
+            document.body.classList.toggle('dark-mode-active', isDark);
+            darkModeToggle.checked = isDark;
+
+            // Accent Color
+            const storedAccent = localStorage.getItem('accentColor') || '#007aff';
+            document.documentElement.style.setProperty('--accent-blue', storedAccent);
+            accentPreview.style.backgroundColor = storedAccent;
+
+            // Opacity Slider
+            const storedOpacity = localStorage.getItem('containerOpacity') || 1;
+            opacitySlider.value = storedOpacity;
+            
+            // Language Text
+            const lang = localStorage.getItem('locale') || 'en';
+            langText.innerText = settingsLocales[lang].english; // Default to English label, but actually set based on current
+            if (lang === 'id') langText.innerText = settingsLocales[lang].indonesian;
+        }
+
+        // --- Event Listeners ---
+
+        // Dark Mode
+        darkModeToggle.addEventListener('change', (e) => {
+            localStorage.setItem('theme', e.target.checked ? 'dark' : 'light');
+            syncVisuals();
+        });
+
+        // Wallpaper
+        wallpaperRow.addEventListener('click', () => bgInput.click());
+        bgInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                localStorage.setItem('customBackground', evt.target.result);
+                alert("Wallpaper updated! Go back to the app to see it.");
+            };
+            reader.readAsDataURL(file);
+        });
+
+        resetBgBtn.addEventListener('click', () => {
+            localStorage.removeItem('customBackground');
+            alert("Wallpaper reset.");
+        });
+
+        // Accent Color
+        accentRow.addEventListener('click', () => accentInput.click());
+        accentInput.addEventListener('change', (e) => {
+            localStorage.setItem('accentColor', e.target.value);
+            syncVisuals();
+        });
+
+        // Opacity
+        opacitySlider.addEventListener('input', (e) => {
+            localStorage.setItem('containerOpacity', e.target.value);
+        });
+
+        // Language
+        langRow.addEventListener('click', () => {
+            const current = localStorage.getItem('locale') || 'en';
+            const next = current === 'en' ? 'id' : 'en';
+            localStorage.setItem('locale', next);
+            syncVisuals();
+            updateSettingsText(); // Update text after language change
+        });
+
+        // Reset All
+        resetSettingsBtn.addEventListener('click', () => {
+            if(confirm("Reset all personalization settings?")) {
+                localStorage.removeItem('theme');
+                localStorage.removeItem('customBackground');
+                localStorage.removeItem('accentColor');
+                localStorage.removeItem('containerOpacity');
+                localStorage.removeItem('locale');
+                syncVisuals();
+                alert("Settings reset.");
+            }
+        });
+
+        // Init on load
+        syncVisuals();
+        updateSettingsText(); // Initial text update
+
+    </script>
+</body>
+</html>

@@ -316,6 +316,11 @@ function convertDecimalToFraction() {
     let resultStr = (k1 === 1) ? `${h1}` : `${h1}/${k1}`;
     
     resultDiv.innerText = `${t.decFracResult} ${resultStr}`;
+
+    // Easter egg: 143?
+    if (decimal === 0.143 || decimal === 143 || decimal === 1.43 || decimal === 14.3) {
+        alert("All it costs is your love!\n~ Mari");
+    }
 }
 
 // Mixed ↔ Improper (Reconstructed)
