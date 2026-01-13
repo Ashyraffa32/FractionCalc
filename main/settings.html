@@ -253,7 +253,7 @@
             <h1 class="content-title">General</h1>
             <div class="settings-group">
                 <div class="settings-row" id="lang-row">
-                    <span class="row-label">System Language</span>
+                    <span class="row-label" id="lbl-sys-lang">System Language</span>
                     <div class="row-value">
                         <span id="current-lang-text">English</span>
                         <ion-icon name="chevron-forward" class="chevron"></ion-icon>
@@ -262,7 +262,7 @@
             </div>
              <div class="settings-group">
                 <div class="settings-row" id="reset-data-btn">
-                    <span class="row-label" style="color: var(--danger);" onclick="localStorage.clear()">Delete All User Data</span>
+                    <span class="row-label" style="color: var(--danger);" onclick="localStorage.clear()" id="lbl-delete-data">Delete All User Data</span>
                 </div>
             </div>
         </div>
@@ -272,25 +272,25 @@
             
             <div class="settings-group">
                 <div class="settings-row">
-                    <span class="row-label">Dark Mode</span>
+                    <span class="row-label" id="lbl-dark-mode">Dark Mode</span>
                     <input type="checkbox" id="dark-mode-toggle" class="toggle-switch">
                 </div>
                 <div class="settings-row" id="wallpaper-row">
-                    <span class="row-label">Change Wallpaper</span>
+                    <span class="row-label" id="lbl-wallpaper">Change Wallpaper</span>
                     <div class="row-value">
-                        <span style="font-size: 14px;">Select Image</span>
+                        <span style="font-size: 14px;" id="txt-select-img">Select Image</span>
                         <ion-icon name="chevron-forward" class="chevron"></ion-icon>
                     </div>
                     <input type="file" id="bg-upload" accept="image/*" style="display: none;">
                 </div>
                 <div class="settings-row" id="reset-bg-btn">
-                    <span class="row-label" style="color: var(--accent-blue);">Reset Wallpaper</span>
+                    <span class="row-label" style="color: var(--accent-blue);" id="lbl-reset-bg">Reset Wallpaper</span>
                 </div>
             </div>
 
             <div class="settings-group">
                 <div class="settings-row" id="accent-row">
-                    <span class="row-label">Accent Color</span>
+                    <span class="row-label" id="lbl-accent">Accent Color</span>
                     <div class="row-value">
                         <div id="accent-preview" class="color-preview" style="background-color: #007aff;"></div>
                         <ion-icon name="chevron-forward" class="chevron"></ion-icon>
@@ -298,7 +298,7 @@
                     <input type="color" id="accent-color-picker" style="display: none;">
                 </div>
                 <div class="settings-row">
-                    <span class="row-label" id="opacity-row">Container Opacity</span>
+                    <span class="row-label" id="lbl-opacity">Container Opacity</span>
                     <div class="row-value">
                         <input type="range" id="opacity-slider" class="ios-slider" min="0" max="1" step="0.05">
                     </div>
@@ -307,7 +307,7 @@
 
             <div class="settings-group">
                 <div class="settings-row" id="reset-settings-btn">
-                    <span class="row-label" style="color: var(--danger);">Reset Settings to Default</span>
+                    <span class="row-label" style="color: var(--danger);" id="lbl-reset-settings">Reset Settings to Default</span>
                 </div>
             </div>
         </div>
@@ -316,15 +316,15 @@
             <h1 class="content-title">About</h1>
             <div class="settings-group">
                 <div class="settings-row">
-                    <span class="row-label">Version</span>
+                    <span class="row-label" id="lbl-version">Version</span>
                     <div class="row-value">1.6.5</div>
                 </div>
                 <div class="settings-row">
-                    <span class="row-label">Developer</span>
+                    <span class="row-label" id="lbl-developer">Developer</span>
                     <div class="row-value">Ashyraffa & Ratu</div>
                 </div>
                 <div class="settings-row" onclick="window.open('license.txt', '_blank')">
-                    <span class="row-label">Legal</span>
+                    <span class="row-label" id="lbl-legal">Legal</span>
                 </div>
             </div>
             <p style="color: var(--text-secondary); padding: 0 10px; font-size: 14px;">

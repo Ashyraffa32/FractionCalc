@@ -49,39 +49,57 @@
         };
 
         // --- Function to Update Settings Text ---
-        function updateSettingsText() {
-            const lang = localStorage.getItem('locale') || 'en';
-            const t = settingsLocales[lang];
-            if (!t) return;
+ // --- Function to Update Settings Text (Fixed Version) ---
+function updateSettingsText() {
+    const lang = localStorage.getItem('locale') || 'en';
+    const t = settingsLocales[lang];
+    if (!t) return;
 
-            // Update sidebar
-            document.querySelector('.back-link').innerHTML = `<ion-icon name="chevron-back"></ion-icon> ${t.backToApp}`;
-            document.querySelector('.sidebar-header h2').innerText = t.settings;
-            document.querySelector('.menu-item[data-target="general"] .menu-text').innerText = t.general;
-            document.querySelector('.menu-item[data-target="display"] .menu-text').innerText = t.personalization;
-            document.querySelector('.menu-item[data-target="about"] .menu-text').innerText = t.about;
+    // --- Sidebar ---
+    document.querySelector('.back-link').innerHTML = `<ion-icon name="chevron-back"></ion-icon> ${t.backToApp}`;
+    document.querySelector('.sidebar-header h2').innerText = t.settings;
+    document.querySelector('.menu-item[data-target="general"] .menu-text').innerText = t.general;
+    document.querySelector('.menu-item[data-target="display"] .menu-text').innerText = t.personalization;
+    document.querySelector('.menu-item[data-target="about"] .menu-text').innerText = t.about;
 
-            // Update content sections
-            document.querySelector('#general .content-title').innerText = t.general;
-            document.querySelector('#general #lang-row .row-label').innerText = t.systemLanguage;
-            document.querySelector('#general #reset-data-btn .row-label').innerText = t.deleteAllData;
+    // --- General Section ---
+    document.querySelector('#general .content-title').innerText = t.general;
+    document.getElementById('lbl-sys-lang').innerText = t.systemLanguage;
+    document.getElementById('lbl-delete-data').innerText = t.deleteAllData;
+    
+    // Update the language display text (English/Indonesia)
+    const langText = document.getElementById('current-lang-text');
+    if (lang === 'id') {
+        langText.innerText = settingsLocales.id.indonesian;
+    } else {
+        langText.innerText = settingsLocales.en.english;
+    }
 
-            document.querySelector('#display .content-title').innerText = t.personalization;
-            document.querySelector('#display .settings-row:nth-child(1) .row-label').innerText = t.darkMode;
-            document.querySelector('#display #wallpaper-row .row-label').innerText = t.changeWallpaper;
-            document.querySelector('#display #wallpaper-row .row-value span').innerText = t.selectImage;
-            document.querySelector('#display #reset-bg-btn .row-label').innerText = t.resetWallpaper;
-            document.querySelector('#display #accent-row .row-label').innerText = t.accentColor;
-            document.querySelector('#display .settings-row:nth-child(5) .row-label').innerText = t.containerOpacity;
-            document.querySelector('#display #reset-settings-btn .row-label').innerText = t.resetSettings;
+    // --- Personalization Section ---
+    document.querySelector('#display .content-title').innerText = t.personalization;
+    document.getElementById('lbl-dark-mode').innerText = t.darkMode;
+    document.getElementById('lbl-wallpaper').innerText = t.changeWallpaper;
+    document.getElementById('txt-select-img').innerText = t.selectImage;
+    document.getElementById('lbl-reset-bg').innerText = t.resetWallpaper;
+    document.getElementById('lbl-accent').innerText = t.accentColor;
+    
+    // This is the line that was crashing before - fixed now with ID
+    const opacityLabel = document.getElementById('lbl-opacity') || document.getElementById('opacity-row');
+    if(opacityLabel) opacityLabel.innerText = t.containerOpacity;
 
-            document.querySelector('#about .content-title').innerText = t.about;
-            document.querySelector('#about .settings-row:nth-child(1) .row-label').innerText = t.version;
-            document.querySelector('#about .settings-row:nth-child(2) .row-label').innerText = t.developer;
-            document.querySelector('#about .settings-row:nth-child(2) .row-value').innerText = t.developers;
-            document.querySelector('#about .settings-row:nth-child(3) .row-label').innerText = t.legal;
-            document.querySelector('#about p').innerText = t.copyright;
-        }
+    document.getElementById('lbl-reset-settings').innerText = t.resetSettings;
+
+    // --- About Section ---
+    document.querySelector('#about .content-title').innerText = t.about;
+    document.getElementById('lbl-version').innerText = t.version;
+    // Note: 'developer' ID was already in your original HTML
+    const devLabel = document.querySelector('#about .settings-row:nth-child(2) .row-label'); 
+    if(devLabel) devLabel.innerText = t.developer; 
+    
+    document.querySelector('#about .settings-row:nth-child(2) .row-value').innerText = t.developers;
+    document.getElementById('lbl-legal').innerText = t.legal;
+    document.querySelector('#about p').innerText = t.copyright;
+}
 
         // --- 1. Navigation Logic ---
         const menuItems = document.querySelectorAll('.menu-item');
