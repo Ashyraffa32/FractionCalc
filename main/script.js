@@ -22,18 +22,18 @@ const locales = {
     en: {
         // Ribbon
         mode: "Mode",
-        operate: "Operate Fractions (Alt+1)",
-        convert: "Mixed ↔ Improper (Alt+2)",
-        decimal: "Fraction → Decimal (Alt+3)",
-        fraction: "Decimal → Fraction (Alt+4)",
-        simplify: "Simplify Fraction (Alt+5)",
+        operate: "Operate Fractions",
+        convert: "Mixed ↔ Improper",
+        decimal: "Fraction → Decimal",
+        fraction: "Decimal → Fraction",
+        simplify: "Simplify Fraction",
         options: "Options",
-        toggleTheme: "Toggle Theme (Ctrl+T)",
+        toggleTheme: "Toggle Theme",
         changeWallpaper: "Change Wallpaper...",
         resetWallpaper: "Reset to Default",
         accentColor: "Change Accent Color...",
         opacity: "Adjust Element Opacity...",
-        toggleLangBtn: "Switch Language (Ctrl+L)",
+        toggleLangBtn: "Switch Language ",
         help: "Help",
         about: "About",
         documentation: "Documentation",
@@ -43,7 +43,7 @@ const locales = {
         // Operate Panel
         howMany: "How many fractions?",
         calculate: "Calculate",
-        showExplanationCheckbox: "Show Explanation (Ctrl+E)",
+        showExplanationCheckbox: "Show Explanation",
         
         // Convert Panel
         convertToggleLabel: "Convert Improper ↔ Mixed",
@@ -102,18 +102,18 @@ const locales = {
     id: {
         // Ribbon
         mode: "Mode",
-        operate: "Operasi Pecahan (Alt+1)",
-        convert: "Campuran ↔ Biasa (Alt+2)",
-        decimal: "Pecahan → Desimal (Alt+3)",
-        fraction: "Desimal → Pecahan (Alt+4)",
-        simplify: "Sederhanakan Pecahan (Alt+5)",
+        operate: "Operasi Pecahan",
+        convert: "Campuran ↔ Biasa",
+        decimal: "Pecahan → Desimal",
+        fraction: "Desimal → Pecahan",
+        simplify: "Sederhanakan Pecahan",
         options: "Opsi",
-        toggleTheme: "Ganti Tema (Ctrl+T)",
+        toggleTheme: "Ganti Tema",
         changeWallpaper: "Ganti Wallpaper...",
         resetWallpaper: "Reset Wallpaper",
         accentColor: "Ganti Warna Aksen...",
         opacity: "Atur Opasitas Elemen...",
-        toggleLangBtn: "Ganti Bahasa (Ctrl+L)",
+        toggleLangBtn: "Ganti Bahasa",
         help: "Bantuan",
         about: "Tentang",
         documentation: "Dokumentasi",
@@ -123,7 +123,7 @@ const locales = {
         // Operate Panel
         howMany: "Berapa banyak pecahan?",
         calculate: "Hitung",
-        showExplanationCheckbox: "Tampilkan Penjelasan (Ctrl+E)",
+        showExplanationCheckbox: "Tampilkan Penjelasan",
 
         // Convert Panel
         convertToggleLabel: "Ubah Biasa ↔ Campuran",
@@ -321,6 +321,9 @@ function convertDecimalToFraction() {
     if (decimal === 0.143 || decimal === 143 || decimal === 1.43 || decimal === 14.3) {
         alert("All it costs is your love!\n~ Mari");
     }
+
+    const inputField = document.getElementById('dec_input_fraction');
+    inputField.focus();
 }
 
 // Mixed ↔ Improper (Reconstructed)
