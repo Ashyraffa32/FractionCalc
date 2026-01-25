@@ -7,331 +7,319 @@
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <style>
         :root {
-            /* Default Light Mode Vars */
-            --bg-color: #f2f2f7;
-            --sidebar-bg: #eaebef;
+            --bg-color: #f5f5f7;
+            --sidebar-bg: #ffffff;
             --white: #ffffff;
             --text-primary: #000000;
-            --text-secondary: #8e8e93;
+            --text-secondary: #86868b;
             --accent-blue: #007aff;
-            --separator: #c6c6c8;
+            --separator: #d5d5d7;
             --danger: #ff3b30;
+            --gray-light: #f5f5f7;
+            --gray-medium: #e5e5ea;
         }
 
-        /* Dark Mode Override Class */
-        .dark-mode-active {
+        body.dark-mode {
             --bg-color: #000000;
             --sidebar-bg: #1c1c1e;
             --white: #1c1c1e;
             --text-primary: #ffffff;
             --text-secondary: #8e8e93;
-            --separator: #38383a;
+            --separator: #424245;
+            --gray-light: #1c1c1e;
+            --gray-medium: #2c2c2e;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-primary); height: 100vh; display: flex; overflow: hidden; transition: background-color 0.3s ease; }
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-primary);
-            height: 100vh;
-            display: flex;
-            overflow: hidden;
-            font-size: 17px;
-            transition: background-color 0.3s;
-        }
-
-        /* --- Sidebar --- */
-        .sidebar {
-            width: 320px;
-            background-color: var(--sidebar-bg);
-            border-right: 1px solid var(--separator);
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-            flex-shrink: 0;
-            user-select: none;
-            transition: background-color 0.3s;
-        }
-
-        .sidebar-header { padding: 15px; }
-
-        .sidebar-menu { list-style: none; padding: 0 15px; }
-
-        .menu-item {
-            display: flex;
-            align-items: center;
-            padding: 10px 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-bottom: 2px;
-        }
-
-        .menu-item:active { background-color: rgba(128,128,128,0.2); }
-
-        .menu-item.active {
-            background-color: var(--accent-blue);
-            color: #fff;
-        }
-        .menu-item.active span { color: #fff !important; }
-
-        .icon-box {
-            width: 28px;
-            height: 28px;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 12px;
-            color: white;
-            font-size: 18px;
-        }
-
-        .menu-text { flex-grow: 1; font-weight: 400; }
-
-        /* --- Main Content --- */
-        .main-content {
-            flex-grow: 1;
-            background-color: var(--bg-color);
-            overflow-y: auto;
-            padding: 20px 40px;
-            transition: background-color 0.3s;
-        }
-
-        .content-title {
-            font-size: 34px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            margin-left: 10px;
-        }
-
-        .content-section { display: none; }
-        .content-section.active-section { display: block; animation: fadeIn 0.2s ease-in-out; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* --- Settings Lists --- */
-        .settings-group {
-            background-color: var(--white);
-            border-radius: 10px;
-            margin-bottom: 25px;
-            overflow: hidden;
-        }
-
-        .settings-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 16px;
-            background-color: var(--white);
-            border-bottom: 0.5px solid var(--separator);
-            min-height: 48px;
-            cursor: pointer;
+        /* Sidebar */
+        .sidebar { 
+            width: 200px; 
+            background-color: var(--sidebar-bg); 
+            border-right: 1px solid var(--separator); 
+            padding: 20px 0; 
+            overflow-y: auto; 
+            transition: background-color 0.3s ease;
+            box-shadow: 0 0 1px rgba(0,0,0,0.1);
         }
         
-        .settings-row:last-child { border-bottom: none; }
-
-        .row-label { font-size: 17px; color: var(--text-primary); }
+        .sidebar-header { 
+            padding: 0 16px 20px 16px; 
+            margin-bottom: 10px;
+            border-bottom: 1px solid var(--separator);
+        }
         
-        .row-value {
-            color: var(--text-secondary);
-            font-size: 17px;
-            display: flex;
-            align-items: center;
+        .sidebar-header button { 
+            background: transparent; 
+            border: none; 
+            color: var(--accent-blue); 
+            cursor: pointer; 
+            font-size: 1rem; 
+            padding: 8px 0;
+            display: flex; 
+            align-items: center; 
             gap: 8px;
+            font-weight: 500;
+            transition: opacity 0.2s;
+        }
+        
+        .sidebar-header button:hover { opacity: 0.7; }
+        
+        .menu-item { 
+            display: flex; 
+            align-items: center; 
+            padding: 12px 16px; 
+            cursor: pointer; 
+            margin: 0;
+            transition: 0.15s ease;
+            background: transparent;
+            border: none; 
+            width: 100%; 
+            color: var(--text-primary); 
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+        
+        .menu-item:hover { 
+            background: rgba(0,0,0,0.04);
+        }
+        
+        .menu-item.active { 
+            background: var(--accent-blue);
+            color: white;
+            border-left: 4px solid var(--accent-blue);
+            padding-left: 12px;
+        }
+        
+        .menu-item ion-icon { 
+            margin-right: 12px; 
+            font-size: 22px; 
         }
 
-        .chevron { color: #c7c7cc; font-size: 18px; }
+        /* Content */
+        .main-content { 
+            flex: 1; 
+            padding: 20px 40px;
+            overflow-y: auto; 
+            transition: background-color 0.3s ease;
+            background-color: var(--bg-color);
+        }
+        
+        .content-section { display: none; }
+        .content-section.active { display: block; animation: fadeIn 0.2s ease-out; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        
+        h1 { 
+            margin-bottom: 24px; 
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        
+        .settings-group { 
+            background: var(--white); 
+            border-radius: 12px; 
+            margin-bottom: 24px; 
+            overflow: hidden; 
+            transition: background-color 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+        
+        .settings-row { 
+            padding: 16px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 1px solid var(--separator);
+            transition: background-color 0.15s ease;
+            cursor: pointer;
+        }
+        
+        .settings-row:hover { 
+            background: var(--gray-light);
+        }
+        
+        .settings-row:last-child { 
+            border-bottom: none; 
+        }
+        
+        .row-label { 
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        
+        .danger-text { 
+            color: var(--danger);
+            font-weight: 500;
+        }
+        
+        input[type="checkbox"] { 
+            width: 24px; 
+            height: 24px; 
+            cursor: pointer;
+            accent-color: var(--accent-blue);
+        }
+        
+        input[type="color"] {
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+            transition: transform 0.2s;
+        }
 
-        /* Inputs (Hidden/Custom) */
-        .color-preview {
+        input[type="color"]:hover {
+            transform: scale(1.05);
+        }
+        
+        button { 
+            font-size: 0.95rem; 
+            padding: 8px 16px; 
+            border-radius: 8px; 
+            border: none;
+            background: var(--gray-light); 
+            color: var(--text-primary); 
+            cursor: pointer; 
+            transition: 0.15s ease;
+            font-weight: 500;
+        }
+        
+        button:hover { 
+            background: var(--gray-medium);
+        }
+
+        button:active {
+            opacity: 0.6;
+        }
+
+        /* Range Slider Styling */
+        input[type="range"] {
+            width: 120px;
+            height: 6px;
+            border-radius: 3px;
+            background: var(--gray-medium);
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
             width: 24px;
             height: 24px;
             border-radius: 50%;
-            border: 1px solid var(--separator);
+            background: var(--accent-blue);
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            transition: 0.1s;
         }
 
-        /* Toggle Switch */
-        .toggle-switch {
-            position: relative;
-            width: 51px;
-            height: 31px;
-            -webkit-appearance: none;
-            background: #e9e9ea;
-            outline: none;
-            border-radius: 16px;
-            transition: 0.3s;
-            cursor: pointer;
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
         }
-        .toggle-switch:checked { background: var(--accent-blue); }
-        .toggle-switch::before {
-            content: '';
-            position: absolute;
-            width: 27px;
-            height: 27px;
+
+        input[type="range"]::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
-            top: 2px;
-            left: 2px;
-            background: #ffffff;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.15);
-            transition: 0.3s;
-        }
-        .toggle-switch:checked::before { left: 22px; }
-
-        /* Range Slider for Opacity */
-        .ios-slider {
-            -webkit-appearance: none;
-            width: 150px;
-            height: 4px;
-            background: var(--separator);
-            border-radius: 2px;
-            outline: none;
-        }
-        .ios-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: #ffffff;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+            background: var(--accent-blue);
             cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            transition: 0.1s;
         }
 
-        /* Colors */
-        .bg-blue { background-color: #007aff; }
-        .bg-orange { background-color: #ff9500; }
-        .bg-gray { background-color: #8e8e93; }
-        .bg-green { background-color: #34c759; }
-        .bg-red { background-color: #ff3b30; }
-        
-        /* Back Button for Mobile/Small Screens context */
-        .back-link {
-            text-decoration: none;
-            color: var(--accent-blue);
-            font-size: 17px;
-            margin-bottom: 10px;
-            display: inline-block;
-            cursor: pointer;
+        input[type="range"]::-moz-range-thumb:hover {
+            transform: scale(1.1);
         }
 
+        #opacity-value {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
         <div class="sidebar-header">
-            <a href="index.html" class="back-link"><ion-icon name="chevron-back"></ion-icon> Back to App</a>
-            <h2>Settings</h2>
+            <button id="back-btn"><ion-icon name="chevron-back-outline"></ion-icon> Back</button>
         </div>
-
-        <ul class="sidebar-menu">
-            <li class="menu-item active" data-target="general">
-                <div class="icon-box bg-gray"><ion-icon name="settings"></ion-icon></div>
-                <span class="menu-text">General</span>
-            </li>
-            <li class="menu-item" data-target="display">
-                <div class="icon-box bg-blue"><ion-icon name="contrast"></ion-icon></div>
-                <span class="menu-text">Personalization</span>
-            </li>
-            <li class="menu-item" data-target="about">
-                <div class="icon-box bg-orange"><ion-icon name="alert-circle-outline"></ion-icon></div>
-                <span class="menu-text">About</span>
-            </li>
-        </ul>
+        <button class="menu-item active" data-section="general">
+            <ion-icon name="settings-outline"></ion-icon> General
+        </button>
+        <button class="menu-item" data-section="personalization">
+            <ion-icon name="color-palette-outline"></ion-icon> Personalization
+        </button>
+        <button class="menu-item" data-section="about">
+            <ion-icon name="information-circle-outline"></ion-icon> About
+        </button>
     </div>
 
     <div class="main-content">
-
-        <div id="general" class="content-section active-section">
-            <h1 class="content-title">General</h1>
+        <!-- General Section -->
+        <div id="general" class="content-section active">
+            <h1>General</h1>
             <div class="settings-group">
-                <div class="settings-row" id="lang-row">
-                    <span class="row-label" id="lbl-sys-lang">System Language</span>
-                    <div class="row-value">
-                        <span id="current-lang-text">English</span>
-                        <ion-icon name="chevron-forward" class="chevron"></ion-icon>
-                    </div>
+                <div class="settings-row">
+                    <span class="row-label">Language</span>
+                    <button id="toggle-lang-btn">English</button>
                 </div>
-            </div>
-             <div class="settings-group">
-                <div class="settings-row" id="reset-data-btn">
-                    <span class="row-label" style="color: var(--danger);" onclick="localStorage.clear()" id="lbl-delete-data">Delete All User Data</span>
+                <div class="settings-row" id="delete-data-row">
+                    <span class="row-label danger-text">Delete All User Data</span>
                 </div>
             </div>
         </div>
-        
-        <div id="display" class="content-section">
-            <h1 class="content-title">Personalization</h1>
-            
+
+        <!-- Personalization Section -->
+        <div id="personalization" class="content-section">
+            <h1>Personalization</h1>
             <div class="settings-group">
                 <div class="settings-row">
-                    <span class="row-label" id="lbl-dark-mode">Dark Mode</span>
-                    <input type="checkbox" id="dark-mode-toggle" class="toggle-switch">
+                    <span class="row-label">Dark Mode</span>
+                    <input type="checkbox" id="dark-mode-toggle">
                 </div>
                 <div class="settings-row" id="wallpaper-row">
-                    <span class="row-label" id="lbl-wallpaper">Change Wallpaper</span>
-                    <div class="row-value">
-                        <span style="font-size: 14px;" id="txt-select-img">Select Image</span>
-                        <ion-icon name="chevron-forward" class="chevron"></ion-icon>
-                    </div>
+                    <span class="row-label">Change Wallpaper</span>
+                    <button>Select Image</button>
                     <input type="file" id="bg-upload" accept="image/*" style="display: none;">
                 </div>
-                <div class="settings-row" id="reset-bg-btn">
-                    <span class="row-label" style="color: var(--accent-blue);" id="lbl-reset-bg">Reset Wallpaper</span>
-                </div>
-            </div>
-
-            <div class="settings-group">
-                <div class="settings-row" id="accent-row">
-                    <span class="row-label" id="lbl-accent">Accent Color</span>
-                    <div class="row-value">
-                        <div id="accent-preview" class="color-preview" style="background-color: #007aff;"></div>
-                        <ion-icon name="chevron-forward" class="chevron"></ion-icon>
-                    </div>
-                    <input type="color" id="accent-color-picker" style="display: none;">
+                <div class="settings-row" id="reset-bg-row">
+                    <span class="row-label">Reset Wallpaper</span>
                 </div>
                 <div class="settings-row">
-                    <span class="row-label" id="lbl-opacity">Container Opacity</span>
-                    <div class="row-value">
-                        <input type="range" id="opacity-slider" class="ios-slider" min="0" max="1" step="0.05">
+                    <span class="row-label">Accent Color</span>
+                    <input type="color" id="accent-color-picker" value="#007aff" style="width: 50px; height: 40px;">
+                </div>
+                <div class="settings-row">
+                    <span class="row-label">Container Opacity</span>
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <input type="range" id="opacity-slider" min="0.1" max="1" step="0.1" value="1">
+                        <span id="opacity-value" style="min-width: 35px;">100%</span>
                     </div>
                 </div>
-            </div>
-
-            <div class="settings-group">
-                <div class="settings-row" id="reset-settings-btn">
-                    <span class="row-label" style="color: var(--danger);" id="lbl-reset-settings">Reset Settings to Default</span>
+                <div class="settings-row" id="reset-settings-row">
+                    <span class="row-label danger-text">Reset Settings</span>
                 </div>
             </div>
         </div>
 
+        <!-- About Section -->
         <div id="about" class="content-section">
-            <h1 class="content-title">About</h1>
+            <h1>About</h1>
             <div class="settings-group">
                 <div class="settings-row">
-                    <span class="row-label" id="lbl-version">Version</span>
-                    <div class="row-value">1.6.5</div>
+                    <span class="row-label">Version</span>
+                    <span style="color: var(--text-secondary);">2.0.0</span>
                 </div>
-                <div class="settings-row">
-                    <span class="row-label" id="lbl-developer">Developer</span>
-                    <div class="row-value">Ashyraffa & Ratu</div>
-                </div>
-                <div class="settings-row" onclick="window.open('license.txt', '_blank')">
-                    <span class="row-label" id="lbl-legal">Legal</span>
+                <div class="settings-row" id="legal-row">
+                    <span class="row-label">Legal / License</span>
                 </div>
             </div>
-            <p style="color: var(--text-secondary); padding: 0 10px; font-size: 14px;">
-                 © 2026 FractionCalc.
-            </p>
         </div>
-
     </div>
 
     <script src="settings.js"></script>

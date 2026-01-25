@@ -27,18 +27,7 @@ const locales = {
         decimal: "Fraction → Decimal",
         fraction: "Decimal → Fraction",
         simplify: "Simplify Fraction",
-        options: "Options",
-        toggleTheme: "Toggle Theme",
-        changeWallpaper: "Change Wallpaper...",
-        resetWallpaper: "Reset to Default",
-        accentColor: "Change Accent Color...",
-        opacity: "Adjust Element Opacity...",
-        toggleLangBtn: "Switch Language ",
-        help: "Help",
-        about: "About",
-        documentation: "Documentation",
-        view: "View",
-        fullscreen: "Toggle Full Screen",
+        options: "Settings",
         
         // Operate Panel
         howMany: "How many fractions?",
@@ -75,7 +64,6 @@ const locales = {
         decFracResult: "Fraction:",
         simplifyResult: "Simplified:",
         language: "Language",
-        aboutMsg: "FractionCalc (1.6.4) - Made by Ashyraffa and Ratu",
         mixedToImproper: "Improper Fraction:",
         improperToMixed: "Mixed Number:",
         result: "Result:",
@@ -107,18 +95,7 @@ const locales = {
         decimal: "Pecahan → Desimal",
         fraction: "Desimal → Pecahan",
         simplify: "Sederhanakan Pecahan",
-        options: "Opsi",
-        toggleTheme: "Ganti Tema",
-        changeWallpaper: "Ganti Wallpaper...",
-        resetWallpaper: "Reset Wallpaper",
-        accentColor: "Ganti Warna Aksen...",
-        opacity: "Atur Opasitas Elemen...",
-        toggleLangBtn: "Ganti Bahasa",
-        help: "Bantuan",
-        about: "Tentang",
-        documentation: "Dokumentasi",
-        view: "Tampilan",
-        fullscreen: "Toggle Layar Penuh",
+        options: "Pengaturan",
 
         // Operate Panel
         howMany: "Berapa banyak pecahan?",
@@ -317,11 +294,23 @@ function convertDecimalToFraction() {
     
     resultDiv.innerText = `${t.decFracResult} ${resultStr}`;
 
-    // Easter egg: 143?
+    // Omori Easter eggs (yea i'm a Omori fan so uhh i put ts here alr?)
     if (decimal === 0.143 || decimal === 143 || decimal === 1.43 || decimal === 14.3) {
         alert("All it costs is your love!\n~ Mari");
+    } else if (decimal === 3.1) { // Mari's Birthday
+        alert("Our Dearest Mari\nThe sun shined brighter when she was here...");
+    } else if (decimal === 2.18) { // Basil's Birthday
+        alert("Everything is going to be okay....\n~ Basil");
+    } else if (decimal === 5.23) { // Aubrey's Birthday
+       alert("Oh you think you're the good guy, Kel? And i'm the big bad bully, here to terrorize poor, defenseless Basil.\n~ Aubrey");
+    } else if (decimal === 7.20) { // Sunny's Birthday
+       alert("eh since he was an introvert in the whole game so i couldnt find qoutes from him, sorry :/\n~ developer");
+    } else if (decimal == 1.1) { // Hero's Birthday
+        alert("Hey, Sunny... Can I poke your brain for a minute?\nI really love cooking and all and Mari always says I'm really good, but my parents want me to become a doctor...\nDo you think I should become a chef?\n~ Hero");
+    } else if (decimal == 11.11) { // Kel's Birthday
+        alert("Do you remember me? It's your old friend, KEL!");
     }
-
+ 
     const inputField = document.getElementById('dec_input_fraction');
     inputField.focus();
 }
@@ -873,11 +862,6 @@ function setupKeyboardShortcuts() {
             document.getElementById('toggle-theme-btn').click();
         }
 
-        // Ctrl + L: Toggle Language
-        if ((e.ctrlKey || e.metaKey) && (e.key === 'l' || e.key === 'L')) {
-            e.preventDefault(); 
-            document.getElementById('toggle-lang-btn').click();
-        }
 
         // 3. Mode Switching (Alt + 1 to 5)
         if (e.altKey) {
