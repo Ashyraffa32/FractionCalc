@@ -1,0 +1,28 @@
+/* ========== Layout ========== */
+.container {
+    padding: 16px;
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+}
+
+.stack.gap-md > .card {
+    margin-bottom: 16px; /* Tambahan untuk memisahkan card */
+}
+
+.row.items-center {
+    align-items: center;
+}
+
+.hint {
+    color: var(--muted);
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+

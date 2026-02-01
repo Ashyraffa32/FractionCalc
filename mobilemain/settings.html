@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title data-i18n="settingsTitle">Settings</title>
+    <link rel="stylesheet" href="settings.css" />
+    <link rel="stylesheet" href="style.css">
+    <meta name="theme-color" content="#0f172a" />
+</head>
+<body>
+    <header class="appbar">
+        <a href="index.html" class="icon-btn" aria-label="Back" data-i18n="back" data-i18n-attr="aria-label">&larr;</a>
+        <h1 class="app-title" id="settings-title" data-i18n="settingsTitle">Settings</h1>
+    </header>
+
+    <main class="container stack gap-md">
+        <h2 data-i18n="themesHeading">Themes/Personalization</h2>
+        <section class="card">
+            <h3 id="display-heading" data-i18n="display">Display</h3>
+            <p class="hint" id="theme-hint" data-i18n="themeHint">Change the app theme</p>
+            <button id="theme-toggle" class="btn" data-i18n="themeBtn">Toggle Theme (Light/Dark)</button>
+        </section>
+
+        <section class="card">
+            <h3 id="accent-heading" data-i18n="accentHeading">Accent Color</h3>
+            <p class="hint" id="accent-hint" data-i18n="accentHint">Change the main color of buttons and controls.</p>
+            <input type="color" id="accent-color-picker" hidden>
+            <button id="change-accent-btn" class="btn" data-i18n="changeColorBtn">Change Color</button>
+        </section>
+
+        <section class="card">
+            <h3 id="opacity-heading" data-i18n="opacityHeading">Element Opacity</h3>
+            <p class="hint" id="opacity-hint" data-i18n="opacityHint">Adjust the transparency of elements.</p>
+            <input type="range" id="opacity-slider" min="0.5" max="1" step="0.05" style="width: 100%;">
+        </section>
+
+        <section class="card">
+            <h3 id="wallpaper-heading" data-i18n="wallpaper">Wallpaper</h3>
+            <p class="hint" id="wallpaper-hint" data-i18n="wallpaperHint">You can set a custom photo from your device as wallpaper.</p>
+            <div class="stack gap-sm">
+                <input type="file" id="bg-upload" accept="image/*" class="input" hidden />
+                <button id="upload-bg-btn" class="btn primary" data-i18n="selectPic">Select Picture...</button>
+                <button id="reset-bg-btn" class="btn" data-i18n="resetBg">Reset Background</button>
+            </div>
+        </section>
+
+        <h2 data-i18n="languageSection">Language</h2>
+        <section class="card">
+            <h3 id="language-heading" data-i18n="language">Language</h3>
+            <p class="hint" id="language-hint" data-i18n="languageHint">Change language for the app (New)</p>
+            <button class="btn" id="lang-toggle" data-i18n="langBtn">Change Language</button>
+        </section>
+
+        <h2 data-i18n="dangerZones">Danger Zones</h2>
+        <section class="card">
+            <h3 id="reset-heading" data-i18n="resetHeading">Reset Settings</h3>
+            <p class="hint" id="reset-hint" data-i18n="resetHint">Reset all settings to default values.</p>
+            <button id="reset-settings-btn" class="btn danger" data-i18n="resetBtn" onclick="localStorage.clear()">Reset Settings</button>
+        </section>
+
+        <h2 data-i18n="aboutSection">About</h2>
+        <section class="card">
+            <h3 id="about-heading" data-i18n="aboutTitle">About and Credits</h3>
+            <p id="about-app" data-i18n="aboutApp">FractionCalc for Android, v2.0.1</p>
+            <p id="about-made" data-i18n="aboutMade">Made by Ashyraffa and Ratu</p>
+        </section>
+    </main>
+
+    <script src="settings.js"></script>
+</body>
+</html>

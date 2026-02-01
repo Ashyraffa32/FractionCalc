@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>FractionCalc</title>
+  <link rel="stylesheet" href="style.css" />
+  <meta name="theme-color" content="#0f172a" />
+</head>
+<body>
+  <header class="appbar">
+    <h1 class="app-title">FractionCalc</h1>
+    <nav class="app-actions">
+      <a class="icon-btn" href="settings.html" aria-label="Settings">⚙</a>
+    </nav>
+  </header>
+
+  <main class="container">
+   
+
+    <section id="operate-section" class="panel show" role="tabpanel">
+      <div class="row gap-sm items-center">
+        <label for="fraction-count" class="label">How many?</label>
+        <select id="fraction-count" class="select-op">
+          <option value="2" selected>2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+        </select>
+      </div>
+
+      <div id="fractions-wrap" class="stack gap-md">
+        <div class="fraction-inputs" id="fraction1">
+          <input type="number" id="whole1" inputmode="numeric" placeholder="Whole" class="input">
+          <input type="number" id="num1" inputmode="numeric" placeholder="Numerator" class="input">
+          <span class="divider">/</span>
+          <input type="number" id="den1" inputmode="numeric" placeholder="Denominator" class="input">
+        </div>
+        <div class="fraction-inputs" id="fraction2">
+          <input type="number" id="whole2" inputmode="numeric" placeholder="Whole" class="input">
+          <input type="number" id="num2" inputmode="numeric" placeholder="Numerator" class="input">
+          <span class="divider">/</span>
+          <input type="number" id="den2" inputmode="numeric" placeholder="Denominator" class="input">
+        </div>
+        <div class="fraction-inputs" id="fraction3" hidden>
+          <input type="number" id="whole3" inputmode="numeric" placeholder="Whole" class="input">
+          <input type="number" id="num3" inputmode="numeric" placeholder="Numerator" class="input">
+          <span class="divider">/</span>
+          <input type="number" id="den3" inputmode="numeric" placeholder="Denominator" class="input">
+        </div>
+        <div class="fraction-inputs" id="fraction4" hidden>
+          <input type="number" id="whole4" inputmode="numeric" placeholder="Whole" class="input">
+          <input type="number" id="num4" inputmode="numeric" placeholder="Numerator" class="input">
+          <span class="divider">/</span>
+          <input type="number" id="den4" inputmode="numeric" placeholder="Denominator" class="input">
+        </div>
+      </div>
+
+      <div class="row gap-sm items-center">
+        <label for="operator" class="label">Operator</label>
+        <select id="operator" class="select-op">
+          <option value="+">+</option>
+          <option value="-">−</option>
+          <option value="*">×</option>
+          <option value="/">÷</option>
+        </select>
+      </div>
+
+      <button class="btn primary" id="calc-btn">Calculate</button>
+      
+      <div class="row items-center gap-sm" style="justify-content: center;">
+        <input type="checkbox" id="show-explanation-checkbox">
+        <label for="show-explanation-checkbox">Show explanation</label>
+      </div>
+
+      <output id="result" class="result" role="status" aria-live="polite">Result: </output>
+
+      <details id="explanation-container" class="steps" hidden>
+        <summary>Calculation Steps</summary>
+        <pre id="explanation-box"></pre>
+      </details>
+      
+      <p class="hint">
+        Let "Whole" empty if the fraction is improper. 
+      </p>
+
+    </section>
+
+    <section id="convert-section" class="panel" role="tabpanel" hidden>
+      <div class="row align-center">
+        <label class="label-checkbox">
+          <input type="checkbox" id="toggle-convert-mode"> Convert Improper ↔ Mixed (Ubah biasa -> pecahan)
+        </label>
+      </div>
+      <div class="fraction-inputs">
+        <input type="number" id="conv_whole" inputmode="numeric" placeholder="Whole" class="input">
+        <input type="number" id="conv_num" inputmode="numeric" placeholder="Numerator" class="input">
+        <span class="divider">/</span>
+        <input type="number" id="conv_den" inputmode="numeric" placeholder="Denominator" class="input">
+      </div>
+      <button class="btn primary" id="btn-convert-mixed">Convert</button>
+      <output id="convert-result" class="result"></output>
+    </section>
+
+    <section id="decimal-section" class="panel" role="tabpanel" hidden>
+       <div class="fraction-inputs">
+        <input type="number" id="dec_num" inputmode="numeric" placeholder="Numerator" class="input">
+        <span class="divider">/</span>
+        <input type="number" id="dec_den" inputmode="numeric" placeholder="Denominator" class="input">
+      </div>
+      <button class="btn primary" id="btn-frac-to-dec">Convert to Decimal</button>
+      <output id="decimal-result" class="result"></output>
+    </section>
+
+    <section id="fraction-section" class="panel" role="tabpanel" hidden>
+      <input type="number" id="dec_input_fraction" inputmode="decimal" placeholder="Insert Decimal..." class="input wide">
+      <button class="btn primary" id="btn-dec-to-frac">Convert to Fractions</button>
+      <output id="decimal-to-fraction-result" class="result"></output>
+    </section>
+
+    <section id="simplify-section" class="panel" role="tabpanel" hidden>
+      <div class="fraction-inputs">
+        <input type="number" id="simp_num" inputmode="numeric" placeholder="Numerator" class="input">
+        <span class="divider">/</span>
+        <input type="number" id="simp_den" inputmode="numeric" placeholder="Denominator" class="input">
+      </div>
+      <button class="btn primary" id="btn-simplify">Simplify</button>
+      <output id="simplify-result" class="result"></output>
+    </section>
+
+     <div class="tabs" role="tablist" aria-label="Modes">
+      <button class="tab active" data-mode="operate" role="tab" aria-selected="true">Operation</button>
+      <button class="tab" data-mode="convert" role="tab" aria-selected="false">Mixed ↔ Improper</button>
+      <button class="tab" data-mode="decimal" role="tab" aria-selected="false">Fraction → Decimal</button>
+      <button class="tab" data-mode="fraction" role="tab" aria-selected="false">Decimal → Fraction</button>
+      <button class="tab" data-mode="simplify" role="tab" aria-selected="false">Simplify</button>
+    </div>
+  </main>
+  
+  <script src="script.js"></script>
+</body>
+</html>

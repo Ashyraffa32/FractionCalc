@@ -21,6 +21,20 @@
       <div class="dropdown">
         <button id="open-settings-btn" onclick="window.location.href='settings.html'">Settings</button>
       </div>
+      <div class="dropdown">
+        <button>Options</button>
+        <div class="dropdown-menu">
+          <button id="options-show-explanations-btn" aria-pressed="false">Show Explanation</button>
+          <button id="toggle-theme-btn">Toggle Theme</button>
+          <button id="fullscreen-btn">Fullscreen</button>
+        </div>
+      </div>
+      <div class="dropdown">
+        <button>Help</button>
+        <div class="dropdown-menu">
+          <button id="tip-of-day-btn">Tip of The Day</button>
+        </div>
+      </div>
     </div>
 
     <div class="container">
@@ -68,9 +82,7 @@
             <div class="row align-center">
                 <button id="calc-btn" class="btn">Calculate</button>
             </div>
-                <label class="label-checkbox">
-                    <input type="checkbox" id="show-explanation-checkbox"> Show Explanation
-                </label>
+
             <div id="result"></div>
             <div id="explanation-box" class="explanation-box"></div>
         </div>
@@ -127,6 +139,6 @@
         </div>
 
     
-    <script src="script.js"></script>
+    <script type="module" src="script.js"></script>
 </body>
 </html>
