@@ -112,18 +112,20 @@ export function initUI() {
             if (decimal === 0.143 || decimal === 143 || decimal === 1.43 || decimal === 14.3) {
                 alert("All it costs is your love!\n~ Mari");
             } else if (decimal === 3.1) {
-                alert("Our Dearest Mari\nThe sun shined brighter when she was here...");
+                alert("Our Dearest Mari..\nThe sun shined brighter when she was here...");
             } else if (decimal === 2.18) {
                 alert("Everything is going to be okay....\n~ Basil");
             } else if (decimal === 5.23) {
-                alert("Oh you think you're the good guy, Kel? And i'm the big bad bully, here to terrorize poor, defenseless Basil.\n~ Aubrey");
+                alert("My old friends weren't there when i needed them.\n~ Aubrey");
             } else if (decimal === 7.20) {
-                alert("eh since he was an introvert in the whole game so i couldnt find qoutes from him, sorry :/\n~ developer");
+                alert("I have to tell you something.....");
             } else if (decimal == 1.1 || decimal == 1.01) {
                 alert("Hey, Sunny... Can I poke your brain for a minute?\nI really love cooking and all and Mari always says I'm really good, but my parents want me to become a doctor...\nDo you think I should become a chef?\n~ Hero");
             } else if (decimal == 11.11) {
                 alert("Do you remember me? It's your old friend, KEL!");
             }
+
+
         });
     }
 
@@ -365,6 +367,10 @@ export function updateTextForLanguage() {
     }
 
     setText('#opacity-modal h4', 'opacityTitle');
+
+    // Update hardcoded UI text
+    const howManyLabel = document.getElementById('howMany-label');
+    if (howManyLabel) howManyLabel.textContent = t.howMany;
 }
 
 function setupKeyboardShortcuts() {

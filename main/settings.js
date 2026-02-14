@@ -27,7 +27,18 @@ class SettingsManager {
                 legal: 'Legal / License',
                 back: 'Back',
                 english: 'English',
-                bahasa: 'Bahasa Indonesia'
+                bahasa: 'Bahasa Indonesia',
+                german: 'Deutsch',
+                japanese: '日本語',
+                resetConfirm: 'Reset personalization settings?',
+                resetSuccess: 'Settings reset!',
+                deleteConfirm: 'Delete ALL data? This cannot be undone!',
+                deleteSuccess: 'All data deleted!',
+                wallpaperApplied: 'New wallpaper applied.',
+                wallpaperReset: 'Wallpaper reset!',
+                confirm: 'Confirm',
+                warning: 'WARNING',
+                success: 'Success'
             },
             id: {
                 general: 'Umum',
@@ -47,7 +58,80 @@ class SettingsManager {
                 legal: 'Lisensi / Hukum',
                 back: 'Kembali',
                 english: 'English',
-                bahasa: 'Bahasa Indonesia'
+                bahasa: 'Bahasa Indonesia',
+                german: 'Deutsch',
+                japanese: '日本語',
+                resetConfirm: 'Reset pengaturan personalisasi?',
+                resetSuccess: 'Pengaturan direset!',
+                deleteConfirm: 'Hapus SEMUA data? Ini tidak dapat dibatalkan!',
+                deleteSuccess: 'Semua data dihapus!',
+                wallpaperApplied: 'Wallpaper baru diterapkan.',
+                wallpaperReset: 'Wallpaper direset!',
+                confirm: 'Konfirmasi',
+                warning: 'PERINGATAN',
+                success: 'Berhasil'
+            },
+            de: {
+                general: 'Allgemein',
+                personalization: 'Personalisierung',
+                about: 'Über',
+                language: 'Sprache',
+                deleteAllData: 'Alle Benutzerdaten löschen',
+                darkMode: 'Dunkler Modus',
+                changeWallpaper: 'Hintergrund ändern',
+                selectImage: 'Bild auswählen',
+                resetWallpaper: 'Hintergrund zurücksetzen',
+                accentColor: 'Akzentfarbe',
+                containerOpacity: 'Containerdeckkraft',
+                resetSettings: 'Einstellungen zurücksetzen',
+                version: 'Version',
+                versionNumber: '2.0.1',
+                legal: 'Rechtliches / Lizenz',
+                back: 'Zurück',
+                english: 'English',
+                bahasa: 'Bahasa Indonesia',
+                german: 'Deutsch',
+                japanese: '日本語',
+                resetConfirm: 'Personalisierungseinstellungen zurücksetzen?',
+                resetSuccess: 'Einstellungen zurückgesetzt!',
+                deleteConfirm: 'ALLE Daten löschen? Dies kann nicht rückgängig gemacht werden!',
+                deleteSuccess: 'Alle Daten gelöscht!',
+                wallpaperApplied: 'Neuer Hintergrund angewendet.',
+                wallpaperReset: 'Hintergrund zurückgesetzt!',
+                confirm: 'Bestätigen',
+                warning: 'WARNUNG',
+                success: 'Erfolg'
+            },
+            jp: {
+                general: '一般',
+                personalization: 'カスタマイズ',
+                about: 'について',
+                language: '言語',
+                deleteAllData: 'すべてのユーザーデータを削除',
+                darkMode: 'ダークモード',
+                changeWallpaper: '壁紙を変更',
+                selectImage: '画像を選択',
+                resetWallpaper: '壁紙をリセット',
+                accentColor: 'アクセントカラー',
+                containerOpacity: 'コンテナの不透明度',
+                resetSettings: '設定をリセット',
+                version: 'バージョン',
+                versionNumber: '2.0.1',
+                legal: '法務 / ライセンス',
+                back: '戻る',
+                english: 'English',
+                bahasa: 'Bahasa Indonesia',
+                german: 'Deutsch',
+                japanese: '日本語',
+                resetConfirm: 'パーソナライズ設定をリセットしますか?',
+                resetSuccess: '設定がリセットされました!',
+                deleteConfirm: 'すべてのデータを削除しますか? これは元に戻すことができません!',
+                deleteSuccess: 'すべてのデータが削除されました!',
+                wallpaperApplied: '新しい壁紙が適用されました。',
+                wallpaperReset: '壁紙がリセットされました!',
+                confirm: '確認',
+                warning: '警告',
+                success: '成功'
             }
         };
         
@@ -103,6 +187,9 @@ class SettingsManager {
         const t = this.locales[this.locale];
         if (!t) return;
 
+        // Update menu items and back button
+        this.updateMenuItemTexts();
+
         // Update headings
         document.querySelectorAll('.content-section').forEach(section => {
             const title = section.querySelector('h1');
@@ -113,12 +200,10 @@ class SettingsManager {
             }
         });
 
-        // Update General section
-        const langRow = document.querySelector('[id="toggle-lang-btn"]');
-        if (langRow) {
-            const label = langRow.parentElement.querySelector('.row-label');
-            if (label) label.textContent = t.language;
-            langRow.textContent = this.locale === 'en' ? t.english : t.bahasa;
+        // Update General section - Language dropdown
+        const firstSettingsRow = document.querySelector('#general .settings-row .row-label');
+        if (firstSettingsRow) {
+            firstSettingsRow.textContent = t.language;
         }
 
         const deleteRow = document.querySelector('[id="delete-data-row"]');
@@ -145,17 +230,18 @@ class SettingsManager {
             if (label) label.textContent = t.resetWallpaper;
         }
 
-        // Find accent color row
-        const accentRows = document.querySelectorAll('.settings-row');
-        accentRows.forEach(row => {
-            const label = row.querySelector('.row-label');
-            if (label && label.textContent.includes('Color')) {
-                label.textContent = t.accentColor;
-            }
-            if (label && label.textContent.includes('Opacity')) {
-                label.textContent = t.containerOpacity;
-            }
-        });
+        // Update Accent Color row
+        const accentColorLabel = document.querySelector('#accent-color');
+        if (accentColorLabel) {
+            accentColorLabel.textContent = t.accentColor;
+        }
+
+        // Update Container Opacity row
+        const opacityTitleRow = document.querySelector('#opacity-title');
+        if (opacityTitleRow) {
+            const label = opacityTitleRow.querySelector('.row-label');
+            if (label) label.textContent = t.containerOpacity;
+        }
 
         const resetSettingsRow = document.querySelector('[id="reset-settings-row"]');
         if (resetSettingsRow) {
@@ -226,18 +312,75 @@ class SettingsManager {
                 }
             });
         });
+
+        // Update menu item texts for current language
+        this.updateMenuItemTexts();
+    }
+
+    updateMenuItemTexts() {
+        const t = this.locales[this.locale];
+        if (!t) return;
+
+        const menuItems = {
+            'general': t.general,
+            'personalization': t.personalization,
+            'about': t.about
+        };
+
+        document.querySelectorAll('.menu-item[data-section]').forEach(item => {
+            const section = item.getAttribute('data-section');
+            if (menuItems[section]) {
+                const icon = item.querySelector('ion-icon');
+                item.innerHTML = '';
+                if (icon) item.appendChild(icon.cloneNode(true));
+                item.appendChild(document.createTextNode(' ' + menuItems[section]));
+            }
+        });
+
+        // Update back button
+        const backBtn = document.getElementById('back-btn');
+        if (backBtn) {
+            const icon = backBtn.querySelector('ion-icon');
+            backBtn.innerHTML = '';
+            if (icon) backBtn.appendChild(icon.cloneNode(true));
+            backBtn.appendChild(document.createTextNode(' ' + t.back));
+        }
     }
 
     // ===== LANGUAGE TOGGLE =====
     setupLanguageToggle() {
+        // Handle dropdown select in HTML
+        const languagesSelect = document.getElementById('languages');
+        if (languagesSelect) {
+            languagesSelect.value = this.locale;
+            languagesSelect.addEventListener('change', async (e) => {
+                this.locale = e.target.value;
+                localStorage.setItem('locale', this.locale);
+                
+                // Update text immediately
+                this.updateSettingsText();
+                
+                const t = this.locales[this.locale];
+            });
+        }
+
+        // Also handle button toggle if it exists
         const btn = document.getElementById('toggle-lang-btn');
         if (!btn) return;
 
-        const langMap = { en: this.locales.en.english, id: this.locales.id.bahasa };
+        const langMap = { 
+            en: this.locales.en.english, 
+            id: this.locales.id.bahasa,
+            de: this.locales.de.german,
+            jp: this.locales.jp.japanese
+        };
+        const langOrder = ['en', 'id', 'de', 'jp'];
+
         btn.textContent = langMap[this.locale];
 
         btn.addEventListener('click', async () => {
-            this.locale = this.locale === 'en' ? 'id' : 'en';
+            const currentIndex = langOrder.indexOf(this.locale);
+            this.locale = langOrder[(currentIndex + 1) % langOrder.length];
             localStorage.setItem('locale', this.locale);
             
             // Update text immediately without reload
@@ -245,9 +388,19 @@ class SettingsManager {
             
             // Update button text
             btn.textContent = langMap[this.locale];
+            
+            // Update dropdown if it exists
+            if (languagesSelect) {
+                languagesSelect.value = this.locale;
+            }
 
             const t = this.locales[this.locale];
-            await this.showMessage(this.locale === 'en' ? 'Language changed to English!' : 'Bahasa berubah ke Indonesia!', 'Language');
+            const messages = {
+                en: 'Language changed to English!',
+                id: 'Bahasa berubah ke Indonesia!',
+                de: 'Sprache zu Deutsch geändert!',
+                jp: '言語が日本語に変わりました!'
+            };
         });
     }
 
@@ -258,19 +411,12 @@ class SettingsManager {
         if (resetSettingsRow) {
             resetSettingsRow.addEventListener('click', async () => {
                 const t = this.locales[this.locale];
-                const confirmed = await this.showConfirm(
-                    this.locale === 'en' ? 'Reset personalization settings?' : 'Reset pengaturan personalisasi?',
-                    'Confirm'
-                );
+                const confirmed = await this.showConfirm(t.resetConfirm, t.confirm);
                 if (confirmed) {
                     localStorage.removeItem('theme');
                     localStorage.removeItem('accentColor');
                     localStorage.removeItem('containerOpacity');
                     localStorage.removeItem('customBackground');
-                    await this.showMessage(
-                        this.locale === 'en' ? 'Settings reset!' : 'Pengaturan direset!',
-                        'Success'
-                    );
                     window.location.reload();
                 }
             });
@@ -280,18 +426,10 @@ class SettingsManager {
         const deleteDataRow = document.getElementById('delete-data-row');
         if (deleteDataRow) {
             deleteDataRow.addEventListener('click', async () => {
-                const confirmed = await this.showConfirm(
-                    this.locale === 'en' 
-                        ? 'Delete ALL data? This cannot be undone!' 
-                        : 'Hapus SEMUA data? Ini tidak dapat dibatalkan!',
-                    'WARNING'
-                );
+                const t = this.locales[this.locale];
+                const confirmed = await this.showConfirm(t.deleteConfirm, t.warning);
                 if (confirmed) {
                     localStorage.clear();
-                    await this.showMessage(
-                        this.locale === 'en' ? 'All data deleted!' : 'Semua data dihapus!',
-                        'Success'
-                    );
                     window.location.reload();
                 }
             });
@@ -316,10 +454,7 @@ class SettingsManager {
                 const reader = new FileReader();
                 reader.onload = async (evt) => {
                     localStorage.setItem('customBackground', evt.target.result);
-                    await this.showMessage(
-                        this.locale === 'en' ? 'New wallpaper applied.' : 'Wallpaper baru diterapkan.',
-                        'Success'
-                    );
+                    const t = this.locales[this.locale];
                 };
                 reader.readAsDataURL(file);
             });
@@ -327,11 +462,8 @@ class SettingsManager {
 
         if (resetBgRow) {
             resetBgRow.addEventListener('click', async () => {
+                const t = this.locales[this.locale];
                 localStorage.removeItem('customBackground');
-                await this.showMessage(
-                    this.locale === 'en' ? 'Wallpaper reset!' : 'Wallpaper direset!',
-                    'Success'
-                );
             });
         }
     }
