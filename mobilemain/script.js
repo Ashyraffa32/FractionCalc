@@ -85,6 +85,8 @@ const locales = {
     hint: "Leave 'Whole' empty or 0 for proper fractions.",
     toDecimal: "To Decimal",
     convertBtn: "Convert to Improper",
+    convertToMixed: "Convert to Mixed",
+    convertToggleLabel: "Convert Improper ↔ Mixed",
     enterDecimal: "Insert Decimal...",
     toFraction: "Convert to Fractions",
     simplifyBtn: "Simplify",
@@ -130,6 +132,8 @@ const locales = {
     hint: "Biarkan 'Bulat' kosong atau 0 untuk pecahan biasa.",
     toDecimal: "Ke Desimal",
     convertBtn: "Konversi ke Biasa",
+    convertToMixed: "Konversi ke Campuran",
+    convertToggleLabel: "Konversi Biasa ↔ Campuran",
     enterDecimal: "Masukkan Desimal...",
     toFraction: "Konversi ke Pecahan",
     simplifyBtn: "Sederhanakan",
@@ -158,6 +162,100 @@ const locales = {
     expDivideNumerator: "  - {num} / {gcd} = {resNum}",
     expDivideDenominator: "  - {den} / {gcd} = {resDen}",
     expSimplestForm: "  - Pecahan sudah dalam bentuk paling sederhana."
+  },
+  de: {
+    operate: "Betrieb",
+    convert: "Umwandeln",
+    decimal: "Zu Dezimal",
+    fraction: "Zu Bruch",
+    simplify: "Vereinfachen",
+    howMany: "Wie viele?",
+    operatorLabel: "Operator",
+    whole: "Ganz",
+    numerator: "Zähler",
+    denominator: "Nenner",
+    calculate: "Berechnen",
+    result: "Ergebnis:",
+    hint: "Lassen Sie 'Ganz' leer oder 0 für echte Brüche.",
+    toDecimal: "Zu Dezimal",
+    convertBtn: "In unechten Bruch konvertieren",
+    convertToMixed: "In gemischten Bruch konvertieren",
+    convertToggleLabel: "Unechten Bruch ↔ Gemischten Konvertieren",
+    enterDecimal: "Dezimalzahl eingeben...",
+    toFraction: "In Bruch konvertieren",
+    simplifyBtn: "Vereinfachen",
+    invalidDen: "Der Nenner darf nicht leer oder null sein.",
+    cannotDivide: "Kann nicht durch Null teilen!",
+    invalidInput: "Ungültige Eingabe!",
+    improperResult: "Unechter Bruch:",
+    decimalResult: "Dezimal:",
+    simplifyResult: "Vereinfachter Bruch:",
+    // Explanation Strings
+    expStep1: "Schritt 1: Konvertieren Sie alle gemischten Zahlen in unechte Brüche.",
+    expMixedToImproper: "  - B{i}: {whole} {num}/{den} = ({whole} * {den} + {num})/{den} = {impNum}/{den}",
+    expIsProper: "  - B{i}: {num}/{den} ist bereits ein echter Bruch.",
+    expStep2: "Schritt 2: Führen Sie die Operation durch: {expression}",
+    expCalcStep: "\nBerechnung {i}: ({num1}/{den1}) {op} ({num2}/{den2})",
+    expFindLCM: "  - Finden Sie einen gemeinsamen Nenner (KGV von {den1} und {den2}): {lcm}",
+    expAdjustFractions: "  - Passen Sie Brüche an: ({num1}/{den1}) = ({newNum1}/{lcm}), ({num2}/{den2}) = ({newNum2}/{lcm})",
+    expPerformOp: "  - Operation durchführen: ({newNum1} {op} {newNum2}) / {lcm}",
+    expMultiplyNumerators: "  - Zähler multiplizieren: {num1} * {num2} = {resNum}",
+    expMultiplyDenominators: "  - Nenner multiplizieren: {den1} * {den2} = {resDen}",
+    expInvertAndMultiply: "  - Invertieren Sie den zweiten Bruch und multiplizieren: ({num1}/{den1}) * ({den2}/{num2})",
+    expIntermediateResult: "  - Zwischenergebnis: {num}/{den}",
+    expStep3: "Schritt 3: Vereinfachen Sie den endgültigen Bruch: {num}/{den}",
+    expFindGCD: "  - Finden Sie den größten gemeinsamen Teiler (GGT) von {num} und {den}: {gcd}",
+    expDivideByGCD: "  - Dividieren Sie Zähler und Nenner durch den GGT:",
+    expDivideNumerator: "  - {num} / {gcd} = {resNum}",
+    expDivideDenominator: "  - {den} / {gcd} = {resDen}",
+    expSimplestForm: "  - Der Bruch ist bereits in seiner einfachsten Form."
+  },
+  jp: {
+    operate: "演算",
+    convert: "変換",
+    decimal: "小数へ",
+    fraction: "分数へ",
+    simplify: "簡約",
+    howMany: "いくつ？",
+    operatorLabel: "演算子",
+    whole: "整数部",
+    numerator: "分子",
+    denominator: "分母",
+    calculate: "計算",
+    result: "結果：",
+    hint: "真の分数の場合は「整数部」を空白のままにするか0にしてください。",
+    toDecimal: "小数へ",
+    convertBtn: "仮分数に変換",
+    convertToMixed: "帯分数に変換",
+    convertToggleLabel: "仮分数 ↔ 帯分数に変換",
+    enterDecimal: "小数を入力...",
+    toFraction: "分数に変換",
+    simplifyBtn: "簡約",
+    invalidDen: "分母は空白または0であってはいけません。",
+    cannotDivide: "ゼロで除算することはできません！",
+    invalidInput: "無効な入力です！",
+    improperResult: "仮分数：",
+    decimalResult: "小数：",
+    simplifyResult: "簡約分数：",
+    // Explanation Strings
+    expStep1: "ステップ1：すべての帯分数を仮分数に変換します。",
+    expMixedToImproper: "  - 分{i}：{whole} {num}/{den} = ({whole} * {den} + {num})/{den} = {impNum}/{den}",
+    expIsProper: "  - 分{i}：{num}/{den}は既に真の分数です。",
+    expStep2: "ステップ2：演算を実行します：{expression}",
+    expCalcStep: "\n計算 {i}：({num1}/{den1}) {op} ({num2}/{den2})",
+    expFindLCM: "  - 共通分母を見つけます（{den1}と{den2}の最小公倍数）：{lcm}",
+    expAdjustFractions: "  - 分数を調整：({num1}/{den1}) = ({newNum1}/{lcm})、({num2}/{den2}) = ({newNum2}/{lcm})",
+    expPerformOp: "  - 演算を実行：({newNum1} {op} {newNum2}) / {lcm}",
+    expMultiplyNumerators: "  - 分子を乗算：{num1} * {num2} = {resNum}",
+    expMultiplyDenominators: "  - 分母を乗算：{den1} * {den2} = {resDen}",
+    expInvertAndMultiply: "  - 2番目の分数を反転して乗算：({num1}/{den1}) * ({den2}/{num2})",
+    expIntermediateResult: "  - 中間結果：{num}/{den}",
+    expStep3: "ステップ3：最終分数を簡約：{num}/{den}",
+    expFindGCD: "  - {num}と{den}の最大公約数（GCD）を見つけます：{gcd}",
+    expDivideByGCD: "  - 分子と分母をGCDで割ります：",
+    expDivideNumerator: "  - {num} / {gcd} = {resNum}",
+    expDivideDenominator: "  - {den} / {gcd} = {resDen}",
+    expSimplestForm: "  - 分数は既に最も簡潔な形式です。"
   }
 };
 
@@ -203,6 +301,15 @@ function applyLocale() {
     setText(`#dec_num`, t.numerator, true);
     setText(`#dec_den`, t.denominator, true);
     setText(`#dec_input_fraction`, t.enterDecimal, true);
+    
+    // Handle generic data-i18n attributes for any element
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        const text = t[key];
+        if (text) {
+            el.innerText = text;
+        }
+    });
 }
 
 
@@ -414,9 +521,9 @@ function convertDecimalToFraction() {
               } else if (decimalInput === 2.18) { // Basil's Birthday
                   alert("Everything is going to be okay....\n~ Basil");
               } else if (decimalInput === 5.23) { // Aubrey's Birthday
-                 alert("Oh you think you're the good guy, Kel? And i'm the big bad bully, here to terrorize poor, defenseless Basil.\n~ Aubrey");
+                 alert("My old friends wasn't there when i needed them.\n~ Aubrey");
               } else if (decimalInput === 7.20) { // Sunny's Birthday
-                 alert("eh since he was an introvert in the whole game so i couldnt find qoutes from him, sorry :/\n~ developer");
+                 alert("I have to tell you something...");
               } else if (decimalInput == 1.1) { // Hero's Birthday
                   alert("Hey, Sunny... Can I poke your brain for a minute?\nI really love cooking and all and Mari always says I'm really good, but my parents want me to become a doctor...\nDo you think I should become a chef?\n~ Hero");
               } else if (decimalInput == 11.11) { // Kel's Birthday
@@ -446,8 +553,10 @@ if (showExplanationCheckbox) {
 
 // Update button text and placeholders based on toggle state
 toggleConvertMode.addEventListener('change', () => {
+    const lang = localStorage.getItem('locale') || 'en';
+    const t = locales[lang];
     const isImproperToMixed = toggleConvertMode.checked;
-    document.getElementById('btn-convert-mixed').innerText = isImproperToMixed ? 'Convert to Mixed' : 'Convert to Improper';
+    document.getElementById('btn-convert-mixed').innerText = isImproperToMixed ? t.convertToMixed : t.convertBtn;
     document.getElementById('conv_whole').placeholder = isImproperToMixed ? 'Improper Whole' : 'Whole';
     document.getElementById('conv_num').placeholder = isImproperToMixed ? 'Improper Numerator' : 'Numerator';
     document.getElementById('conv_den').placeholder = isImproperToMixed ? 'Improper Denominator' : 'Denominator';

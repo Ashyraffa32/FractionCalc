@@ -33,8 +33,8 @@ document.addEventListener('DOMContentLoaded', () => {
             langBtn: "Change Language",
             aboutSection: "About",
             aboutTitle: "About and Credits",
-            aboutApp: "FractionCalc for Android, v2.0.1",
-            aboutMade: "Made by Ashyraffa and Ratu",
+            aboutApp: "FractionCalc for Android, v2.0.2",
+            aboutMade: "Made by Ashyraffa",
             dangerZones: "Danger Zones",
             resetHint: "Reset all settings to default values.",
             resetHeading: "Reset Settings",
@@ -62,12 +62,70 @@ document.addEventListener('DOMContentLoaded', () => {
             langBtn: "Ganti Bahasa",
             aboutSection: "Tentang",
             aboutTitle: "Tentang dan Kredit",
-            aboutApp: "FractionCalc untuk Android, v2.0.1",
-            aboutMade: "Dibuat oleh Ashyraffa dan Ratu",
+            aboutApp: "FractionCalc untuk Android, v2.0.2",
+            aboutMade: "Dibuat oleh Ashyraffa",
             dangerZones: "Zona Bahaya",
             resetHint: "Atur ulang semua pengaturan ke nilai default.",
             resetHeading: "Atur Ulang Pengaturan",
             resetBtn: "Atur Ulang"
+        },
+        de: {
+            settingsTitle: "Einstellungen",
+            back: "Zurück",
+            themesHeading: "Designs/Personalisierung",
+            languageSection: "Sprache",
+            display: "Anzeige",
+            themeHint: "Ändern Sie das App-Design.",
+            themeBtn: "Design umschalten (Hell/Dunkel)",
+            accentHeading: "Akzentfarbe",
+            accentHint: "Ändern Sie die Hauptfarbe von Schaltflächen und Steuerelementen.",
+            changeColorBtn: "Farbe ändern",
+            opacityHeading: "Element-Deckkraft",
+            opacityHint: "Passen Sie die Transparenz von Elementen an.",
+            wallpaper: "Hintergrundbild",
+            wallpaperHint: "Sie können ein benutzerdefiniertes Foto von Ihrem Gerät als Hintergrundbild festlegen.",
+            selectPic: "Bild auswählen...",
+            resetBg: "Hintergrund zurücksetzen",
+            language: "Sprache",
+            languageHint: "Ändern Sie die App-Sprache.",
+            langBtn: "Sprache ändern",
+            aboutSection: "Über",
+            aboutTitle: "Über und Credits",
+            aboutApp: "FractionCalc für Android, v2.0.2",
+            aboutMade: "Erstellt von Ashyraffa",
+            dangerZones: "Gefahrenzonen",
+            resetHint: "Setzen Sie alle Einstellungen auf Standardwerte zurück.",
+            resetHeading: "Einstellungen zurücksetzen",
+            resetBtn: "Einstellungen zurücksetzen"
+        },
+        jp: {
+            settingsTitle: "設定",
+            back: "戻る",
+            themesHeading: "テーマ/パーソナライズ",
+            languageSection: "言語",
+            display: "表示",
+            themeHint: "アプリのテーマを変更します。",
+            themeBtn: "テーマを切り替え（明るい/暗い）",
+            accentHeading: "アクセントカラー",
+            accentHint: "ボタンとコントロールのメインカラーを変更します。",
+            changeColorBtn: "色を変更",
+            opacityHeading: "要素の不透明度",
+            opacityHint: "要素の透明度を調整します。",
+            wallpaper: "壁紙",
+            wallpaperHint: "デバイスからカスタム写真を壁紙として設定できます。",
+            selectPic: "画像を選択...",
+            resetBg: "背景をリセット",
+            language: "言語",
+            languageHint: "アプリの言語を変更します。",
+            langBtn: "言語を変更",
+            aboutSection: "について",
+            aboutTitle: "について＆クレジット",
+            aboutApp: "FractionCalc for Android, v2.0.2",
+            aboutMade: "Ashyraffa により開発されました",
+            dangerZones: "危険なゾーン",
+            resetHint: "すべての設定をデフォルト値にリセットします。",
+            resetHeading: "設定をリセット",
+            resetBtn: "設定をリセット"
         }
     };
 
@@ -168,6 +226,18 @@ document.addEventListener('DOMContentLoaded', () => {
         resetBgBtn.addEventListener('click', () => {
             localStorage.removeItem('customBackground');
             applyBackground(null);
+        });
+    }
+
+    const langSelect = document.getElementById('language');
+    if (langSelect) {
+        // Set the dropdown to the current language on load
+        langSelect.value = localStorage.getItem('locale') || 'en';
+        
+        langSelect.addEventListener('change', (e) => {
+            const newLang = e.target.value;
+            localStorage.setItem('locale', newLang);
+            applyLocale();
         });
     }
 
