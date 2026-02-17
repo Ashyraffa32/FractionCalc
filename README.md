@@ -30,9 +30,7 @@ Here’s FractionCalc in action 👇
 ---
 
 ## 🚀 Why FractionCalc?
-- ⚡ **Lightweight**: uses ~100 MB RAM on desktop, <10 MB on Android.
-- 💾 **Tiny installer**: Android APK is only 2.7 MB.
-- 🖥️ **Optimized for old PCs**: runs smooth even on 2 GB RAM systems with HDDs.
+- ⚡ **Lightweight**: its very light and fast, thanks to Tauri framework
 - 🎓 **Made for students**: no ads, no distractions, just learning.
 
 ---
@@ -61,7 +59,7 @@ If you share or modify, please give proper credits 🙏.
 ## 📢 Credits
 This project was started by two middle‑school friends who just wanted a better calculator for class ✨
 
-> Built with ❤️ by Ashyraffa and Ratu
+> Built with ❤️ by Ashyraffa
 
 ---
 
