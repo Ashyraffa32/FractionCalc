@@ -1,4 +1,4 @@
-import { lcm, simplify, convertImproperToMixed, convertMixedToImproper, formatFraction } from './utils.js';
+import { lcm, simplify, convertImproperToMixed, convertMixedToImproper, formatFraction, formatFractionHTML } from './utils.js';
 
 // fractions input: array of {whole, num, den}
 // operator: '+','-','*','/'
@@ -69,7 +69,7 @@ export function calculateFraction(fractionsInput, operator = '+', explanationOn 
             explanation += t.expFinalMixed.replace('{result}', resultStr) + '\n';
         }
 
-        return { resultStr: `${t.result || 'Result:'} ${resultStr}`, explanation, showExplanation: explanationOn };
+    return { resultStr: `${t.result || 'Result:'} ${resultStr}`, resultFraction: finalMixed, resultHTML: formatFractionHTML(finalMixed), explanation, showExplanation: explanationOn };
     }
 
     // Multiplication / Division
@@ -106,7 +106,7 @@ export function calculateFraction(fractionsInput, operator = '+', explanationOn 
         explanation += t.expFinalMixed.replace('{result}', resultStr) + '\n';
     }
 
-    return { resultStr: `${t.result || 'Result:'} ${resultStr}`, explanation, showExplanation: explanationOn };
+    return { resultStr: `${t.result || 'Result:'} ${resultStr}`, resultFraction: finalMixed, resultHTML: formatFractionHTML(finalMixed), explanation, showExplanation: explanationOn };
 }
 
 export function convertFractionCore({ whole = 0, num, den }, improperToMixed, t = {}) {
@@ -117,11 +117,13 @@ export function convertFractionCore({ whole = 0, num, den }, improperToMixed, t 
         const res = convertImproperToMixed(num, den);
         if (!res) return { error: t.invalidInput };
         const resultStr = res.whole !== 0 ? `${res.whole} ${res.num}/${res.den}` : `${res.num}/${res.den}`;
-        if (res.num === 0) return { resultStr: `${t.improperToMixed} ${res.whole}` };
-        return { resultStr: `${t.improperToMixed} ${resultStr}` };
+        const resultHTML = res.num === 0 ? `<div class='fraction-result'>${res.whole}</div>` : formatFractionHTML(res);
+        if (res.num === 0) return { resultStr: `${t.improperToMixed} ${res.whole}`, resultFraction: res, resultHTML };
+        return { resultStr: `${t.improperToMixed} ${resultStr}`, resultFraction: res, resultHTML };
     }
     const res = convertMixedToImproper(whole, num, den);
     if (!res) return { error: t.invalidInput };
     const resultStr = res.den === 1 ? `${res.num}` : `${res.num}/${res.den}`;
-    return { resultStr: `${t.mixedToImproper} ${resultStr}` };
+    const resultHTML = res.den === 1 ? `<div class='fraction-result'>${res.num}</div>` : formatFractionHTML({whole: 0, num: res.num, den: res.den});
+    return { resultStr: `${t.mixedToImproper} ${resultStr}`, resultFraction: {whole: 0, num: res.num, den: res.den}, resultHTML };
 }

@@ -53,3 +53,13 @@ export function formatFraction({ whole, num, den }) {
     if (!whole) return `${num}/${den}`;
     return `${whole} ${num}/${den}`;
 }
+
+export function formatFractionHTML({ whole, num, den }) {
+    if (den === 0) return "<div class='fraction-result'>Undefined</div>";
+    if (num === 0) return `<div class='fraction-result'>${whole || 0}</div>`;
+    
+    const fractionHTML = `<div class='fraction-display'><div class='frac-num'>${num}</div><div class='frac-line'></div><div class='frac-den'>${den}</div></div>`;
+    
+    if (!whole || whole === 0) return fractionHTML;
+    return `<div class='fraction-result mixed-fraction'><span class='frac-whole'>${whole}</span> ${fractionHTML}</div>`;
+}
