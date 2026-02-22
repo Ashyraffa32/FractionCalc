@@ -18,7 +18,7 @@ We built this to help **middle‑school students (and teachers!)** who need a fa
 
 Here’s FractionCalc in action 👇
 
-![FractionCalc Screenshot](../demo.png)
+![FractionCalc Demo](demo.webp)
 
 
 ---
@@ -40,12 +40,13 @@ Here’s FractionCalc in action 👇
 ---
 
 ## 🤝 Contributing
-We ❤️ open source! 
+Want to contribute?
 
 1. Fork this repo
 2. Clone your fork
 3. Make your changes
 4. Open an issue / pull request
+5. Thats it, youre done.
 
 ---
 
