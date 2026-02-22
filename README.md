@@ -1,3 +1,7 @@
+![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20Android-blue)
+![Tech](https://img.shields.io/badge/Built%20with-Tauri%20%26%20Capacitor-orange)
+
+
 # 📐 FractionCalc
 
 > A lightweight, cross‑platform fraction calculator — built by students, for students. 100% free & open source.
