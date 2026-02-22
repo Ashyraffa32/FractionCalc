@@ -64,11 +64,21 @@
             <button id="reset-settings-btn" class="btn danger" data-i18n="resetBtn" onclick="localStorage.clear()">Reset Settings</button>
         </section>
 
+        <h2 data-i18n="historySection">History</h2>
+        <section class="card">
+            <h3 id="history-heading" data-i18n="historyHeading">Calculation History</h3>
+            <p class="hint" id="history-hint" data-i18n="historyHint">View your recent calculations.</p>
+            <div id="history-list" style="max-height: 300px; overflow-y: auto; border: 1px solid var(--border); border-radius: 8px; padding: 10px;">
+                <p id="no-history" style="text-align: center; color: var(--muted);" data-i18n="noHistory">No calculations yet</p>
+            </div>
+            <button id="clear-history-btn" class="btn" data-i18n="clearHistoryBtn">Clear History</button>
+        </section>
+
         <h2 data-i18n="aboutSection">About</h2>
         <section class="card">
             <h3 id="about-heading" data-i18n="aboutTitle">About and Credits</h3>
-            <p id="about-app" data-i18n="aboutApp">FractionCalc for Android, v2.0.1</p>
-            <p id="about-made" data-i18n="aboutMade">Made by Ashyraffa and Ratu</p>
+            <p id="about-app" data-i18n="aboutApp">FractionCalc for Android, v2.1.0</p>
+            <p id="about-made" data-i18n="aboutMade">Made by Ashyraffa</p>
         </section>
     </main>
 

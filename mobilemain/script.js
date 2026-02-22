@@ -7,6 +7,10 @@ const explanationContainer = document.getElementById('explanation-container');
 const explanationBox = document.getElementById('explanation-box');
 const toggleConvertMode = document.getElementById('toggle-convert-mode');
 
+// Store last result as fractions for memory operations
+let lastResultNum = null;
+let lastResultDen = null;
+
 // --- Math utility functions ---
 function gcd(a, b) {
     return b === 0 ? a : gcd(b, a % b);
@@ -313,6 +317,115 @@ function applyLocale() {
 }
 
 
+// --- Memory Management ---
+const Memory = {
+    get: function() {
+        try {
+            const saved = localStorage.getItem('calcMemory');
+            return saved ? JSON.parse(saved) : null;
+        } catch (e) {
+            return null;
+        }
+    },
+    set: function(num, den) {
+        if (den === 0) return;
+        // Simplify the fraction
+        const divisor = gcd(Math.abs(num), Math.abs(den));
+        const simplifiedNum = num / divisor;
+        const simplifiedDen = den / divisor;
+        localStorage.setItem('calcMemory', JSON.stringify({ num: simplifiedNum, den: simplifiedDen }));
+        updateMemoryDisplay();
+    },
+    clear: function() {
+        localStorage.removeItem('calcMemory');
+        updateMemoryDisplay();
+    },
+    add: function(num, den) {
+        if (den === 0) return;
+        const current = this.get();
+        if (current === null) {
+            this.set(num, den);
+        } else {
+            // Add fractions: a/b + c/d = (a*d + c*b) / (b*d)
+            const newNum = current.num * den + num * current.den;
+            const newDen = current.den * den;
+            this.set(newNum, newDen);
+        }
+    },
+    subtract: function(num, den) {
+        if (den === 0) return;
+        const current = this.get();
+        if (current === null) {
+            this.set(-num, den);
+        } else {
+            // Subtract fractions: a/b - c/d = (a*d - c*b) / (b*d)
+            const newNum = current.num * den - num * current.den;
+            const newDen = current.den * den;
+            this.set(newNum, newDen);
+        }
+    }
+};
+
+function updateMemoryDisplay() {
+    const memValue = Memory.get();
+    const memDisplay = document.getElementById('memory-display');
+    if (memDisplay) {
+        if (memValue === null) {
+            memDisplay.textContent = '—';
+        } else {
+            // Display simplified: if den is 1, just show num
+            if (memValue.den === 1) {
+                memDisplay.innerHTML = `<span>${memValue.num}</span>`;
+            } else {
+                memDisplay.innerHTML = formatStackedFraction(memValue.num, memValue.den);
+            }
+        }
+    }
+}
+
+// --- History Management ---
+const History = {
+    get: function() {
+        try {
+            const saved = localStorage.getItem('calcHistory');
+            return saved ? JSON.parse(saved) : [];
+        } catch (e) {
+            return [];
+        }
+    },
+    add: function(entry) {
+        const history = this.get();
+        history.push({
+            ...entry,
+            timestamp: new Date().toISOString()
+        });
+        // Keep only last 100 entries
+        if (history.length > 100) {
+            history.shift();
+        }
+        localStorage.setItem('calcHistory', JSON.stringify(history));
+    },
+    clear: function() {
+        localStorage.removeItem('calcHistory');
+    }
+};
+
+// --- Stacked Fraction Display ---
+function formatStackedFraction(num, den) {
+    if (den === 1 || den === 0) {
+        return `<span>${num}</span>`;
+    }
+    return `<span class="fraction-stack"><span class="fraction-numerator">${num}</span><span class="fraction-bar"></span><span class="fraction-denominator">${den}</span></span>`;
+}
+
+function formatNumberAsDecimal(value) {
+    if (typeof value !== 'number') return String(value);
+    // Round to 10 decimal places to avoid floating point artifacts
+    const rounded = Math.round(value * 10000000000) / 10000000000;
+    // Remove trailing zeros after decimal point
+    return rounded.toString();
+}
+
 // --- Main fraction operation logic ---
 function calculate() {
     const lang = localStorage.getItem('locale') || 'en';
@@ -415,7 +528,22 @@ function calculate() {
     }
 
     let resultStr = (resultDen === 1) ? `${resultNum}` : `${resultNum}/${resultDen}`;
-    document.getElementById("result").innerText = `${t.result} ${resultStr}`;
+    const resultHTML = (resultDen === 1) ? `${t.result} <span>${resultNum}</span>` : `${t.result} ${formatStackedFraction(resultNum, resultDen)}`;
+    document.getElementById("result").innerHTML = resultHTML;
+    
+    // Store result fractions for memory operations
+    lastResultNum = resultNum;
+    lastResultDen = resultDen;
+    
+    // Add to history
+    const resultDecimal = resultDen === 1 ? resultNum : resultNum / resultDen;
+    History.add({
+        type: 'operation',
+        inputs: originalInputs,
+        operator: operator,
+        result: { num: resultNum, den: resultDen, decimal: resultDecimal },
+        explanation: explanation
+    });
     
     // 4. Display or hide the explanation box
     if (showExplanationCheckbox.checked) {
@@ -448,11 +576,23 @@ function simplifyFraction() {
     const simpDen = den / divisor;
 
     // Handle cases like 4/2 = 2
-    let resultStr = (simpDen === 1) ? `${simpNum}` : `${simpNum}/${simpDen}`;
-    resultEl.innerText = `${t.simplifyResult} ${resultStr}`;
+    if (simpDen === 1) {
+        resultEl.innerHTML = `<span>${t.simplifyResult} ${simpNum}</span>`;
+    } else {
+        resultEl.innerHTML = `<span>${t.simplifyResult}</span> ${formatStackedFraction(simpNum, simpDen)}`;
+    }
+    
+    // Store result fractions for memory operations
+    lastResultNum = simpNum;
+    lastResultDen = simpDen;
+    
+    // Add to history
+    History.add({
+        type: 'simplify',
+        input: { num: num, den: den },
+        result: { num: simpNum, den: simpDen }
+    });
 }
-
-
 
 // --- Conversion logic ---
 function convertMixed() {
@@ -461,9 +601,10 @@ function convertMixed() {
     const whole = parseInt(document.getElementById("conv_whole").value) || 0;
     const num = parseInt(document.getElementById("conv_num").value) || 0;
     const den = parseInt(document.getElementById("conv_den").value);
+    const resultEl = document.getElementById("convert-result");
 
     if (isNaN(den) || den === 0) {
-        document.getElementById("convert-result").innerText = t.invalidDen;
+        resultEl.innerText = t.invalidDen;
         return;
     }
 
@@ -472,13 +613,32 @@ function convertMixed() {
         const mixedWhole = Math.floor(num / den);
         const mixedNum = Math.abs(num % den);
         const resultStr = `${mixedWhole ? mixedWhole + ' ' : ''}${mixedNum}/${den}`;
-        document.getElementById("convert-result").innerText = `${t.result} ${resultStr}`;
+        resultEl.innerHTML = `${t.result} <span>${resultStr}</span>`;
+        
+        // Store as improper fraction for memory
+        lastResultNum = num;
+        lastResultDen = den;
+        
+        History.add({
+            type: 'convert_improper_to_mixed',
+            input: { num: num, den: den },
+            result: { whole: mixedWhole, num: mixedNum, den: den }
+        });
     } else {
         // Convert mixed to improper
         const improper = Math.abs(whole) * den + num;
         const resultNum = whole < 0 ? -improper : improper;
-        const resultStr = `${resultNum}/${den}`;
-        document.getElementById("convert-result").innerText = `${t.result} ${resultStr}`;
+        resultEl.innerHTML = `${t.result} ${formatStackedFraction(resultNum, den)}`;
+        
+        // Store result fractions
+        lastResultNum = resultNum;
+        lastResultDen = den;
+        
+        History.add({
+            type: 'convert_mixed_to_improper',
+            input: { whole: whole, num: num, den: den },
+            result: { num: resultNum, den: den }
+        });
     }
 }
 
@@ -487,11 +647,23 @@ function convertDecimal() {
     const t = locales[lang];
     const num = parseInt(document.getElementById("dec_num").value);
     const den = parseInt(document.getElementById("dec_den").value);
+    const resultEl = document.getElementById("decimal-result");
     if (isNaN(num) || isNaN(den) || den === 0) {
-        document.getElementById("decimal-result").innerText = t.invalidInput;
+        resultEl.innerText = t.invalidInput;
         return;
     }
-    document.getElementById("decimal-result").innerText = `${t.decimalResult} ${num / den}`;
+    const decimalValue = num / den;
+    resultEl.innerHTML = `${t.decimalResult} <span>${formatNumberAsDecimal(decimalValue)}</span>`;
+    
+    // Store as fraction for memory
+    lastResultNum = num;
+    lastResultDen = den;
+    
+    History.add({
+        type: 'fraction_to_decimal',
+        input: { num: num, den: den },
+        result: { decimal: decimalValue }
+    });
 }
 
 function convertDecimalToFraction() {
@@ -511,24 +683,36 @@ function convertDecimalToFraction() {
         aux = k1; k1 = a * k1 + k2; k2 = aux;
         b = 1 / (b - a);
     } while (Math.abs(decimalInput - h1 / k1) > decimalInput * tolerance && k1 < 10000);
-    document.getElementById("decimal-to-fraction-result").innerText = `${t.result} ${h1}/${k1}`;
+    
+    const resultEl = document.getElementById("decimal-to-fraction-result");
+    resultEl.innerHTML = `${t.result} ${formatStackedFraction(h1, k1)}`;
+    
+    // Store result fractions
+    lastResultNum = h1;
+    lastResultDen = k1;
+    
+    History.add({
+        type: 'decimal_to_fraction',
+        input: { decimal: decimalInput },
+        result: { num: h1, den: k1 }
+    });
 
-        // Easter egg: 143?
-        if (decimalInput === 0.143 || decimalInput === 143 || decimalInput === 1.43 || decimalInput === 14.3) {
-            alert("All it costs is your love!\n~ Mari");
-        } else if (decimalInput === 3.1) { // Mari's Birthday
-                  alert("Our Dearest Mari\nThe sun shined brighter when she was here...");
-              } else if (decimalInput === 2.18) { // Basil's Birthday
-                  alert("Everything is going to be okay....\n~ Basil");
-              } else if (decimalInput === 5.23) { // Aubrey's Birthday
-                 alert("My old friends wasn't there when i needed them.\n~ Aubrey");
-              } else if (decimalInput === 7.20) { // Sunny's Birthday
-                 alert("I have to tell you something...");
-              } else if (decimalInput == 1.1) { // Hero's Birthday
-                  alert("Hey, Sunny... Can I poke your brain for a minute?\nI really love cooking and all and Mari always says I'm really good, but my parents want me to become a doctor...\nDo you think I should become a chef?\n~ Hero");
-              } else if (decimalInput == 11.11) { // Kel's Birthday
-                  alert("Do you remember me? It's your old friend, KEL!");
-              }
+    // Easter egg: 143?
+    if (decimalInput === 0.143 || decimalInput === 143 || decimalInput === 1.43 || decimalInput === 14.3) {
+        alert("All it costs is your love!\n~ Mari");
+    } else if (decimalInput === 3.1) { // Mari's Birthday
+        alert("Our Dearest Mari\nThe sun shined brighter when she was here...");
+    } else if (decimalInput === 2.18) { // Basil's Birthday
+        alert("Everything is going to be okay....\n~ Basil");
+    } else if (decimalInput === 5.23) { // Aubrey's Birthday
+        alert("My old friends wasn't there when i needed them.\n~ Aubrey");
+    } else if (decimalInput === 7.20) { // Sunny's Birthday
+        alert("I have to tell you something...");
+    } else if (decimalInput == 1.1) { // Hero's Birthday
+        alert("Hey, Sunny... Can I poke your brain for a minute?\nI really love cooking and all and Mari always says I'm really good, but my parents want me to become a doctor...\nDo you think I should become a chef?\n~ Hero");
+    } else if (decimalInput == 11.11) { // Kel's Birthday
+        alert("Do you remember me? It's your old friend, KEL!");
+    }
 }
 
 // --- Event Listeners ---
@@ -566,13 +750,46 @@ document.getElementById('calc-btn')?.addEventListener('click', calculate);
 document.getElementById('btn-convert-mixed')?.addEventListener('click', convertMixed);
 document.getElementById('btn-frac-to-dec')?.addEventListener('click', convertDecimal);
 document.getElementById('btn-dec-to-frac')?.addEventListener('click', convertDecimalToFraction);
-document.getElementById('btn-simplify')?.addEventListener('click', simplifyFraction); // new simplify button
+document.getElementById('btn-simplify')?.addEventListener('click', simplifyFraction);
+
+// Memory button listeners
+document.getElementById('btn-mc')?.addEventListener('click', () => {
+    Memory.clear();
+});
+
+document.getElementById('btn-mr')?.addEventListener('click', () => {
+    const memValue = Memory.get();
+    if (memValue !== null) {
+        lastResultNum = memValue.num;
+        lastResultDen = memValue.den;
+        const lang = localStorage.getItem('locale') || 'en';
+        const t = locales[lang];
+        if (memValue.den === 1) {
+            document.getElementById('result').innerHTML = `<span>${t.result} ${memValue.num}</span>`;
+        } else {
+            document.getElementById('result').innerHTML = `<span>${t.result}</span> ${formatStackedFraction(memValue.num, memValue.den)}`;
+        }
+    }
+});
+
+document.getElementById('btn-m-plus')?.addEventListener('click', () => {
+    if (lastResultNum !== null && lastResultDen !== null) {
+        Memory.add(lastResultNum, lastResultDen);
+    }
+});
+
+document.getElementById('btn-m-minus')?.addEventListener('click', () => {
+    if (lastResultNum !== null && lastResultDen !== null) {
+        Memory.subtract(lastResultNum, lastResultDen);
+    }
+});
 
 // --- Initial load ---
 document.addEventListener('DOMContentLoaded', () => {
     applyAllSettings();
     updateFractionInputs();
     applyLocale();
+    updateMemoryDisplay();
 });
 
 // pSBC Function to darken/lighten colors (for hover states)

@@ -18,6 +18,7 @@
   <main class="container">
    
 
+    
     <section id="operate-section" class="panel show" role="tabpanel">
       <div class="row gap-sm items-center">
         <label for="fraction-count" class="label">How many?</label>
@@ -66,6 +67,18 @@
       </div>
 
       <button class="btn primary" id="calc-btn">Calculate</button>
+      
+      <div class="row items-center gap-sm" style="justify-content: center;">
+        <span id="memory-display-label" style="font-size: 0.9rem; color: var(--muted);">M: </span>
+        <span id="memory-display" style="font-size: 1.1rem; font-weight: bold; min-width: 100px;">—</span>
+      </div>
+
+      <div class="row gap-sm" style="justify-content: center;">
+        <button class="btn small" id="btn-mc">MC</button>
+        <button class="btn small" id="btn-mr">MR</button>
+        <button class="btn small" id="btn-m-plus">M+</button>
+        <button class="btn small" id="btn-m-minus">M−</button>
+      </div>
       
       <div class="row items-center gap-sm" style="justify-content: center;">
         <input type="checkbox" id="show-explanation-checkbox">

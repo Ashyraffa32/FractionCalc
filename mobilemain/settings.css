@@ -26,3 +26,50 @@
     margin-top: 5px;
 }
 
+/* History Styles */
+.history-item {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.85rem;
+    word-break: break-word;
+}
+
+.history-item:last-child {
+    border-bottom: none;
+}
+
+.history-timestamp {
+    font-size: 0.75rem;
+    color: var(--muted);
+}
+
+.history-operation {
+    font-weight: 600;
+    color: var(--text);
+}
+
+.fraction-stack {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 4px;
+    font-size: 0.9em;
+}
+
+.fraction-numerator {
+    font-weight: bold;
+}
+
+.fraction-bar {
+    width: 100%;
+    height: 1px;
+    background-color: currentColor;
+    margin: 1px 0;
+    min-width: 20px;
+}
+
+.fraction-denominator {
+    font-weight: bold;
+}
+

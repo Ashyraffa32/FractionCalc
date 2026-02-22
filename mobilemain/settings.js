@@ -33,12 +33,17 @@ document.addEventListener('DOMContentLoaded', () => {
             langBtn: "Change Language",
             aboutSection: "About",
             aboutTitle: "About and Credits",
-            aboutApp: "FractionCalc for Android, v2.0.2",
+            aboutApp: "FractionCalc for Android, v2.1.0",
             aboutMade: "Made by Ashyraffa",
             dangerZones: "Danger Zones",
             resetHint: "Reset all settings to default values.",
             resetHeading: "Reset Settings",
             resetBtn: "Reset Settings",
+            historySection: "History & Memory",
+            historyHeading: "Calculation History",
+            historyHint: "View your recent calculations.",
+            noHistory: "No calculations yet",
+            clearHistoryBtn: "Clear History"
         },
         id: {
             settingsTitle: "Pengaturan",
@@ -62,12 +67,17 @@ document.addEventListener('DOMContentLoaded', () => {
             langBtn: "Ganti Bahasa",
             aboutSection: "Tentang",
             aboutTitle: "Tentang dan Kredit",
-            aboutApp: "FractionCalc untuk Android, v2.0.2",
+            aboutApp: "FractionCalc untuk Android, v2.1.0",
             aboutMade: "Dibuat oleh Ashyraffa",
             dangerZones: "Zona Bahaya",
             resetHint: "Atur ulang semua pengaturan ke nilai default.",
             resetHeading: "Atur Ulang Pengaturan",
-            resetBtn: "Atur Ulang"
+            resetBtn: "Atur Ulang",
+            historySection: "Riwayat & Memori",
+            historyHeading: "Riwayat Perhitungan",
+            historyHint: "Lihat perhitungan terbaru Anda.",
+            noHistory: "Belum ada perhitungan",
+            clearHistoryBtn: "Hapus Riwayat"
         },
         de: {
             settingsTitle: "Einstellungen",
@@ -91,12 +101,17 @@ document.addEventListener('DOMContentLoaded', () => {
             langBtn: "Sprache ändern",
             aboutSection: "Über",
             aboutTitle: "Über und Credits",
-            aboutApp: "FractionCalc für Android, v2.0.2",
+            aboutApp: "FractionCalc für Android, v2.1.0",
             aboutMade: "Erstellt von Ashyraffa",
             dangerZones: "Gefahrenzonen",
             resetHint: "Setzen Sie alle Einstellungen auf Standardwerte zurück.",
             resetHeading: "Einstellungen zurücksetzen",
-            resetBtn: "Einstellungen zurücksetzen"
+            resetBtn: "Einstellungen zurücksetzen",
+            historySection: "Verlauf & Speicher",
+            historyHeading: "Berechnungsverlauf",
+            historyHint: "Zeigen Sie Ihre letzten Berechnungen an.",
+            noHistory: "Noch keine Berechnungen",
+            clearHistoryBtn: "Verlauf löschen"
         },
         jp: {
             settingsTitle: "設定",
@@ -120,12 +135,17 @@ document.addEventListener('DOMContentLoaded', () => {
             langBtn: "言語を変更",
             aboutSection: "について",
             aboutTitle: "について＆クレジット",
-            aboutApp: "FractionCalc for Android, v2.0.2",
+            aboutApp: "FractionCalc for Android, v2.1.0",
             aboutMade: "Ashyraffa により開発されました",
             dangerZones: "危険なゾーン",
             resetHint: "すべての設定をデフォルト値にリセットします。",
             resetHeading: "設定をリセット",
-            resetBtn: "設定をリセット"
+            resetBtn: "設定をリセット",
+            historySection: "履歴とメモリ",
+            historyHeading: "計算履歴",
+            historyHint: "最近の計算を表示します。",
+            noHistory: "まだ計算がありません",
+            clearHistoryBtn: "履歴をクリア"
         }
     };
 
@@ -250,6 +270,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Clear history button
+    const clearHistoryBtn = document.getElementById('clear-history-btn');
+    if (clearHistoryBtn) {
+        clearHistoryBtn.addEventListener('click', () => {
+            if (confirm('Are you sure you want to clear all calculation history?')) {
+                localStorage.removeItem('calcHistory');
+                loadAndRenderHistory();
+            }
+        });
+    }
+
     // --- Initial Load ---
     applyTheme(localStorage.getItem('theme') || 'light');
     applyAccentColor(localStorage.getItem('accentColor'));
@@ -260,7 +291,73 @@ document.addEventListener('DOMContentLoaded', () => {
     
     applyBackground(localStorage.getItem('customBackground'));
     applyLocale();
+    loadAndRenderHistory();
 });
+
+// History Management from localStorage
+function loadAndRenderHistory() {
+    try {
+        const history = JSON.parse(localStorage.getItem('calcHistory') || '[]');
+        const historyList = document.getElementById('history-list');
+        const noHistory = document.getElementById('no-history');
+        
+        if (!historyList) return;
+        
+        if (history.length === 0) {
+            historyList.innerHTML = '<p id="no-history" style="text-align: center; color: var(--muted);" data-i18n="noHistory">No calculations yet</p>';
+            return;
+        }
+        
+        historyList.innerHTML = '';
+        // Show history in reverse order (newest first)
+        history.reverse().forEach((entry, index) => {
+            const timeStr = new Date(entry.timestamp).toLocaleString();
+            let description = '';
+            
+            if (entry.type === 'operation') {
+                const opSymbols = { '+': '+', '-': '−', '*': '×', '/': '÷' };
+                const op = opSymbols[entry.operator] || entry.operator;
+                description = `${entry.inputs.join(' ' + op + ' ')} = ${formatHistoryResult(entry.result)}`;
+            } else if (entry.type === 'simplify') {
+                description = `Simplify ${formatHistoryFraction(entry.input.num, entry.input.den)} = ${formatHistoryResult(entry.result)}`;
+            } else if (entry.type === 'convert_improper_to_mixed') {
+                description = `${formatHistoryFraction(entry.input.num, entry.input.den)} → ${entry.result.whole} ${formatHistoryFraction(entry.result.num, entry.result.den)}`;
+            } else if (entry.type === 'convert_mixed_to_improper') {
+                description = `${entry.input.whole} ${formatHistoryFraction(entry.input.num, entry.input.den)} → ${formatHistoryResult(entry.result)}`;
+            } else if (entry.type === 'fraction_to_decimal') {
+                description = `${formatHistoryFraction(entry.input.num, entry.input.den)} = ${entry.result.decimal.toFixed(6).replace(/\.?0+$/, '')}`;
+            } else if (entry.type === 'decimal_to_fraction') {
+                description = `${entry.input.decimal} = ${formatHistoryResult(entry.result)}`;
+            }
+            
+            const item = document.createElement('div');
+            item.className = 'history-item';
+            item.innerHTML = `
+                <div class="history-operation">${description}</div>
+                <div class="history-timestamp">${timeStr}</div>
+            `;
+            historyList.appendChild(item);
+        });
+    } catch (e) {
+        console.error('Error loading history:', e);
+    }
+}
+
+function formatHistoryFraction(num, den) {
+    if (den === 1) return String(num);
+    return `${num}/${den}`;
+}
+
+function formatHistoryResult(result) {
+    if (result.num !== undefined && result.den !== undefined) {
+        if (result.den === 1) return String(result.num);
+        return `${result.num}/${result.den}`;
+    }
+    if (result.decimal !== undefined) {
+        return result.decimal.toFixed(6).replace(/\.?0+$/, '');
+    }
+    return '';
+}
 
 // pSBC Function to darken/lighten colors (for hover states)
 const pSBC=(p,c0,c1,l)=>{let r,g,b,P,f,t,h,i=parseInt,m=Math.round,a=typeof(c1)=="string";if(typeof(p)!="number"||p<-1||p>1||typeof(c0)!="string"||(c0[0]!='r'&&c0[0]!='#')||(c1&&!a))return null;let pSBCr=(d)=>{let n=d.length,x={};if(n>9){[r,g,b,a]=d=d.split(","),n=d.length;if(n<3||n>4)return null;x.r=i(r.slice(4)),x.g=i(g),x.b=i(b),x.a=a?parseFloat(a):-1}else{if(n==8||n==6||n<4)return null;if(n<6)d="#"+d[1]+d[1]+d[2]+d[2]+d[3]+d[3]+(n>4?d[4]+d[4]:"");d=i(d.slice(1),16);if(n==9||n==5)x.r=d>>24&255,x.g=d>>16&255,x.b=d>>8&255,x.a=m((d&255)/0.255)/1000;else x.r=d>>16,x.g=d>>8&255,x.b=d&255,x.a=-1}return x};h=c0.length>9,h=a?c1.length>9?true:c1=="c"?!h:false:h,f=pSBCr(c0),P=p<0,t=c1&&c1!="c"?pSBCr(c1):P?{r:0,g:0,b:0,a:-1}:{r:255,g:255,b:255,a:-1},p=P?p*-1:p,P=1-p;if(!f||!t)return null;if(l)r=m(P*f.r+p*t.r),g=m(P*f.g+p*t.g),b=m(P*f.b+p*t.b);else r=m((P*f.r**2+p*t.r**2)**0.5),g=m((P*f.g**2+p*t.g**2)**0.5),b=m((P*f.b**2+p*t.b**2)**0.5);a=f.a,t=t.a,f=a>=0||t>=0,a=f?a<0?t:t<0?a:a*P+t*p:0;if(h)return"rgb"+(f?"a(":"(")+r+","+g+","+b+(f?","+m(a*1000)/1000:"")+")";else return"#"+(4294967296+r*16777216+g*65536+b*256+(f?m(a*255):0)).toString(16).slice(1,f?undefined:-2)};
