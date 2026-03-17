@@ -27,6 +27,7 @@
           <button id="options-show-explanations-btn" aria-pressed="false">Show Explanation</button>
           <button id="toggle-theme-btn">Toggle Theme</button>
           <button id="fullscreen-btn">Fullscreen</button>
+          <button id="clear-all-btn">Clear (AC)</button>
         </div>
       </div>
       <div class="dropdown">
@@ -52,41 +53,24 @@
         <div id="memory-display" class="memory-display">
             <span id="memory-value" class="memory-value">M: 0</span>
         </div>
+
         <div id="operate-section" class="panel show">
             <label for="fraction-count" id="howMany-label">How many fractions?</label>
             <select id="fraction-count">
                 <option value="2" selected>2</option>
                 <option value="3">3</option>
                 <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
             </select>
-            <div class="fraction" id="fraction1">
-                <input type="number" id="whole1" placeholder="Whole" class="input small">
-                <div class="slash"> </div>
-                <input type="number" id="num1" placeholder="Numerator" class="input">
-                <span class="sep">/</span>
-                <input type="number" id="den1" placeholder="Denominator" class="input">
-            </div>
-            <div class="fraction" id="fraction2">
-                <input type="number" id="whole2" placeholder="Whole" class="input small">
-                <div class="slash"> </div>
-                <input type="number" id="num2" placeholder="Numerator" class="input">
-                <span class="sep">/</span>
-                <input type="number" id="den2" placeholder="Denominator" class="input">
-            </div>
-            <div class="fraction" id="fraction3" hidden>
-                <input type="number" id="whole3" placeholder="Whole" class="input small">
-                <div class="slash"> </div>
-                <input type="number" id="num3" placeholder="Numerator" class="input">
-                <span class="sep">/</span>
-                <input type="number" id="den3" placeholder="Denominator" class="input">
-            </div>
-            <div class="fraction" id="fraction4" hidden>
-                <input type="number" id="whole4" placeholder="Whole" class="input small">
-                <div class="slash"> </div>
-                <input type="number" id="num4" placeholder="Numerator" class="input">
-                <span class="sep">/</span>
-                <input type="number" id="den4" placeholder="Denominator" class="input">
-            </div>
+
+            <!-- Fraction inputs dirender dinamis oleh JS -->
+            <div id="fractions-container"></div>
+
             <select id="operator">
                 <option value="+">+</option>
                 <option value="-">-</option>
@@ -161,13 +145,12 @@
                 </div>
                 <div id="history-list" class="history-list"></div>
                 <div class="history-buttons">
-                    <button id="history-export-btn" class="btn-small">Export CSV</button>
                     <button id="history-clear-btn" class="btn-small danger">Clear History</button>
                 </div>
             </div>
         </div>
 
-    
+    </div>
     <script type="module" src="script.js"></script>
 </body>
 </html>

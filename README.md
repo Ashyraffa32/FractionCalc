@@ -27,7 +27,7 @@ Here’s FractionCalc in action 👇
 - 🌙 **Dark/Light Mode** toggle
 - ➗ **Fraction ↔ Decimal conversions**
 - 🔄 **Complex → Simple fractions** reducer
-- 🧮 **Operate up to 4 fractions at once**
+- 🧮 **Operate up to 10 fractions at once**
 - 🎨 **Personalization options** (wallpapers & themes)
 - 📱 Available on **Windows, Linux, and Android**
 

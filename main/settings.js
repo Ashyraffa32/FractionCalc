@@ -1,7 +1,3 @@
-// ========================================
-// Settings Page - Complete Rewrite
-// ========================================
-
 class SettingsManager {
     constructor() {
         this.isDark = localStorage.getItem('theme') === 'dark';
@@ -119,10 +115,6 @@ class SettingsManager {
                 versionNumber: '2.0.1',
                 legal: '法務 / ライセンス',
                 back: '戻る',
-                english: 'English',
-                bahasa: 'Bahasa Indonesia',
-                german: 'Deutsch',
-                japanese: '日本語',
                 resetConfirm: 'パーソナライズ設定をリセットしますか?',
                 resetSuccess: '設定がリセットされました!',
                 deleteConfirm: 'すべてのデータを削除しますか? これは元に戻すことができません!',
@@ -132,6 +124,114 @@ class SettingsManager {
                 confirm: '確認',
                 warning: '警告',
                 success: '成功'
+            },
+            fr: {
+                general: 'Général',
+                personalization: 'Personnalisation',
+                about: 'À propos',
+                language: 'Langue',
+                deleteAllData: 'Supprimer toutes les données',
+                darkMode: 'Mode sombre',
+                changeWallpaper: 'Changer le fond d\'écran',
+                selectImage: 'Sélectionner une image',
+                resetWallpaper: 'Réinitialiser le fond d\'écran',
+                accentColor: 'Couleur d\'accentuation',
+                containerOpacity: 'Opacité du conteneur',
+                resetSettings: 'Réinitialiser les paramètres',
+                version: 'Version',
+                versionNumber: '2.1.0',
+                legal: 'Mentions légales / Licence',
+                back: 'Retour',
+                resetConfirm: 'Réinitialiser les paramètres de personnalisation?',
+                resetSuccess: 'Paramètres réinitialisés!',
+                deleteConfirm: 'Supprimer TOUTES les données? Impossible d\'annuler!',
+                deleteSuccess: 'Toutes les données supprimées!',
+                wallpaperApplied: 'Nouveau fond d\'écran appliqué.',
+                wallpaperReset: 'Fond d\'écran réinitialisé!',
+                confirm: 'Confirmer',
+                warning: 'AVERTISSEMENT',
+                success: 'Succès'
+            },
+            es: {
+                general: 'General',
+                personalization: 'Personalización',
+                about: 'Acerca de',
+                language: 'Idioma',
+                deleteAllData: 'Eliminar todos los datos',
+                darkMode: 'Modo oscuro',
+                changeWallpaper: 'Cambiar fondo de pantalla',
+                selectImage: 'Seleccionar imagen',
+                resetWallpaper: 'Restablecer fondo de pantalla',
+                accentColor: 'Color de acento',
+                containerOpacity: 'Opacidad del contenedor',
+                resetSettings: 'Restablecer configuración',
+                version: 'Versión',
+                versionNumber: '2.1.0',
+                legal: 'Legal / Licencia',
+                back: 'Volver',
+                resetConfirm: '¿Restablecer configuración de personalización?',
+                resetSuccess: '¡Configuración restablecida!',
+                deleteConfirm: '¿Eliminar TODOS los datos? ¡No se puede deshacer!',
+                deleteSuccess: '¡Todos los datos eliminados!',
+                wallpaperApplied: 'Nuevo fondo de pantalla aplicado.',
+                wallpaperReset: '¡Fondo de pantalla restablecido!',
+                confirm: 'Confirmar',
+                warning: 'ADVERTENCIA',
+                success: 'Éxito'
+            },
+            it: {
+                general: 'Generale',
+                personalization: 'Personalizzazione',
+                about: 'Informazioni',
+                language: 'Lingua',
+                deleteAllData: 'Elimina tutti i dati',
+                darkMode: 'Modalità scura',
+                changeWallpaper: 'Cambia sfondo',
+                selectImage: 'Seleziona immagine',
+                resetWallpaper: 'Ripristina sfondo',
+                accentColor: 'Colore di accento',
+                containerOpacity: 'Opacità contenitore',
+                resetSettings: 'Ripristina impostazioni',
+                version: 'Versione',
+                versionNumber: '2.1.0',
+                legal: 'Legale / Licenza',
+                back: 'Indietro',
+                resetConfirm: 'Ripristinare le impostazioni di personalizzazione?',
+                resetSuccess: 'Impostazioni ripristinate!',
+                deleteConfirm: 'Eliminare TUTTI i dati? Non è possibile annullare!',
+                deleteSuccess: 'Tutti i dati eliminati!',
+                wallpaperApplied: 'Nuovo sfondo applicato.',
+                wallpaperReset: 'Sfondo ripristinato!',
+                confirm: 'Conferma',
+                warning: 'ATTENZIONE',
+                success: 'Successo'
+            },
+            ru: {
+                general: 'Общие',
+                personalization: 'Персонализация',
+                about: 'О программе',
+                language: 'Язык',
+                deleteAllData: 'Удалить все данные',
+                darkMode: 'Тёмный режим',
+                changeWallpaper: 'Сменить обои',
+                selectImage: 'Выбрать изображение',
+                resetWallpaper: 'Сбросить обои',
+                accentColor: 'Цвет акцента',
+                containerOpacity: 'Прозрачность контейнера',
+                resetSettings: 'Сбросить настройки',
+                version: 'Версия',
+                versionNumber: '2.1.0',
+                legal: 'Правовая информация / Лицензия',
+                back: 'Назад',
+                resetConfirm: 'Сбросить настройки персонализации?',
+                resetSuccess: 'Настройки сброшены!',
+                deleteConfirm: 'Удалить ВСЕ данные? Это нельзя отменить!',
+                deleteSuccess: 'Все данные удалены!',
+                wallpaperApplied: 'Новые обои применены.',
+                wallpaperReset: 'Обои сброшены!',
+                confirm: 'Подтвердить',
+                warning: 'ПРЕДУПРЕЖДЕНИЕ',
+                success: 'Успешно'
             }
         };
         
@@ -349,58 +449,27 @@ class SettingsManager {
 
     // ===== LANGUAGE TOGGLE =====
     setupLanguageToggle() {
-        // Handle dropdown select in HTML
         const languagesSelect = document.getElementById('languages');
         if (languagesSelect) {
             languagesSelect.value = this.locale;
-            languagesSelect.addEventListener('change', async (e) => {
+            languagesSelect.addEventListener('change', (e) => {
                 this.locale = e.target.value;
                 localStorage.setItem('locale', this.locale);
-                
-                // Update text immediately
                 this.updateSettingsText();
-                
-                const t = this.locales[this.locale];
             });
         }
 
-        // Also handle button toggle if it exists
+        // button toggle (cycle) - kalau ada
         const btn = document.getElementById('toggle-lang-btn');
         if (!btn) return;
 
-        const langMap = { 
-            en: this.locales.en.english, 
-            id: this.locales.id.bahasa,
-            de: this.locales.de.german,
-            jp: this.locales.jp.japanese
-        };
-        const langOrder = ['en', 'id', 'de', 'jp'];
-
-        btn.textContent = langMap[this.locale];
-
-        btn.addEventListener('click', async () => {
+        const langOrder = Object.keys(this.locales);
+        btn.addEventListener('click', () => {
             const currentIndex = langOrder.indexOf(this.locale);
             this.locale = langOrder[(currentIndex + 1) % langOrder.length];
             localStorage.setItem('locale', this.locale);
-            
-            // Update text immediately without reload
             this.updateSettingsText();
-            
-            // Update button text
-            btn.textContent = langMap[this.locale];
-            
-            // Update dropdown if it exists
-            if (languagesSelect) {
-                languagesSelect.value = this.locale;
-            }
-
-            const t = this.locales[this.locale];
-            const messages = {
-                en: 'Language changed to English!',
-                id: 'Bahasa berubah ke Indonesia!',
-                de: 'Sprache zu Deutsch geändert!',
-                jp: '言語が日本語に変わりました!'
-            };
+            if (languagesSelect) languagesSelect.value = this.locale;
         });
     }
 

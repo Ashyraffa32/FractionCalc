@@ -6,78 +6,89 @@ import { HistoryManager } from './history.js';
 import { formatFractionHTML } from './utils.js';
 
 export function initUI() {
-    // Initialize Memory and History managers
     const memoryManager = new MemoryManager();
     const historyManager = new HistoryManager();
 
-    // Store the last calculation result for memory operations
     let lastResult = null;
-    
-    // Track the currently focused fraction input (defaults to 1)
     let currentFractionFocus = 1;
 
-    // Cache frequently used elements
+    // ----------------------------------------
+    // renderFractions - di dalam initUI supaya
+    // bisa akses currentFractionFocus
+    // ----------------------------------------
+    function renderFractions(count) {
+        const container = document.getElementById('fractions-container');
+        if (!container) return;
+        const lang = localStorage.getItem('locale') || 'en';
+        const t = locales[lang] || locales.en;
+        container.innerHTML = '';
+        for (let i = 1; i <= count; i++) {
+            const div = document.createElement('div');
+            div.className = 'fraction';
+            div.id = `fraction${i}`;
+            div.innerHTML = `
+                <input type="number" id="whole${i}" placeholder="${t.whole}" class="input small">
+                <div class="slash"> </div>
+                <input type="number" id="num${i}" placeholder="${t.numerator}" class="input">
+                <span class="sep">/</span>
+                <input type="number" id="den${i}" placeholder="${t.denominator}" class="input">
+            `;
+            container.appendChild(div);
+        }
+        // Attach focus tracker ke semua input yang baru dirender
+        for (let i = 1; i <= count; i++) {
+            ['whole', 'num', 'den'].forEach(field => {
+                const el = document.getElementById(`${field}${i}`);
+                if (el) el.addEventListener('focus', () => { currentFractionFocus = i; });
+            });
+        }
+    }
+
+    // Cache elements
     const modeButtons = document.querySelectorAll('.dropdown-menu button[data-mode]');
     const panels = document.querySelectorAll('.panel');
     const calcBtn = document.getElementById('calc-btn');
     const convertBtn = document.getElementById('btn-convert-mixed');
     const toggleConvertMode = document.getElementById('toggle-convert-mode');
     const explanationBox = document.getElementById('explanation-box');
-
-    // Options menu: Show Explanation button (replaces previous checkbox)
     const showExplanationBtn = document.getElementById('options-show-explanations-btn');
+    const fractionCountSelect = document.getElementById('fraction-count');
 
-    // Apply settings and localization on load
+    // Apply settings dulu sebelum render fractions
     applySettings();
 
-    // Setup Memory and History UI
-    setupMemoryUI(memoryManager, memoryUtils, () => lastResult, () => currentFractionFocus);
-    setupHistoryUI(historyManager);
-    
-    // Track focus on fraction inputs (whole, numerator, denominator)
-    for (let i = 1; i <= 4; i++) {
-        const wholeInput = document.getElementById(`whole${i}`);
-        const numInput = document.getElementById(`num${i}`);
-        const denInput = document.getElementById(`den${i}`);
-        
-        const onFocus = () => {
-            currentFractionFocus = i;
-        };
-        
-        if (wholeInput) wholeInput.addEventListener('focus', onFocus);
-        if (numInput) numInput.addEventListener('focus', onFocus);
-        if (denInput) denInput.addEventListener('focus', onFocus);
+    // Render default 2 fractions
+    renderFractions(2);
+
+    // Hook select ke renderFractions
+    if (fractionCountSelect) {
+        fractionCountSelect.addEventListener('change', () => {
+            renderFractions(parseInt(fractionCountSelect.value));
+        });
     }
 
-    // Keyboard shortcuts for memory management
+    // Setup Memory dan History UI
+    setupMemoryUI(memoryManager, memoryUtils, () => lastResult, () => currentFractionFocus);
+    setupHistoryUI(historyManager);
+
+    // Keyboard shortcuts memory
     document.addEventListener('keydown', (e) => {
-        // Alt+M - Recall memory
         if (e.altKey && e.key.toLowerCase() === 'm') {
             e.preventDefault();
-            const recallBtn = document.getElementById('recall-memory');
-            if (recallBtn) recallBtn.click();
-        }
-        // Alt+A - Add to memory (m+)
-        else if (e.altKey && e.key.toLowerCase() === 'a') {
+            document.getElementById('recall-memory')?.click();
+        } else if (e.altKey && e.key.toLowerCase() === 'a') {
             e.preventDefault();
-            const addBtn = document.getElementById('add-memory');
-            if (addBtn) addBtn.click();
-        }
-        // Alt+S - Subtract from memory (m-)
-        else if (e.altKey && e.key.toLowerCase() === 's') {
+            document.getElementById('add-memory')?.click();
+        } else if (e.altKey && e.key.toLowerCase() === 's') {
             e.preventDefault();
-            const subsBtn = document.getElementById('subs-memory');
-            if (subsBtn) subsBtn.click();
-        }
-        // Alt+C - Clear memory (mc)
-        else if (e.altKey && e.key.toLowerCase() === 'c') {
+            document.getElementById('subs-memory')?.click();
+        } else if (e.altKey && e.key.toLowerCase() === 'c') {
             e.preventDefault();
-            const clrBtn = document.getElementById('clr-memory');
-            if (clrBtn) clrBtn.click();
+            document.getElementById('clr-memory')?.click();
         }
     });
 
-    // Initialize show explanation state (persisted)
+    // Show explanation toggle
     const initShowExplanation = () => {
         const showOn = localStorage.getItem('showExplanation') === 'true';
         if (showExplanationBtn) {
@@ -112,10 +123,10 @@ export function initUI() {
         });
     });
 
-    // Operate click
+    // Calculate button
     if (calcBtn) {
         calcBtn.addEventListener('click', () => {
-            const count = parseInt(document.getElementById('fraction-count').value);
+            const count = parseInt(fractionCountSelect.value);
             const operator = document.getElementById('operator').value;
             const t = locales[localStorage.getItem('locale') || 'en'];
             const fractions = [];
@@ -142,7 +153,6 @@ export function initUI() {
                 } else {
                     explanationBox.style.display = 'none';
                 }
-                // Add to history
                 const operandStrings = fractions.map(f => {
                     if (f.num === 0) return (f.whole || 0).toString();
                     if (!f.whole || f.whole === 0) return `${f.num}/${f.den}`;
@@ -153,7 +163,7 @@ export function initUI() {
         });
     }
 
-    // Convert click
+    // Convert button
     if (convertBtn) {
         convertBtn.addEventListener('click', () => {
             const t = locales[localStorage.getItem('locale') || 'en'];
@@ -173,7 +183,7 @@ export function initUI() {
         });
     }
 
-    // Convert decimal -> fraction
+    // Decimal -> Fraction
     const decToFracBtn = document.getElementById('btn-dec-to-frac');
     if (decToFracBtn) {
         decToFracBtn.addEventListener('click', () => {
@@ -187,36 +197,80 @@ export function initUI() {
             resultDiv.innerHTML = `<div style="margin: 20px 0;"><strong>${t.decFracResult}</strong></div>${resultHTML}`;
 
             // Omori Easter Eggs
-            if (decimal === 0.143 || decimal === 143 || decimal === 1.43 || decimal === 14.3) {
-                alert("All it costs is your love!\n~ Mari");
-            } else if (decimal === 3.1) {
-                alert("Our Dearest Mari..\nThe sun shined brighter when she was here...");
-            } else if (decimal === 2.18) {
-                alert("Everything is going to be okay....\n~ Basil");
-            } else if (decimal === 5.23) {
-                alert("My old friends weren't there when i needed them.\n~ Aubrey");
-            } else if (decimal === 7.20) {
-                alert("I have to tell you something.....");
-            } else if (decimal === 1.1 || decimal === 1.01) {
-                alert("Hey, Sunny... Can I poke your brain for a minute?\nI really love cooking and all and Mari always says I'm really good, but my parents want me to become a doctor...\nDo you think I should become a chef?\n~ Hero");
-            } else if (decimal === 11.11) {
-                alert("Do you remember me? It's your old friend, KEL!");
-            } else if (decimal === 12.25) {
-                alert("I wish i could go and watch the Omori Anniversary Concert...\n~ developer :/");
+            const omoriEggs = {
+                '0.143': ["All it costs is your love!\n~ Mari"],
+                '143':   ["All it costs is your love!\n~ Mari"],
+                '1.43':  ["All it costs is your love!\n~ Mari"],
+                '14.3':  ["All it costs is your love!\n~ Mari"],
+                '3.1': [ // Mari's Birthday
+                    "Our Dearest Mari...\nThe sun shined brighter when she was here...",
+                ],
+                '2.18': [ // Basil's Birthday
+                    "Everything is going to be okay....\n~ Basil",
+                ],
+                '5.23': [ // Aubrey's Birthday
+                    "My old friends weren't there for me when I needed them.\nYou and Sunny think you can just barge back into my life and tell me what to do?\nDon't be so naive.",
+                    "No matter how far you push your feelings down... they'll always come back somehow. And what you do with those feelings...\nThat will be your truth.\n ~ Aubrey"
+                ],
+                '7.2': [ // Sunny's Birthday
+                    "I have to tell you something.....",
+                    "I-",
+                    "I'm the one who killed Mari. and Basil is the one who mask Mari's death so it's looks like a suicide.\n ~ Sunny"
+                ],
+                '1.1': [ // Hero's Birthday
+                    "Hey, Sunny... Can I poke your brain for a minute?",
+                    "I really love cooking and all and Mari always says I'm really good.",
+                    "but my parents wants me to became a doctor...",
+                    "Do you think i should became a chef?\n ~ Hero"
+                ],
+                '1.01': [
+                    "Hey, Sunny... Can I poke your brain for a minute?",
+                    "I really love cooking and all and Mari always says I'm really good.",
+                    "but my parents wants me to became a doctor...",
+                    "Do you think i should became a chef?\n ~ Hero"
+                ],
+                '11.11': [ // Kel's Birthday
+                    "PINK IS A GROSS COLOR!!\n~ Kel",
+                ],
+                '12.25': [ // Omori Anniversary
+                    "I wish i could go and watch the Omori Anniversary Concert...\n~ developer :/",
+                ]
+            };
+
+            const eggLines = omoriEggs[String(decimal)];
+            if (eggLines) {
+                (async () => {
+                    for (const line of eggLines) {
+                        await new Promise(resolve => {
+                            try {
+                                if (window.__TAURI__?.dialog?.message) {
+                                    window.__TAURI__.dialog.message(line, { title: '...' }).then(resolve);
+                                } else {
+                                    alert(line);
+                                    resolve();
+                                }
+                            } catch {
+                                alert(line);
+                                resolve();
+                            }
+                        });
+                    }
+                })();
             }
-
-
         });
     }
 
-    // Fraction -> decimal
+    // Fraction -> Decimal
     const fracToDecBtn = document.getElementById('btn-frac-to-dec');
     if (fracToDecBtn) {
         fracToDecBtn.addEventListener('click', () => {
             const num = parseInt(document.getElementById('dec_num').value);
             const den = parseInt(document.getElementById('dec_den').value);
             const resultEl = document.getElementById('decimal-result');
-            if (isNaN(num) || isNaN(den) || den === 0) { resultEl.innerText = locales[localStorage.getItem('locale') || 'en'].invalidInput; return; }
+            if (isNaN(num) || isNaN(den) || den === 0) {
+                resultEl.innerText = locales[localStorage.getItem('locale') || 'en'].invalidInput;
+                return;
+            }
             resultEl.innerText = fractionToDecimal(num, den).toString();
         });
     }
@@ -237,13 +291,12 @@ export function initUI() {
         });
     }
 
-    // Toggle convert mode show/hide
+    // Toggle convert mode (improper <-> mixed)
     if (toggleConvertMode) {
         toggleConvertMode.addEventListener('change', (e) => {
             const isImproperToMixed = e.target.checked;
             const wholeEl = document.getElementById('conv_whole');
             const slashEl = document.querySelector('#convert-section .slash');
-
             if (isImproperToMixed) {
                 if (wholeEl) wholeEl.hidden = true;
                 if (slashEl) slashEl.hidden = true;
@@ -254,7 +307,7 @@ export function initUI() {
         });
     }
 
-    // Opacity slider, wallpaper, theme etc. reuse existing logic
+    // Opacity, wallpaper, theme, lang
     const openOpacityModalBtn = document.getElementById('open-opacity-modal-btn');
     const opacityModal = document.getElementById('opacity-modal');
     const opacityCloseBtn = document.getElementById('opacity-close-btn');
@@ -315,31 +368,18 @@ export function initUI() {
         opacitySlider.addEventListener('input', (e) => { localStorage.setItem('containerOpacity', e.target.value); applySettings(); });
     }
 
-    // Fraction count selector
-    const fractionCountSelect = document.getElementById('fraction-count');
-    if (fractionCountSelect) {
-        fractionCountSelect.addEventListener('change', (e) => {
-            const count = parseInt(e.target.value);
-            for (let i = 3; i <= 4; i++) {
-                const fracDiv = document.getElementById(`fraction${i}`);
-                if (fracDiv) fracDiv.hidden = (i > count);
-            }
-        });
-    }
-
-    // About, docs, fullscreen
+    // About, docs, fullscreen, tip
     const aboutBtn = document.getElementById('about-btn');
     const docsBtn = document.getElementById('docs-btn');
     const fullscreenBtn = document.getElementById('fullscreen-btn');
-
     const tipBtn = document.getElementById('tip-of-day-btn');
+
     if (tipBtn) {
         tipBtn.addEventListener('click', () => {
             const lang = localStorage.getItem('locale') || 'en';
             const t = locales[lang] || locales.en;
             const tips = t.tips || [t.tipOfDay || 'Tip of the day not available.'];
             const tip = tips[Math.floor(Math.random() * tips.length)];
-            // Prefer Tauri dialog if available, fallback to alert
             try {
                 if (window.__TAURI__ && window.__TAURI__.dialog && window.__TAURI__.dialog.message) {
                     window.__TAURI__.dialog.message(tip, { title: t.tipOfDay });
@@ -353,15 +393,33 @@ export function initUI() {
     }
     if (aboutBtn) aboutBtn.addEventListener('click', () => { const lang = localStorage.getItem('locale') || 'en'; alert(locales[lang].aboutMsg); });
     if (docsBtn) docsBtn.addEventListener('click', () => { window.open('https://ashyraffa32.github.io/FractionCalcSite/getstarted.html', '_blank'); });
+    const clearAllBtn = document.getElementById('clear-all-btn');
+    if (clearAllBtn) {
+        clearAllBtn.addEventListener('click', () => {
+            const count = parseInt(fractionCountSelect.value);
+            for (let i = 1; i <= count; i++) {
+                ['whole', 'num', 'den'].forEach(field => {
+                    const el = document.getElementById(`${field}${i}`);
+                    if (el) el.value = '';
+                });
+            }
+            const resultEl = document.getElementById('result');
+            if (resultEl) resultEl.innerHTML = '';
+            if (explanationBox) { explanationBox.innerText = ''; explanationBox.style.display = 'none'; }
+            lastResult = null;
+        });
+    }
+
     if (fullscreenBtn) fullscreenBtn.addEventListener('click', () => {
-        if (!document.fullscreenElement) document.documentElement.requestFullscreen(); else if (document.exitFullscreen) document.exitFullscreen();
+        if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+        else if (document.exitFullscreen) document.exitFullscreen();
     });
 
     // Keyboard shortcuts
     setupKeyboardShortcuts();
 
-    // Ensure operate section is default
-    document.getElementById('operate-section').classList.add('show');
+    // Ensure operate section is default active
+    document.getElementById('operate-section')?.classList.add('show');
 }
 
 // ========================================
@@ -370,68 +428,46 @@ export function initUI() {
 function setupMemoryUI(memoryManager, memoryUtils, getLastResult, getCurrentFractionFocus) {
     const memoryValue = document.getElementById('memory-value');
 
-    // Update memory display
     const updateMemoryDisplay = () => {
-        memoryValue.textContent = `M: ${memoryManager.getFormattedMemory()}`;
+        if (memoryValue) memoryValue.textContent = `M: ${memoryManager.getFormattedMemory()}`;
     };
 
-    // Initial display
     updateMemoryDisplay();
 
-    // Clear memory (mc)
-    const clrBtn = document.getElementById('clr-memory');
-    if (clrBtn) {
-        clrBtn.addEventListener('click', () => {
-            memoryManager.clear();
-            updateMemoryDisplay();
-        });
-    }
+    document.getElementById('clr-memory')?.addEventListener('click', () => {
+        memoryManager.clear();
+        updateMemoryDisplay();
+    });
 
-    // Add to memory (m+)
-    const addBtn = document.getElementById('add-memory');
-    if (addBtn) {
-        addBtn.addEventListener('click', () => {
-            const lang = localStorage.getItem('locale') || 'en';
-            const t = locales[lang] || locales.en;
-            const lastResult = getLastResult();
-            if (!lastResult) {
-                alert(t.noResult || 'No result to add to memory. Perform a calculation first.');
-                return;
-            }
-            memoryManager.add(lastResult, memoryUtils);
-            updateMemoryDisplay();
-        });
-    }
+    document.getElementById('add-memory')?.addEventListener('click', () => {
+        const lang = localStorage.getItem('locale') || 'en';
+        const t = locales[lang] || locales.en;
+        const lastResult = getLastResult();
+        if (!lastResult) { alert(t.noResult || 'No result to add. Perform a calculation first.'); return; }
+        memoryManager.add(lastResult, memoryUtils);
+        updateMemoryDisplay();
+    });
 
-    // Subtract from memory (m-)
-    const subsBtn = document.getElementById('subs-memory');
-    if (subsBtn) {
-        subsBtn.addEventListener('click', () => {
-            const lang = localStorage.getItem('locale') || 'en';
-            const t = locales[lang] || locales.en;
-            const lastResult = getLastResult();
-            if (!lastResult) {
-                alert(t.noResult || 'No result to subtract from memory. Perform a calculation first.');
-                return;
-            }
-            memoryManager.subtract(lastResult, memoryUtils);
-            updateMemoryDisplay();
-        });
-    }
+    document.getElementById('subs-memory')?.addEventListener('click', () => {
+        const lang = localStorage.getItem('locale') || 'en';
+        const t = locales[lang] || locales.en;
+        const lastResult = getLastResult();
+        if (!lastResult) { alert(t.noResult || 'No result to subtract. Perform a calculation first.'); return; }
+        memoryManager.subtract(lastResult, memoryUtils);
+        updateMemoryDisplay();
+    });
 
-    // Recall memory (mr) - dynamic based on focused input
-    const recallBtn = document.getElementById('recall-memory');
-    if (recallBtn) {
-        recallBtn.addEventListener('click', () => {
-            const focusedFraction = getCurrentFractionFocus();
-            const memory = memoryManager.recall();
-            document.getElementById(`whole${focusedFraction}`).value = memory.whole || '';
-            document.getElementById(`num${focusedFraction}`).value = memory.num || '';
-            document.getElementById(`den${focusedFraction}`).value = memory.den || '';
-        });
-    }
+    document.getElementById('recall-memory')?.addEventListener('click', () => {
+        const focusedFraction = getCurrentFractionFocus();
+        const memory = memoryManager.recall();
+        const wholeEl = document.getElementById(`whole${focusedFraction}`);
+        const numEl = document.getElementById(`num${focusedFraction}`);
+        const denEl = document.getElementById(`den${focusedFraction}`);
+        if (wholeEl) wholeEl.value = memory.whole || '';
+        if (numEl) numEl.value = memory.num || '';
+        if (denEl) denEl.value = memory.den || '';
+    });
 }
-
 
 // ========================================
 // History UI Setup
@@ -444,26 +480,11 @@ function setupHistoryUI(historyManager) {
     const historyExportBtn = document.getElementById('history-export-btn');
     const historyClearBtn = document.getElementById('history-clear-btn');
 
-    // Show history modal
-    if (showHistoryBtn) {
-        showHistoryBtn.addEventListener('click', () => {
-            refreshHistoryDisplay();
-            if (historyModal) historyModal.style.display = 'flex';
-        });
-    }
-
-    // Close history modal
-    if (historyCloseBtn) {
-        historyCloseBtn.addEventListener('click', () => {
-            if (historyModal) historyModal.style.display = 'none';
-        });
-    }
-
-    // Refresh history display
     const refreshHistoryDisplay = () => {
         const lang = localStorage.getItem('locale') || 'en';
         const t = locales[lang] || locales.en;
         const history = historyManager.getRecent(50);
+        if (!historyList) return;
         if (history.length === 0) {
             historyList.innerHTML = `<div class="empty-history">${t.emptyHistory}</div>`;
             return;
@@ -479,33 +500,35 @@ function setupHistoryUI(historyManager) {
         `).join('');
     };
 
-    // Export history
-    if (historyExportBtn) {
-        historyExportBtn.addEventListener('click', () => {
-            const csv = historyManager.exportAsCSV();
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `fraction-history-${new Date().toISOString().slice(0, 10)}.csv`;
-            a.click();
-            URL.revokeObjectURL(url);
-        });
-    }
+    showHistoryBtn?.addEventListener('click', () => {
+        refreshHistoryDisplay();
+        if (historyModal) historyModal.style.display = 'flex';
+    });
 
-    // Clear history
-    if (historyClearBtn) {
-        historyClearBtn.addEventListener('click', () => {
-            const lang = localStorage.getItem('locale') || 'en';
-            const t = locales[lang] || locales.en;
-            if (confirm(t.deleteConfirm)) {
-                historyManager.clear();
-                refreshHistoryDisplay();
-            }
-        });
-    }
+    historyCloseBtn?.addEventListener('click', () => {
+        if (historyModal) historyModal.style.display = 'none';
+    });
 
-    // Expose delete function globally for the history entries
+    historyExportBtn?.addEventListener('click', () => {
+        const csv = historyManager.exportAsCSV();
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `fraction-history-${new Date().toISOString().slice(0, 10)}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+    });
+
+    historyClearBtn?.addEventListener('click', () => {
+        const lang = localStorage.getItem('locale') || 'en';
+        const t = locales[lang] || locales.en;
+        if (confirm(t.deleteConfirm)) {
+            historyManager.clear();
+            refreshHistoryDisplay();
+        }
+    });
+
     window.deleteHistory = (index) => {
         const allHistory = historyManager.getHistory();
         if (index >= 0 && index < allHistory.length) {
@@ -514,10 +537,12 @@ function setupHistoryUI(historyManager) {
         }
     };
 
-    // Expose refresh function globally
     window.refreshHistoryDisplay = refreshHistoryDisplay;
 }
 
+// ========================================
+// Apply Settings
+// ========================================
 export function applySettings() {
     const theme = localStorage.getItem('theme');
     document.documentElement.classList.toggle('dark-mode', theme === 'dark');
@@ -539,7 +564,6 @@ export function applySettings() {
 
     updateTextForLanguage();
 
-    // Restore show explanation state (pulled from localStorage)
     const showBtn = document.getElementById('options-show-explanations-btn');
     const showOn = localStorage.getItem('showExplanation') === 'true';
     if (showBtn) {
@@ -548,7 +572,9 @@ export function applySettings() {
     }
 }
 
-// Languages Switching Logic
+// ========================================
+// Language / Localization
+// ========================================
 export function updateTextForLanguage() {
     const lang = localStorage.getItem('locale') || 'en';
     const t = locales[lang] || locales.en;
@@ -559,7 +585,7 @@ export function updateTextForLanguage() {
         if (isPlaceholder) el.placeholder = t[key]; else el.innerText = t[key];
     };
 
-    // Ribbon titles (1: Mode, 2: Settings, 3: Options, 4: View, 5: Help)
+    // Ribbon
     setText('.ribbon .dropdown:nth-child(1) > button', 'mode');
     setText('.ribbon .dropdown:nth-child(2) > button', 'settings');
     setText('.ribbon .dropdown:nth-child(3) > button', 'options');
@@ -580,69 +606,90 @@ export function updateTextForLanguage() {
     setText('#btn-frac-to-dec', 'toDecimal');
     setText('#btn-dec-to-frac', 'toFraction');
     setText('#btn-simplify', 'simplifyBtn');
-
-    setText('#toggle-theme-btn','toggleTheme');
-    setText('#open-opacity-modal-btn','opacity');
-    setText('#about-btn','about');
-    setText('#docs-btn','documentation');
-    setText('#fullscreen-btn','fullscreen');
+    setText('#toggle-theme-btn', 'toggleTheme');
+    setText('#open-opacity-modal-btn', 'opacity');
+    setText('#about-btn', 'about');
+    setText('#docs-btn', 'documentation');
+    setText('#fullscreen-btn', 'fullscreen');
 
     const showBtn = document.getElementById('options-show-explanations-btn');
     if (showBtn) showBtn.innerText = t.showExplanationCheckbox;
 
     const convertLabel = document.getElementById('toggle-convert-mode')?.parentElement;
-    if (convertLabel && convertLabel.lastChild.nodeType === Node.TEXT_NODE) convertLabel.lastChild.textContent = ' ' + t.convertToggleLabel;
+    if (convertLabel && convertLabel.lastChild.nodeType === Node.TEXT_NODE) {
+        convertLabel.lastChild.textContent = ' ' + t.convertToggleLabel;
+    }
 
-    const placeholderKeys = {
-        'whole1': 'whole', 'num1': 'numerator', 'den1': 'denominator',
-        'whole2': 'whole', 'num2': 'numerator', 'den2': 'denominator',
-        'whole3': 'whole', 'num3': 'numerator', 'den3': 'denominator',
-        'whole4': 'whole', 'num4': 'numerator', 'den4': 'denominator',
+    // Placeholders statik (non-fraction-container)
+    const staticPlaceholders = {
         'conv_whole': 'whole', 'conv_num': 'numerator', 'conv_den': 'denominator',
         'dec_num': 'numerator', 'dec_den': 'denominator',
         'simp_num': 'numerator', 'simp_den': 'denominator',
         'dec_input_fraction': 'enterDecimal'
     };
-    for (const [id, key] of Object.entries(placeholderKeys)) {
+    for (const [id, key] of Object.entries(staticPlaceholders)) {
         const el = document.getElementById(id);
         if (el) el.placeholder = t[key];
     }
 
+    // Placeholders dinamis di fractions-container
+    document.querySelectorAll('#fractions-container .fraction').forEach((div, idx) => {
+        const i = idx + 1;
+        const wholeEl = document.getElementById(`whole${i}`);
+        const numEl = document.getElementById(`num${i}`);
+        const denEl = document.getElementById(`den${i}`);
+        if (wholeEl) wholeEl.placeholder = t.whole;
+        if (numEl) numEl.placeholder = t.numerator;
+        if (denEl) denEl.placeholder = t.denominator;
+    });
+
     setText('#opacity-modal h4', 'opacityTitle');
 
-    // Update hardcoded UI text
     const howManyLabel = document.getElementById('howMany-label');
     if (howManyLabel) howManyLabel.textContent = t.howMany;
 }
 
+// ========================================
+// Keyboard Shortcuts
+// ========================================
 function setupKeyboardShortcuts() {
     document.addEventListener('keydown', (e) => {
         const modals = document.querySelectorAll('.modal');
         const openModal = Array.from(modals).find(m => getComputedStyle(m).display !== 'none');
         if (e.key === 'Escape' && openModal) { openModal.style.display = 'none'; return; }
         if (openModal) return;
-        if ((e.ctrlKey || e.metaKey) && (e.key === 't' || e.key === 'T')) { e.preventDefault(); const btn = document.getElementById('toggle-theme-btn'); if (btn) btn.click(); }
+
+        if ((e.ctrlKey || e.metaKey) && (e.key === 't' || e.key === 'T')) {
+            e.preventDefault();
+            document.getElementById('toggle-theme-btn')?.click();
+        }
+
         if (e.altKey) {
             const modes = ['operate', 'convert', 'decimal', 'fraction', 'simplify'];
             const keyNum = parseInt(e.key);
             if (keyNum >= 1 && keyNum <= 5) {
-                const modeName = modes[keyNum - 1];
-                const modeBtn = document.querySelector(`button[data-mode="${modeName}"]`);
+                const modeBtn = document.querySelector(`button[data-mode="${modes[keyNum - 1]}"]`);
                 if (modeBtn) modeBtn.click();
             }
         }
+
         if ((e.ctrlKey || e.metaKey) && (e.key === 'e' || e.key === 'E')) {
-            e.preventDefault(); const operatePanel = document.getElementById('operate-section'); if (operatePanel && operatePanel.classList.contains('show')) { const btn = document.getElementById('options-show-explanations-btn'); if (btn) btn.click(); }
+            e.preventDefault();
+            const operatePanel = document.getElementById('operate-section');
+            if (operatePanel && operatePanel.classList.contains('show')) {
+                document.getElementById('options-show-explanations-btn')?.click();
+            }
         }
+
         if (e.key === 'Enter') {
             const activePanel = document.querySelector('.panel.show');
             if (activePanel) {
-                switch(activePanel.id) {
-                    case 'operate-section': document.getElementById('calc-btn').click(); break;
-                    case 'convert-section': document.getElementById('btn-convert-mixed').click(); break;
-                    case 'decimal-section': document.getElementById('btn-frac-to-dec').click(); break;
-                    case 'fraction-section': document.getElementById('btn-dec-to-frac').click(); break;
-                    case 'simplify-section': document.getElementById('btn-simplify').click(); break;
+                switch (activePanel.id) {
+                    case 'operate-section': document.getElementById('calc-btn')?.click(); break;
+                    case 'convert-section': document.getElementById('btn-convert-mixed')?.click(); break;
+                    case 'decimal-section': document.getElementById('btn-frac-to-dec')?.click(); break;
+                    case 'fraction-section': document.getElementById('btn-dec-to-frac')?.click(); break;
+                    case 'simplify-section': document.getElementById('btn-simplify')?.click(); break;
                 }
             }
         }
