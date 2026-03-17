@@ -23,24 +23,37 @@ function lcm(a, b) {
 // --- UI functions ---
 function switchMode(mode) {
     if (!mode) return;
-    panels.forEach(panel => {
+    document.querySelectorAll('.panel').forEach(panel => {
         panel.hidden = true;
         panel.classList.remove('show');
     });
     const panelToShow = document.getElementById(mode + '-section');
-    if(panelToShow) {
-      panelToShow.hidden = false;
-      panelToShow.classList.add('show');
+    if (panelToShow) {
+        panelToShow.hidden = false;
+        panelToShow.classList.add('show');
     }
 }
 
 function updateFractionInputs() {
-    const count = parseInt(fractionCountSelect.value);
-    for (let i = 1; i <= 4; i++) {
-        const fracEl = document.getElementById('fraction' + i);
-        if (fracEl) {
-            fracEl.hidden = (i > count);
-        }
+    const sel = document.getElementById('fraction-count');
+    const count = parseInt(sel?.value || 2);
+    const wrap = document.getElementById('fractions-wrap');
+    if (!wrap) return;
+    const lang = localStorage.getItem('locale') || 'en';
+    const t = locales[lang] || locales.en;
+
+    wrap.innerHTML = '';
+    for (let i = 1; i <= count; i++) {
+        const div = document.createElement('div');
+        div.className = 'fraction-inputs';
+        div.id = 'fraction' + i;
+        div.innerHTML = `
+            <input type="number" id="whole${i}" inputmode="numeric" placeholder="${t.whole}" class="input">
+            <input type="number" id="num${i}" inputmode="numeric" placeholder="${t.numerator}" class="input">
+            <span class="divider">/</span>
+            <input type="number" id="den${i}" inputmode="numeric" placeholder="${t.denominator}" class="input">
+        `;
+        wrap.appendChild(div);
     }
 }
 
@@ -260,6 +273,190 @@ const locales = {
     expDivideNumerator: "  - {num} / {gcd} = {resNum}",
     expDivideDenominator: "  - {den} / {gcd} = {resDen}",
     expSimplestForm: "  - 分数は既に最も簡潔な形式です。"
+  },
+  fr: {
+    operate: "Opération",
+    convert: "Convertir",
+    decimal: "En Décimal",
+    fraction: "En Fraction",
+    simplify: "Simplifier",
+    howMany: "Combien?",
+    operatorLabel: "Opérateur",
+    whole: "Entier",
+    numerator: "Numérateur",
+    denominator: "Dénominateur",
+    calculate: "Calculer",
+    result: "Résultat:",
+    hint: "Laissez 'Entier' vide ou 0 pour les fractions propres.",
+    toDecimal: "En Décimal",
+    convertBtn: "Convertir en Impropre",
+    convertToMixed: "Convertir en Mixte",
+    convertToggleLabel: "Convertir Impropre ↔ Mixte",
+    enterDecimal: "Entrez un décimal...",
+    toFraction: "Convertir en Fraction",
+    simplifyBtn: "Simplifier",
+    invalidDen: "Le dénominateur ne doit pas être vide ou zéro.",
+    cannotDivide: "Impossible de diviser par zéro!",
+    invalidInput: "Entrée invalide!",
+    improperResult: "Fraction impropre:",
+    decimalResult: "Décimal:",
+    simplifyResult: "Fraction simplifiée:",
+    expStep1: "Étape 1: Convertir tous les nombres mixtes en fractions impropres.",
+    expMixedToImproper: "  - F{i}: {whole} {num}/{den} = ({whole} * {den} + {num})/{den} = {impNum}/{den}",
+    expIsProper: "  - F{i}: {num}/{den} est déjà une fraction propre.",
+    expStep2: "Étape 2: Effectuer l'opération: {expression}",
+    expCalcStep: "\nCalcul {i}: ({num1}/{den1}) {op} ({num2}/{den2})",
+    expFindLCM: "  - Trouver un dénominateur commun (PPCM de {den1} et {den2}): {lcm}",
+    expAdjustFractions: "  - Ajuster les fractions: ({num1}/{den1}) = ({newNum1}/{lcm}), ({num2}/{den2}) = ({newNum2}/{lcm})",
+    expPerformOp: "  - Effectuer l'opération: ({newNum1} {op} {newNum2}) / {lcm}",
+    expMultiplyNumerators: "  - Multiplier les numérateurs: {num1} * {num2} = {resNum}",
+    expMultiplyDenominators: "  - Multiplier les dénominateurs: {den1} * {den2} = {resDen}",
+    expInvertAndMultiply: "  - Inverser la deuxième fraction et multiplier: ({num1}/{den1}) * ({den2}/{num2})",
+    expIntermediateResult: "  - Résultat intermédiaire: {num}/{den}",
+    expStep3: "Étape 3: Simplifier la fraction finale: {num}/{den}",
+    expFindGCD: "  - Trouver le PGCD de {num} et {den}: {gcd}",
+    expDivideByGCD: "  - Diviser le numérateur et le dénominateur par le PGCD:",
+    expDivideNumerator: "  - {num} / {gcd} = {resNum}",
+    expDivideDenominator: "  - {den} / {gcd} = {resDen}",
+    expSimplestForm: "  - La fraction est déjà sous sa forme la plus simple."
+  },
+  es: {
+    operate: "Operación",
+    convert: "Convertir",
+    decimal: "A Decimal",
+    fraction: "A Fracción",
+    simplify: "Simplificar",
+    howMany: "¿Cuántas?",
+    operatorLabel: "Operador",
+    whole: "Entero",
+    numerator: "Numerador",
+    denominator: "Denominador",
+    calculate: "Calcular",
+    result: "Resultado:",
+    hint: "Deje 'Entero' vacío o 0 para fracciones propias.",
+    toDecimal: "A Decimal",
+    convertBtn: "Convertir a Impropia",
+    convertToMixed: "Convertir a Mixta",
+    convertToggleLabel: "Convertir Impropia ↔ Mixta",
+    enterDecimal: "Ingresa un decimal...",
+    toFraction: "Convertir a Fracción",
+    simplifyBtn: "Simplificar",
+    invalidDen: "El denominador no debe estar vacío o ser cero.",
+    cannotDivide: "¡No se puede dividir por cero!",
+    invalidInput: "¡Entrada inválida!",
+    improperResult: "Fracción impropia:",
+    decimalResult: "Decimal:",
+    simplifyResult: "Fracción simplificada:",
+    expStep1: "Paso 1: Convertir todos los números mixtos en fracciones impropias.",
+    expMixedToImproper: "  - F{i}: {whole} {num}/{den} = ({whole} * {den} + {num})/{den} = {impNum}/{den}",
+    expIsProper: "  - F{i}: {num}/{den} ya es una fracción propia.",
+    expStep2: "Paso 2: Realizar la operación: {expression}",
+    expCalcStep: "\nCálculo {i}: ({num1}/{den1}) {op} ({num2}/{den2})",
+    expFindLCM: "  - Encontrar denominador común (MCM de {den1} y {den2}): {lcm}",
+    expAdjustFractions: "  - Ajustar fracciones: ({num1}/{den1}) = ({newNum1}/{lcm}), ({num2}/{den2}) = ({newNum2}/{lcm})",
+    expPerformOp: "  - Realizar operación: ({newNum1} {op} {newNum2}) / {lcm}",
+    expMultiplyNumerators: "  - Multiplicar numeradores: {num1} * {num2} = {resNum}",
+    expMultiplyDenominators: "  - Multiplicar denominadores: {den1} * {den2} = {resDen}",
+    expInvertAndMultiply: "  - Invertir la segunda fracción y multiplicar: ({num1}/{den1}) * ({den2}/{num2})",
+    expIntermediateResult: "  - Resultado intermedio: {num}/{den}",
+    expStep3: "Paso 3: Simplificar la fracción final: {num}/{den}",
+    expFindGCD: "  - Encontrar el MCD de {num} y {den}: {gcd}",
+    expDivideByGCD: "  - Dividir numerador y denominador por el MCD:",
+    expDivideNumerator: "  - {num} / {gcd} = {resNum}",
+    expDivideDenominator: "  - {den} / {gcd} = {resDen}",
+    expSimplestForm: "  - La fracción ya está en su forma más simple."
+  },
+  it: {
+    operate: "Operazione",
+    convert: "Convertire",
+    decimal: "In Decimale",
+    fraction: "In Frazione",
+    simplify: "Semplificare",
+    howMany: "Quante?",
+    operatorLabel: "Operatore",
+    whole: "Intero",
+    numerator: "Numeratore",
+    denominator: "Denominatore",
+    calculate: "Calcola",
+    result: "Risultato:",
+    hint: "Lascia 'Intero' vuoto o 0 per frazioni proprie.",
+    toDecimal: "In Decimale",
+    convertBtn: "Converti in Impropria",
+    convertToMixed: "Converti in Mista",
+    convertToggleLabel: "Converti Impropria ↔ Mista",
+    enterDecimal: "Inserisci un decimale...",
+    toFraction: "Converti in Frazione",
+    simplifyBtn: "Semplifica",
+    invalidDen: "Il denominatore non deve essere vuoto o zero.",
+    cannotDivide: "Non è possibile dividere per zero!",
+    invalidInput: "Input non valido!",
+    improperResult: "Frazione impropria:",
+    decimalResult: "Decimale:",
+    simplifyResult: "Frazione semplificata:",
+    expStep1: "Passo 1: Convertire tutti i numeri misti in frazioni improprie.",
+    expMixedToImproper: "  - F{i}: {whole} {num}/{den} = ({whole} * {den} + {num})/{den} = {impNum}/{den}",
+    expIsProper: "  - F{i}: {num}/{den} è già una frazione propria.",
+    expStep2: "Passo 2: Eseguire l'operazione: {expression}",
+    expCalcStep: "\nCalcolo {i}: ({num1}/{den1}) {op} ({num2}/{den2})",
+    expFindLCM: "  - Trovare denominatore comune (MCM di {den1} e {den2}): {lcm}",
+    expAdjustFractions: "  - Aggiustare frazioni: ({num1}/{den1}) = ({newNum1}/{lcm}), ({num2}/{den2}) = ({newNum2}/{lcm})",
+    expPerformOp: "  - Eseguire operazione: ({newNum1} {op} {newNum2}) / {lcm}",
+    expMultiplyNumerators: "  - Moltiplicare numeratori: {num1} * {num2} = {resNum}",
+    expMultiplyDenominators: "  - Moltiplicare denominatori: {den1} * {den2} = {resDen}",
+    expInvertAndMultiply: "  - Invertire la seconda frazione e moltiplicare: ({num1}/{den1}) * ({den2}/{num2})",
+    expIntermediateResult: "  - Risultato intermedio: {num}/{den}",
+    expStep3: "Passo 3: Semplificare la frazione finale: {num}/{den}",
+    expFindGCD: "  - Trovare il MCD di {num} e {den}: {gcd}",
+    expDivideByGCD: "  - Dividere numeratore e denominatore per il MCD:",
+    expDivideNumerator: "  - {num} / {gcd} = {resNum}",
+    expDivideDenominator: "  - {den} / {gcd} = {resDen}",
+    expSimplestForm: "  - La frazione è già nella sua forma più semplice."
+  },
+  ru: {
+    operate: "Операция",
+    convert: "Конвертировать",
+    decimal: "В Десятичную",
+    fraction: "В Дробь",
+    simplify: "Упростить",
+    howMany: "Сколько?",
+    operatorLabel: "Оператор",
+    whole: "Целое",
+    numerator: "Числитель",
+    denominator: "Знаменатель",
+    calculate: "Вычислить",
+    result: "Результат:",
+    hint: "Оставьте 'Целое' пустым или 0 для правильных дробей.",
+    toDecimal: "В Десятичную",
+    convertBtn: "В неправильную дробь",
+    convertToMixed: "В смешанное число",
+    convertToggleLabel: "Конвертировать Неправильная ↔ Смешанная",
+    enterDecimal: "Введите десятичное...",
+    toFraction: "В Дробь",
+    simplifyBtn: "Упростить",
+    invalidDen: "Знаменатель не должен быть пустым или равным нулю.",
+    cannotDivide: "Нельзя делить на ноль!",
+    invalidInput: "Неверный ввод!",
+    improperResult: "Неправильная дробь:",
+    decimalResult: "Десятичная:",
+    simplifyResult: "Упрощённая дробь:",
+    expStep1: "Шаг 1: Преобразовать все смешанные числа в неправильные дроби.",
+    expMixedToImproper: "  - Д{i}: {whole} {num}/{den} = ({whole} * {den} + {num})/{den} = {impNum}/{den}",
+    expIsProper: "  - Д{i}: {num}/{den} уже является правильной дробью.",
+    expStep2: "Шаг 2: Выполнить операцию: {expression}",
+    expCalcStep: "\nВычисление {i}: ({num1}/{den1}) {op} ({num2}/{den2})",
+    expFindLCM: "  - Найти общий знаменатель (НОК {den1} и {den2}): {lcm}",
+    expAdjustFractions: "  - Привести дроби: ({num1}/{den1}) = ({newNum1}/{lcm}), ({num2}/{den2}) = ({newNum2}/{lcm})",
+    expPerformOp: "  - Выполнить операцию: ({newNum1} {op} {newNum2}) / {lcm}",
+    expMultiplyNumerators: "  - Перемножить числители: {num1} * {num2} = {resNum}",
+    expMultiplyDenominators: "  - Перемножить знаменатели: {den1} * {den2} = {resDen}",
+    expInvertAndMultiply: "  - Перевернуть вторую дробь и умножить: ({num1}/{den1}) * ({den2}/{num2})",
+    expIntermediateResult: "  - Промежуточный результат: {num}/{den}",
+    expStep3: "Шаг 3: Упростить финальную дробь: {num}/{den}",
+    expFindGCD: "  - Найти НОД {num} и {den}: {gcd}",
+    expDivideByGCD: "  - Разделить числитель и знаменатель на НОД:",
+    expDivideNumerator: "  - {num} / {gcd} = {resNum}",
+    expDivideDenominator: "  - {den} / {gcd} = {resDen}",
+    expSimplestForm: "  - Дробь уже в простейшем виде."
   }
 };
 
@@ -294,7 +491,8 @@ function applyLocale() {
     setText('#btn-dec-to-frac', t.toFraction);
     setText('#btn-simplify', t.simplifyBtn);
     
-    for (let i = 1; i <= 4; i++) {
+    const count = parseInt(document.getElementById('fraction-count')?.value || 2);
+    for (let i = 1; i <= count; i++) {
         setText(`#whole${i}`, t.whole, true);
         setText(`#num${i}`, t.numerator, true);
         setText(`#den${i}`, t.denominator, true);
@@ -429,8 +627,8 @@ function formatNumberAsDecimal(value) {
 // --- Main fraction operation logic ---
 function calculate() {
     const lang = localStorage.getItem('locale') || 'en';
-    const t = locales[lang];
-    const count = parseInt(fractionCountSelect.value);
+    const t = locales[lang] || locales.en;
+    const count = parseInt(document.getElementById('fraction-count')?.value || 2);
     const operator = document.getElementById('operator').value;
     let explanation = '';
     
@@ -697,21 +895,51 @@ function convertDecimalToFraction() {
         result: { num: h1, den: k1 }
     });
 
-    // Easter egg: 143?
-    if (decimalInput === 0.143 || decimalInput === 143 || decimalInput === 1.43 || decimalInput === 14.3) {
-        alert("All it costs is your love!\n~ Mari");
-    } else if (decimalInput === 3.1) { // Mari's Birthday
-        alert("Our Dearest Mari\nThe sun shined brighter when she was here...");
-    } else if (decimalInput === 2.18) { // Basil's Birthday
-        alert("Everything is going to be okay....\n~ Basil");
-    } else if (decimalInput === 5.23) { // Aubrey's Birthday
-        alert("My old friends wasn't there when i needed them.\n~ Aubrey");
-    } else if (decimalInput === 7.20) { // Sunny's Birthday
-        alert("I have to tell you something...");
-    } else if (decimalInput == 1.1) { // Hero's Birthday
-        alert("Hey, Sunny... Can I poke your brain for a minute?\nI really love cooking and all and Mari always says I'm really good, but my parents want me to become a doctor...\nDo you think I should become a chef?\n~ Hero");
-    } else if (decimalInput == 11.11) { // Kel's Birthday
-        alert("Do you remember me? It's your old friend, KEL!");
+    // Easter eggs - Omori
+    const omoriEggs = {
+        '0.143': ["All it costs is your love!\n~ Mari"],
+        '143':   ["All it costs is your love!\n~ Mari"],
+        '1.43':  ["All it costs is your love!\n~ Mari"],
+        '14.3':  ["All it costs is your love!\n~ Mari"],
+        '3.1': [
+            "Our Dearest Mari...\nThe sun shined brighter when she was here..."
+        ],
+        '2.18': [
+            "Everything is going to be okay....\n~ Basil",
+        ],
+        '5.23': [
+            "My old friends weren't there for me when I needed them.\nYou and Sunny think you can just barge back into my life and tell me what to do?\nDon't be so naive.",
+            "No matter how far you push your feelings down...\nthey will always come back somehow.\nAnd what you do with those feelings...\nThat will be your truth.\n~ Aubrey"
+        ],
+        '7.2': [
+            "I have to tell you something.....",
+            "I..",
+            "I'm the one who killed Mari and Basil is the one who have an idea of hanging her and masking her death as suicide.",
+        ],
+        '1.1': [
+                    "Hey, Sunny... Can I poke your brain for a minute?",
+                    "I really love cooking and all and Mari always says I'm really good..",
+                    "but my parents want me to become a doctor...",
+                    "Do you think I should become a chef?\n~ Hero",
+        ],
+        '1.01': [
+            "Hey, Sunny... Can I poke your brain for a minute?",
+            "I really love cooking and all and Mari always says I'm really good..",
+            "but my parents want me to become a doctor...",
+            "Do you think I should become a chef?\n~ Hero",
+        ],
+        '11.11': [
+            "PINK IS A GROSS COLOR!!\n~ Kel",
+        ]
+    };
+
+    const eggLines = omoriEggs[String(decimalInput)];
+    if (eggLines) {
+        (async () => {
+            for (const line of eggLines) {
+                await new Promise(resolve => { alert(line); resolve(); });
+            }
+        })();
     }
 }
 
@@ -730,27 +958,51 @@ if (fractionCountSelect) fractionCountSelect.addEventListener('change', updateFr
 if (showExplanationCheckbox) {
     showExplanationCheckbox.addEventListener('change', () => {
         if (!showExplanationCheckbox.checked) {
-            explanationContainer.hidden = true;
+            if (explanationContainer) explanationContainer.hidden = true;
         }
     });
 }
 
 // Update button text and placeholders based on toggle state
-toggleConvertMode.addEventListener('change', () => {
-    const lang = localStorage.getItem('locale') || 'en';
-    const t = locales[lang];
-    const isImproperToMixed = toggleConvertMode.checked;
-    document.getElementById('btn-convert-mixed').innerText = isImproperToMixed ? t.convertToMixed : t.convertBtn;
-    document.getElementById('conv_whole').placeholder = isImproperToMixed ? 'Improper Whole' : 'Whole';
-    document.getElementById('conv_num').placeholder = isImproperToMixed ? 'Improper Numerator' : 'Numerator';
-    document.getElementById('conv_den').placeholder = isImproperToMixed ? 'Improper Denominator' : 'Denominator';
-});
+if (toggleConvertMode) {
+    toggleConvertMode.addEventListener('change', () => {
+        const lang = localStorage.getItem('locale') || 'en';
+        const t = locales[lang] || locales.en;
+        const isImproperToMixed = toggleConvertMode.checked;
+        const btnConvert = document.getElementById('btn-convert-mixed');
+        if (btnConvert) btnConvert.innerText = isImproperToMixed ? t.convertToMixed : t.convertBtn;
+        const cw = document.getElementById('conv_whole');
+        const cn = document.getElementById('conv_num');
+        const cd = document.getElementById('conv_den');
+        if (cw) cw.placeholder = isImproperToMixed ? 'Improper Whole' : (t.whole || 'Whole');
+        if (cn) cn.placeholder = isImproperToMixed ? 'Improper Numerator' : (t.numerator || 'Numerator');
+        if (cd) cd.placeholder = isImproperToMixed ? 'Improper Denominator' : (t.denominator || 'Denominator');
+    });
+}
 
 document.getElementById('calc-btn')?.addEventListener('click', calculate);
 document.getElementById('btn-convert-mixed')?.addEventListener('click', convertMixed);
 document.getElementById('btn-frac-to-dec')?.addEventListener('click', convertDecimal);
 document.getElementById('btn-dec-to-frac')?.addEventListener('click', convertDecimalToFraction);
 document.getElementById('btn-simplify')?.addEventListener('click', simplifyFraction);
+
+// Clear AC
+document.getElementById('btn-ac')?.addEventListener('click', () => {
+    const count = parseInt(document.getElementById('fraction-count')?.value || 2);
+    for (let i = 1; i <= count; i++) {
+        const w = document.getElementById('whole' + i);
+        const n = document.getElementById('num' + i);
+        const d = document.getElementById('den' + i);
+        if (w) w.value = '';
+        if (n) n.value = '';
+        if (d) d.value = '';
+    }
+    document.getElementById('result').innerHTML = locales[localStorage.getItem('locale') || 'en'].result + ' ';
+    document.getElementById('explanation-box').innerText = '';
+    if (explanationContainer) explanationContainer.hidden = true;
+    lastResultNum = null;
+    lastResultDen = null;
+});
 
 // Memory button listeners
 document.getElementById('btn-mc')?.addEventListener('click', () => {
